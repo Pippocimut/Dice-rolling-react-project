@@ -46,9 +46,9 @@ export function Main() {
             <input
                 className={"p-4 m-4 w-50 border-2 border-gray-500 rounded-lg"}
                 type={"text"} placeholder={"Name"} value={name} onChange={(e) => setName(e.target.value)}/>
-            <div className={"flex flex-row gap-2"}>
+            <div className={"flex flex-row gap-2 w-full"}>
                 {rolls.map((roll, index) => (
-                    <div>
+                    <div className={"flex flex-col gap-2 w-full justify-center items-center"}>
                         <RollInput updateRoll={function (roll: Roll) {
                             setRolls((prev) => {
                                 // Create a new array instead of mutating the previous one
