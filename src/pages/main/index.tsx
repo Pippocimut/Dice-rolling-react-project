@@ -60,9 +60,9 @@ export function Main() {
                         <button
                             className={"p-4 m-4"}
                             onClick={() =>
-                            setRolls((prevRolls) => prevRolls.filter((_, i) => i !== index))
+                                setRolls((prevRolls) => prevRolls.filter((_, i) => i !== index))
 
-                        }> Delete roll
+                            }> Delete roll
                         </button>
                     </div>))}
             </div>
@@ -72,7 +72,10 @@ export function Main() {
             <label htmlFor={"buttons"} className={"text-left text-2xl"}>Saved Buttons</label>
             <ul id="buttons"
                 className={"flex flex-col gap-2 m-4 p-4 w-64 justify-center items-center h-fit border-2 border-gray-500 rounded-lg shadow-lg"}>
-                {buttonList.map((buttonData, index) => {
+                {buttonList.map((buttonData: {
+                    name: string,
+                    rolls: Roll[]
+                }, index: number) => {
                     return (<div className={"flex flex-row"}>
                         <RollButton rolls={buttonData.rolls} name={buttonData.name}
                                     key={index}/>
