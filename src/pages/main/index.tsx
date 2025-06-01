@@ -6,7 +6,7 @@ import {ButtonCreatePopup} from "./components/ButtonCreatePopup";
 import {CreateButtonDialog} from "./components/CreateButtonDialog.tsx";
 
 export function Main() {
-    const [cookie, setCookie, removeCookie] = useCookies(["buttonList"])
+    const {0: cookie, 1: setCookie} = useCookies(["buttonList"])
     const [isOpenDialog, setIsOpenDialog] = useState(false)
     const buttonList = cookie.buttonList || []
 
@@ -26,7 +26,8 @@ export function Main() {
                     rolls: Roll[]
                 }, index: number) => {
                     return (<div className={"flex flex-row"}>
-                        <RollButton rolls={buttonData.rolls} name={buttonData.name} deleteButton={() => removeButton(index)}
+                        <RollButton rolls={buttonData.rolls} name={buttonData.name}
+                                    deleteButton={() => removeButton(index)}
                                     key={index}/>
                     </div>)
                 })}

@@ -11,10 +11,8 @@ export function ButtonCreatePopup({buttonList, onClose}: {
 }) {
     const [name, setName] = useState("")
     const [rolls, setRolls] = useState<Roll[]>([])
-    
-    
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [cookie, setCookie, removeCookie] = useCookies(["buttonList"])
+
+    const {1: setCookie} = useCookies(["buttonList"])
     const [isOpenDialog, setIsOpenDialog] = useState(false)
 
     const createNewButton = () => {
@@ -60,8 +58,8 @@ export function ButtonCreatePopup({buttonList, onClose}: {
                 </button>
             </div>
             <CreateButtonDialog isOpen={isOpenDialog} onClose={() => setIsOpenDialog(false)}>
-                <RollInput createRoll={(roll:Roll) => {
-                    setRolls((prev) => [...prev,roll ])
+                <RollInput createRoll={(roll: Roll) => {
+                    setRolls((prev) => [...prev, roll])
                     setIsOpenDialog(false)
                 }}/>
             </CreateButtonDialog>
