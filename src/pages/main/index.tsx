@@ -18,20 +18,21 @@ export function Main() {
 
     return (<div className={"flex flex-col h-full gap-20 items-center justify-around"}>
         <div>
-            <label htmlFor={"buttons"} className={"text-left text-2xl"}>Saved Buttons</label>
             <ul id="buttons"
-                className={"flex flex-row flex-wrap gap-2 m-4 p-4 w-full justify-center items-center h-fit border-2 border-gray-500 rounded-lg shadow-lg"}>
+                className={"flex flex-row flex-wrap gap-2 m-4 p-4 w-full justify-center items-center h-fit"}>
                 {buttonList.map((buttonData: {
                     name: string,
-                    rolls: Roll[]
+                    rolls: Roll[],
+                    color:string
                 }, index: number) => {
                     return (<div className={"flex flex-row"}>
                         <RollButton rolls={buttonData.rolls} name={buttonData.name}
                                     deleteButton={() => removeButton(index)}
+                                    color={buttonData.color}
                                     key={index}/>
                     </div>)
                 })}
-                <button className={"w-50 h-50 flex items-center justify-center"} onClick={() => setIsOpenDialog(true)}>
+                <button className={"w-50 h-50 flex items-center justify-center bg-neutral-900"} onClick={() => setIsOpenDialog(true)}>
                     <span className={"text-6xl pb-3"}>✚</span>
                 </button>
             </ul>

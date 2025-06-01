@@ -5,6 +5,19 @@ import {useCookies} from "react-cookie";
 import {CreateButtonDialog} from "../CreateButtonDialog.tsx";
 import {toast} from "react-toastify";
 
+const colors = [
+    "bg-red-500",
+    "bg-green-500",
+    "bg-blue-500",
+    "bg-yellow-500",
+    "bg-pink-500",
+    "bg-purple-500",
+    "bg-orange-500",
+    "bg-teal-500",
+    "bg-gray-500",
+    "bg-indigo-500",
+]
+
 export function ButtonCreatePopup({buttonList, onClose}: {
     buttonList: { name: string, rolls: Roll[] }[],
     onClose: () => void
@@ -16,6 +29,7 @@ export function ButtonCreatePopup({buttonList, onClose}: {
     const [isOpenDialog, setIsOpenDialog] = useState(false)
 
     const createNewButton = () => {
+
         if (name == "") {
             toast.error("Button name cannot be empty")
             return
@@ -23,6 +37,7 @@ export function ButtonCreatePopup({buttonList, onClose}: {
         const newButton = {
             name: name,
             rolls: rolls,
+            color: colors[Math.floor(Math.random() * colors.length)]
         }
         setCookie("buttonList", [...buttonList, newButton])
         setRolls([])

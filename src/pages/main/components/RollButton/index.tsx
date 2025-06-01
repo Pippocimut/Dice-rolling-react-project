@@ -5,9 +5,10 @@ type Props = {
     rolls: Roll[];
     name: string;
     deleteButton: () => void;
+    color: string;
 }
 
-export function RollButton({rolls, name,deleteButton}: Props) {
+export function RollButton({rolls, name, deleteButton, color}: Props) {
 
     const handleOnClick = () => {
         const results = []
@@ -43,16 +44,16 @@ export function RollButton({rolls, name,deleteButton}: Props) {
         )
     }
 
-
+    console.log(color)
     return (
         <button
-            className={"w-50 h-50"}
+            className={`w-50 h-50 rounded-lg ${color}`}
             onClick={handleOnClick}
             onContextMenu={(e) => {
                 e.preventDefault()
                 deleteButton()
 
             }}
-                ><span className={"text-2xl"}>{name} </span></button>
-                )
-            }
+        ><span className={"text-2xl"}>{name} </span></button>
+    )
+}
