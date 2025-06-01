@@ -11,6 +11,9 @@ export function ButtonCreatePopup({buttonList, onClose}: {
 }) {
     const [name, setName] = useState("")
     const [rolls, setRolls] = useState<Roll[]>([])
+    
+    
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [cookie, setCookie, removeCookie] = useCookies(["buttonList"])
     const [isOpenDialog, setIsOpenDialog] = useState(false)
 
