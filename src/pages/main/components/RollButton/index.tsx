@@ -4,9 +4,10 @@ import type {Roll} from "../../types";
 type Props = {
     rolls: Roll[];
     name: string;
+    deleteButton: () => void;
 }
 
-export function RollButton({rolls, name}: Props) {
+export function RollButton({rolls, name,deleteButton}: Props) {
 
     const handleOnClick = () => {
         const results = []
@@ -44,6 +45,14 @@ export function RollButton({rolls, name}: Props) {
 
 
     return (
-        <button onClick={handleOnClick}> {name} </button>
-    )
-}
+        <button
+            className={"w-50 h-50"}
+            onClick={handleOnClick}
+            onContextMenu={(e) => {
+                e.preventDefault()
+                deleteButton()
+
+            }}
+                ><span className={"text-2xl"}>{name} </span></button>
+                )
+            }

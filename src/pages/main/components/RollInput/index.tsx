@@ -1,20 +1,29 @@
 import type {Roll} from "../../types.ts";
 import {useState} from "react";
 
-export function RollInput({roll, updateRoll}: { roll: Roll, updateRoll: (roll: Roll) => void }) {
+export function RollInput({createRoll}: {
+    createRoll: (roll: Roll) => void
+}) {
     const labelClassName = "text-left"
     const dieInputClassname = "p-4 w-50 border-2 border-gray-500 rounded-lg text-right"
 
-    const [name, setName] = useState(roll.name || "")
+    const [roll, updateRoll] = useState<Roll>({
+        name: "New roll",
+        numberOfRolls: 1,
+        modifier: 0,
+        sides: 20
+    })
+
+    const [name, setName] = useState(roll.name ||"")
     const [nameError, setNameError] = useState("")
 
-    const [sides, setSides] = useState(roll.sides || "")
+    const [sides, setSides] = useState(roll.sides ||"")
     const [sidesError, setSidesError] = useState("")
 
     const [numberOfRolls, setNumberOfRolls] = useState(roll.numberOfRolls || "")
     const [numberOfRollsError, setNumberOfRollsError] = useState("")
 
-    const [modifier, setModifier] = useState(roll.modifier || "")
+    const [modifier, setModifier] = useState(roll.modifier || "0")
     const [modifierError, setModifierError] = useState("")
 
     const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -60,7 +69,7 @@ export function RollInput({roll, updateRoll}: { roll: Roll, updateRoll: (roll: R
 
     const handleModifierChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setModifier(e.target.value)
-        if(e.target.value == "-" || e.target.value == "") return
+        if (e.target.value == "-" || e.target.value == "") return
         if (isNaN(Number(e.target.value))) {
             setModifierError("Must be a number")
             return
@@ -92,6 +101,7 @@ export function RollInput({roll, updateRoll}: { roll: Roll, updateRoll: (roll: R
             <input type={"text"} placeholder={"Modifier"} value={modifier}
                    className={dieInputClassname}
                    onChange={handleModifierChange}/>
+            <button className={"p-4 m-4"} onClick={() => createRoll(roll)}>Add Roll</button>
         </div>
     )
 }
