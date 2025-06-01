@@ -19,6 +19,7 @@ export function RollInput({roll, updateRoll}: { roll: Roll, updateRoll: (roll: R
 
     const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setName(e.target.value)
+        setNameError("")
         updateRoll({...roll, name: e.target.value})
     }
 
