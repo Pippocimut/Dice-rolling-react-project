@@ -44,16 +44,15 @@ export function RollButton({rolls, name, deleteButton, color}: Props) {
         )
     }
 
-    console.log(color)
     return (
         <button
             className={`w-50 h-50 rounded-lg ${color}`}
             onClick={handleOnClick}
             onContextMenu={(e) => {
-                e.preventDefault()
+                e.preventDefault();
                 deleteButton()
-
-            }}
-        ><span className={"text-2xl"}>{name} </span></button>
+            }}>
+            <span className={"text-2xl"}>{name} </span>
+        </button>
     )
 }

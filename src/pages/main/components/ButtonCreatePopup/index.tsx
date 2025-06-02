@@ -2,7 +2,7 @@ import {RollInput} from "../RollInput";
 import type {Roll} from "../../types.ts";
 import {useState} from "react";
 import {useCookies} from "react-cookie";
-import {CreateButtonDialog} from "../CreateButtonDialog.tsx";
+import {Index} from "../CreateDialog";
 import {toast} from "react-toastify";
 
 const colors = [
@@ -23,6 +23,7 @@ export function ButtonCreatePopup({buttonList, onClose}: {
     onClose: () => void
 }) {
     const [name, setName] = useState("")
+    const [buttonColor, setButtonColor] = useState<string>(colors[Math.floor(Math.random() * colors.length)])
     const [rolls, setRolls] = useState<Roll[]>([])
 
     const {1: setCookie} = useCookies(["buttonList"])
@@ -37,7 +38,7 @@ export function ButtonCreatePopup({buttonList, onClose}: {
         const newButton = {
             name: name,
             rolls: rolls,
-            color: colors[Math.floor(Math.random() * colors.length)]
+            color: buttonColor
         }
         setCookie("buttonList", [...buttonList, newButton])
         setRolls([])
@@ -45,12 +46,20 @@ export function ButtonCreatePopup({buttonList, onClose}: {
     }
 
     return (
-        <div
-            className={"flex flex-col gap-2 m-4 p-4 w-fit justify-center items-center h-fit"}>
+        <div className={"flex flex-col gap-2 m-4 p-4 w-fit justify-center items-center h-fit"}>
+            <div className={"flex flex-row gap-2"}>
+                <input
+                    className={"p-4 m-4 w-50 border-2 border-gray-500 rounded-lg w-full text-left"}
+                    type={"text"} placeholder={"Button's Name"} value={name} onChange={(e) => setName(e.target.value)}/>
+                <select className={"p-4 m-4 w-15 h-15 border-2 rounded-lg "+buttonColor}
+                    value={buttonColor}
+                    onChange={(e) => setButtonColor(e.target.value)}>
+                    {colors.map((color) => (
+                        <option value={color} key={color} className={"w-2 h-2 "+ color}></option>
+                    ))}
+                </select>
+            </div>
 
-            <input
-                className={"p-4 m-4 w-50 border-2 border-gray-500 rounded-lg w-full text-left"}
-                type={"text"} placeholder={"Button's Name"} value={name} onChange={(e) => setName(e.target.value)}/>
             <div className={"flex flex-row gap-2"}>
                 <button className={"p-6 m-4"} onClick={() => setRolls([])}>Clear rolls</button>
                 <button className={"p-6 m-4"} onClick={() => setIsOpenDialog(true)}>Add roll</button>
@@ -72,12 +81,12 @@ export function ButtonCreatePopup({buttonList, onClose}: {
                     Create Button
                 </button>
             </div>
-            <CreateButtonDialog isOpen={isOpenDialog} onClose={() => setIsOpenDialog(false)}>
+            <Index isOpen={isOpenDialog} onClose={() => setIsOpenDialog(false)}>
                 <RollInput createRoll={(roll: Roll) => {
                     setRolls((prev) => [...prev, roll])
                     setIsOpenDialog(false)
                 }}/>
-            </CreateButtonDialog>
+            </Index>
         </div>
     )
 }

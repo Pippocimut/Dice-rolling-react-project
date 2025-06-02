@@ -1,4 +1,4 @@
-export function CreateButtonDialog({isOpen, onClose, children}: {
+export function Index({isOpen, onClose, children}: {
     isOpen: boolean,
     onClose: () => void,
     children: React.ReactNode

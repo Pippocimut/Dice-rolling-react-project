@@ -3,12 +3,18 @@ import {useCookies} from "react-cookie";
 import {useState} from "react";
 import type {Roll} from "./types.ts";
 import {ButtonCreatePopup} from "./components/ButtonCreatePopup";
-import {CreateButtonDialog} from "./components/CreateButtonDialog.tsx";
+import {Index} from "./components/CreateDialog";
+
+type ButtonData = {
+    name: string,
+    rolls: Roll[],
+    color: string
+}
 
 export function Main() {
     const {0: cookie, 1: setCookie} = useCookies(["buttonList"])
     const [isOpenDialog, setIsOpenDialog] = useState(false)
-    const buttonList = cookie.buttonList || []
+    const buttonList: ButtonData[] = cookie.buttonList || []
 
     const removeButton = (index: number) => {
         const newButtonList = [...buttonList]
@@ -20,11 +26,7 @@ export function Main() {
         <div>
             <ul id="buttons"
                 className={"flex flex-row flex-wrap gap-2 m-4 p-4 w-full justify-center items-center h-fit"}>
-                {buttonList.map((buttonData: {
-                    name: string,
-                    rolls: Roll[],
-                    color:string
-                }, index: number) => {
+                {buttonList.map((buttonData: ButtonData, index: number) => {
                     return (<div className={"flex flex-row"}>
                         <RollButton rolls={buttonData.rolls} name={buttonData.name}
                                     deleteButton={() => removeButton(index)}
@@ -32,15 +34,16 @@ export function Main() {
                                     key={index}/>
                     </div>)
                 })}
-                <button className={"w-50 h-50 flex items-center justify-center bg-neutral-900"} onClick={() => setIsOpenDialog(true)}>
+                <button className={"w-50 h-50 flex items-center justify-center bg-neutral-900"}
+                        onClick={() => setIsOpenDialog(true)}>
                     <span className={"text-6xl pb-3"}>✚</span>
                 </button>
             </ul>
         </div>
         {isOpenDialog && (
-            <CreateButtonDialog isOpen={isOpenDialog} onClose={() => setIsOpenDialog(false)}>
+            <Index isOpen={isOpenDialog} onClose={() => setIsOpenDialog(false)}>
                 <ButtonCreatePopup buttonList={buttonList} onClose={() => setIsOpenDialog(false)}/>
-            </CreateButtonDialog>
+            </Index>
         )}
 
     </div>)
