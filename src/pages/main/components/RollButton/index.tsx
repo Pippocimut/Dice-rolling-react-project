@@ -1,5 +1,6 @@
 import {toast} from "react-toastify";
 import type {Roll} from "../../types";
+import {evaluate} from "mathjs"
 
 type Props = {
     rolls: Roll[];
@@ -13,19 +14,63 @@ export function RollButton({rolls, name, deleteButton, color}: Props) {
     const handleOnClick = () => {
         const results = []
         for (const roll of rolls) {
-            const {sides, numberOfRolls = 1, modifier = 0, name} = roll;
+            const {modifier = 0, name, equation} = roll;
 
             let total = modifier;
             let totalAdv = modifier;
             let totalDis = modifier;
 
-            for (let i = 0; i < numberOfRolls; i++) {
-                const roll1 = Math.floor(Math.random() * sides) + 1;
-                const roll2 = Math.floor(Math.random() * sides) + 1;
-                total += roll1;
-                totalAdv += Math.max(roll1, roll2);
-                totalDis += Math.min(roll1, roll2);
+            let normaledEquation = ""
+            let advantageEquation = ""
+            let disadvantageEquation = ""
+
+            console.log(equation)
+            const equationComponents = equation
+                .split(/(\s*[+\-*/()^]\s*)/g)
+                .filter(Boolean)
+                .map(component => component.trim());
+
+            for (const component of equationComponents) {
+                if (component === " ") continue;
+                if (component.includes("d")) {
+                    const [numberOfRolls, sides] = component.split("d").map(Number);
+                    normaledEquation += "( ";
+                    advantageEquation += "( ";
+                    disadvantageEquation += "( ";
+
+                    for (let i = 0; i < numberOfRolls; i++) {
+                        const result1 = Math.floor(Math.random() * sides) + 1;
+                        const result2 = Math.floor(Math.random() * sides) + 1;
+
+                        if (i === 0) {
+                            normaledEquation += result1
+                            advantageEquation += Math.max(result1, result2)
+                            disadvantageEquation += Math.min(result1, result2)
+                            continue;
+                        }
+                        normaledEquation += " + " + result1
+                        advantageEquation += " + " + Math.max(result1, result2)
+                        disadvantageEquation += " + " + Math.min(result1, result2)
+                    }
+
+                    normaledEquation += " )"
+                    advantageEquation += " )"
+                    disadvantageEquation += " )"
+
+                } else {
+                    normaledEquation += " " + component
+                    advantageEquation += " " + component
+                    disadvantageEquation += " " + component
+                }
             }
+
+            console.log(normaledEquation)
+            console.log(advantageEquation)
+            console.log(disadvantageEquation)
+
+            total += evaluate(normaledEquation)
+            totalAdv += evaluate(advantageEquation)
+            totalDis += evaluate(disadvantageEquation)
 
             results.push({name, total, totalAdv, totalDis})
 

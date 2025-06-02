@@ -35,6 +35,12 @@ export function ButtonCreatePopup({buttonList, onClose}: {
             toast.error("Button name cannot be empty")
             return
         }
+
+        if (rolls.length === 0) {
+            toast.error("Button must have at least one roll")
+            return
+        }
+
         const newButton = {
             name: name,
             rolls: rolls,
@@ -64,11 +70,11 @@ export function ButtonCreatePopup({buttonList, onClose}: {
                 <button className={"p-6 m-4"} onClick={() => setRolls([])}>Clear rolls</button>
                 <button className={"p-6 m-4"} onClick={() => setIsOpenDialog(true)}>Add roll</button>
             </div>
-            <div className={"flex flex-row gap-2 w-full"}>
+            <div className={"flex flex-col gap-2 w-full"}>
                 {rolls.map((roll, index) => (
-                    <div
+                    <div key={index}
                         className={"flex flex-row gap-2 w-full justify-center items-center border-2 border-gray-500 rounded-lg shadow-lg"}>
-                        <button className={"m-4"}> {roll.name} </button>
+                        <button className={"m-4"}> {roll.name}</button>
                         <button className={"m-4"}
                                 onClick={() => setRolls((prevRolls) => prevRolls.filter((_, i) => i !== index))}> Delete
                             roll
