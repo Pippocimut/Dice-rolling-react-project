@@ -14,11 +14,11 @@ export function RollButton({rolls, name, deleteButton, color}: Props) {
     const handleOnClick = () => {
         const results = []
         for (const roll of rolls) {
-            const {modifier = 0, name, equation} = roll;
+            const { name, equation} = roll;
 
-            let total = modifier;
-            let totalAdv = modifier;
-            let totalDis = modifier;
+            let total = 0
+            let totalAdv = 0;
+            let totalDis = 0;
 
             let normaledEquation = ""
             let advantageEquation = ""
