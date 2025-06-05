@@ -8,7 +8,7 @@ export default function Sidebar({children}: Props) {
     const [expanded, setExpanded] = useState(false)
 
     return (
-        <aside className={"min-h-screen h-fit"+` transition-all ${expanded ? "w-60" : "w-15"}`}>
+        <aside className={"min-h-screen h-fit" + ` transition-all ${expanded ? "w-60" : "w-15"}`}>
             <nav className="min-h-screen h-full flex flex-col bg-neutral-700 border-r shadow-sm">
                 <div
                     className={"p-4 pb-2 flex justify-end items-end"}>
@@ -27,7 +27,9 @@ export default function Sidebar({children}: Props) {
                     </button>
                 </div>
 
-                {expanded && (<ul className="flex-1 px-3">{children}</ul>)}
+                <ul className={`flex-1 px-3 w-full ${expanded ? "block" : "hidden"} transition-all`}>
+                    {children}
+                </ul>
 
             </nav>
         </aside>
