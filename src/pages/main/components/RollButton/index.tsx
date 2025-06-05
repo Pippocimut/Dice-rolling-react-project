@@ -92,13 +92,13 @@ export function RollButton({rolls, name, editButton, color}: Props) {
 
     return (
         <button
-            className={`w-50 h-50 rounded-lg ${color}`}
+            className={`w-30 h-30 rounded-lg ${color} hover:outline-2 `}
             onClick={handleOnClick}
             onContextMenu={(e) => {
                 e.preventDefault();
                 editButton()
             }}>
-            <span className={"text-2xl"}>{name} </span>
+            <span className={"text-xl"}>{name} </span>
         </button>
     )
 }

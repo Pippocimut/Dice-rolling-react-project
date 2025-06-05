@@ -4,7 +4,8 @@ import type {Roll} from "../pages/main/types.ts";
 export type ButtonData = {
     name: string,
     rolls: Roll[],
-    color: string
+    color: string,
+    tag?: string,
 }
 
 export function useButtonList() {
