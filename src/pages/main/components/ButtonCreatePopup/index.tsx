@@ -96,11 +96,39 @@ export function ButtonCreatePopup(props: Props) {
     const filteredTags = tag == "" ? tags : tags.filter(tagI => tagI.name.toLowerCase().includes(tag.toLowerCase()))
 
     return (
-        <div className={"flex flex-col gap-2 m-4 p-4 h-100 w-fit justify-center items-center"}>
+        <div className={"flex flex-col gap-2 p-4 h-fit w-fit justify-center items-center"}>
+            <div className={"flex flex-row gap-2 w-full justify-end items-end"}>
+                <button className={"px-4 text-6xl"} onClick={props.onClose}>X</button>
+            </div>
+            <div>
+                <h1 className={"text-4xl font-bold"}> {props.function === "edit" ? "Edit Button" : "Create Button"} </h1>
+            </div>
             <div className={"flex flex-row gap-2"}>
                 <input
-                    className={"p-4 m-4 w-50 border-2 border-gray-500 rounded-lg text-left"}
+                    className={"p-4 m-4 w-70 border-2 border-gray-500 rounded-lg text-left"}
                     type={"text"} placeholder={"Button's Name"} value={name} onChange={(e) => setName(e.target.value)}/>
+
+            </div>
+            <div className={"flex flex-row gap-2 relative"}>
+                <Combobox value={tag} onChange={handleTagChange}>
+                    <Combobox.Input
+                        placeholder={"Tag"}
+                        onChange={(e) => setTag(e.target.value)}
+                        className={"p-4 mx-4 my-auto border-2 border-gray-500 rounded-lg w-60 text-left max-h-10 align-middle"}
+                        displayValue={(tag: string) => tag || ""}
+                    />
+                    {!(filteredTags.length === 0 && tag !== "") && (
+                        <Combobox.Options
+                            className={"absolute z-10 top-18 overflow-auto text-base shadow-lg ring-1 bg-neutral-800 ring-black ring-opacity-5 focus:outline-none sm:text-sm my-2 mx-4 border-2 border-gray-500 rounded-lg w-60 text-left"}>
+                            {filteredTags.map((tag) => (
+                                <Combobox.Option value={tag.name} key={tag.name}
+                                                 className={"cursor-pointer w-full select-none py-2 px-4  bg-neutral-800 hover:text-white hover:bg-neutral-500 rounded-md"}>
+                                    {tag.name}
+                                </Combobox.Option>
+                            ))}
+                        </Combobox.Options>)}
+
+                </Combobox>
                 <select className={"p-4 m-4 w-15 h-15 border-2 rounded-lg " + buttonColor}
                         value={buttonColor}
                         onChange={(e) => setButtonColor(e.target.value)}>
@@ -109,41 +137,21 @@ export function ButtonCreatePopup(props: Props) {
                     ))}
                 </select>
             </div>
-            <div>
-                <Combobox value={tag} onChange={handleTagChange}>
-                    <Combobox.Input
-                        placeholder={"Tag"}
-                        onChange={(e) => setTag(e.target.value)}
-                        className={"p-4 mx-4 border-2 border-gray-500 rounded-lg w-60 text-left"}
-                        displayValue={(tag: string) => tag || ""}
-                    />
-                    {!(filteredTags.length === 0 && tag !== "") && (
-                        <Combobox.Options
-                            className={"absolute z-10 mt-1 overflow-auto text-base shadow-lg ring-1 bg-neutral-800 ring-black ring-opacity-5 focus:outline-none sm:text-sm my-2 mx-4 border-2 border-gray-500 rounded-lg w-60 text-left"}>
-                            {filteredTags.map((tag) => (
-                                <Combobox.Option value={tag.name} key={tag.name}
-                                                 className={"relative cursor-pointer w-full select-none py-2 px-4  bg-neutral-800 hover:text-white hover:bg-neutral-500 rounded-md"}>
-                                    {tag.name}
-                                </Combobox.Option>
-                            ))}
-                        </Combobox.Options>)}
-
-                </Combobox>
-            </div>
 
             <div className={"flex flex-row gap-2"}>
-                <button className={"p-6 m-4"} onClick={() => setRolls([])}>Clear rolls</button>
-                <button className={"p-6 m-4"} onClick={() => setIsOpenDialog(true)}>Add roll</button>
+                <button className={"px-6 m-4"} onClick={() => setRolls([])}>Clear rolls</button>
+                <button className={"px-6 m-4"} onClick={() => setIsOpenDialog(true)}>Add roll</button>
             </div>
             <div className={"flex flex-col gap-2 w-full"}>
                 {rolls.map((roll, index) => (
                     <div key={index}
-                         className={"flex flex-row gap-2 w-full justify-center items-center border-2 border-gray-500 rounded-lg shadow-lg"}>
-                        <button className={"m-4"}> {roll.name}</button>
-                        <button className={"m-4"}
-                                onClick={() => setRolls((prevRolls) => prevRolls.filter((_, i) => i !== index))}> Delete
-                            roll
-                        </button>
+                         className={"flex flex-col w-full justify-between items-center border-2 border-gray-500 rounded-lg shadow-lg"}>
+                        <div className={"flex flex-row p-2 gap-2 w-full justify-between items-center"}>
+                            <p className={"m-4"}> <span className={"font-bold"}>{roll.name}</span>: {roll.equation.length>20?roll.equation.substring(0,25)+"...":roll.equation} </p>
+                            <button className={"mt-2 w-10 bg-red-500 text-white rounded hover:bg-red-600 p-2"}
+                                    onClick={() => setRolls((prevRolls) => prevRolls.filter((_, i) => i !== index))}> X
+                            </button>
+                        </div>
                     </div>))}
             </div>
             <div className="p-4 flex flex-row gap-2 w-full justify-center items-center">
