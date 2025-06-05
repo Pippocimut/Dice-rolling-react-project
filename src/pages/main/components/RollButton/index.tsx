@@ -6,10 +6,11 @@ type Props = {
     rolls: Roll[];
     name: string;
     deleteButton: () => void;
+    editButton: () => void;
     color: string;
 }
 
-export function RollButton({rolls, name, deleteButton, color}: Props) {
+export function RollButton({rolls, name, editButton, color}: Props) {
 
     const handleOnClick = () => {
         const results = []
@@ -95,7 +96,7 @@ export function RollButton({rolls, name, deleteButton, color}: Props) {
             onClick={handleOnClick}
             onContextMenu={(e) => {
                 e.preventDefault();
-                deleteButton()
+                editButton()
             }}>
             <span className={"text-2xl"}>{name} </span>
         </button>
