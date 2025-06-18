@@ -6,6 +6,7 @@ import { CreateButtonDialog } from "./components/CreateButtonDialog";
 import { EditButtonDialog } from "./components/EditButtonDialog";
 import { TagsSideBar } from "./components/TagsSideBar";
 import { useButtonPressedHistory, type ButtonPressRecord } from "../../data/rollHistoryDAO.ts";
+import Sidebar from "./components/TagsSideBar/Sidebar.tsx";
 
 export function Main() {
     const [buttonList, updateButtonList] = useButtonList()
@@ -68,7 +69,7 @@ export function Main() {
                             setIsOpenEditDialog(false)
                         }} /> : null}
             </div>
-            <div className={"w-90 h-screen bg-gray-600"}>
+            <Sidebar direction={"right"}>
                 <ul id="history"
                     className={"flex flex-row flex-wrap gap-2 m-4 p-4 w-full justify-center items-center h-fit"}>
                     {buttonHistory && buttonHistory.map((historyData: ButtonPressRecord, index: number) => {
@@ -80,6 +81,6 @@ export function Main() {
                         )
                     })}
                 </ul>
-            </div>
+            </Sidebar>
         </div>)
 }

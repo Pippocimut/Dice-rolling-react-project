@@ -8,7 +8,7 @@ type Props = {
 
 export function TagsSideBar(props: Props) {
     const [tags, updateTags] = useTags()
-    return <Sidebar>
+    return <Sidebar direction={"left"}>
         {tags.map(tag => {
             if (tag.name !== "") {
                 return (<button

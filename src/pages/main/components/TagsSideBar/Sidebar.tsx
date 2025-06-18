@@ -1,17 +1,18 @@
 import {useState} from "react"
 
 type Props = {
+    direction: "left" | "right";
     children: React.ReactNode;
 }
 
-export default function Sidebar({children}: Props) {
+export default function Sidebar({children, direction = "left"}: Props) {
     const [expanded, setExpanded] = useState(false)
 
     return (
         <aside className={"min-h-screen h-fit" + ` transition-all ${expanded ? "w-60" : "w-15"}`}>
             <nav className="min-h-screen h-full flex flex-col bg-neutral-700 border-r shadow-sm">
                 <div
-                    className={"p-4 pb-2 flex justify-end items-end"}>
+                    className={"p-4 pb-2 flex "+(direction === "left" ? "justify-end" : "justify-start")}>
                     <button
                         onClick={() => setExpanded((curr) => !curr)}
                         className={"focus:outline-none p-0"}
