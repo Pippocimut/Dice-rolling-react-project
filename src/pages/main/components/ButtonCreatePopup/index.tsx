@@ -26,22 +26,22 @@ type Props = {
     tag?: Tag
 } | {
     function: "edit",
-    button: ButtonData
+    button?: ButtonData
     deleteButton: () => void
     onClose: () => void
 }
 
 
 export function ButtonCreatePopup(props: Props) {
-    const [name, setName] = useState(props.function === "edit" ? props.button.name : "")
-    const [buttonColor, setButtonColor] = useState<string>(props.function === "edit" ? props.button.color :
+    const [name, setName] = useState(props.function === "edit" ? props.button?.name || "" : "")
+    const [buttonColor, setButtonColor] = useState<string>(props.function === "edit" ? props.button?.color || "" :
         props.tag ? props.tag.color : colors[Math.floor(Math.random() * colors.length)])
-    const [rolls, setRolls] = useState<Roll[]>(props.function === "edit" ? props.button.rolls : [])
+    const [rolls, setRolls] = useState<Roll[]>(props.function === "edit" ? props.button?.rolls || [] : [])
 
     const [tags, updateTagList] = useTags();
 
     const [tag, setTag] = useState<string>(
-        props.function === "edit" ? (props.button.tag ? props.button.tag : "") :
+        props.function === "edit" ? (props.button?.tag || "") :
             props.tag ? props.tag.name : ""
     )
 
@@ -68,6 +68,8 @@ export function ButtonCreatePopup(props: Props) {
 
         if (props.function === "edit") {
             const newButtonList = buttonList.map((button: ButtonData) => {
+                if (props.button === undefined) return button
+                
                 if (button.name === props.button.name) {
                     return newButton
                 }

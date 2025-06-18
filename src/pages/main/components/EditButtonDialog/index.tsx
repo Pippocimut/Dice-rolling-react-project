@@ -40,7 +40,7 @@ export function EditButtonDialog(props: Props) {
                             className="w-full max-w-md transform overflow-hidden rounded-2xl bg-neutral-700 p-6 text-left align-middle shadow-xl transition-all">
                             <ButtonCreatePopup
                                 function={"edit"}
-                                button = {props.button}
+                                button = {props.button || undefined}
                                 deleteButton = {props.deleteButton}
                                 onClose={props.onClose}
                             />
