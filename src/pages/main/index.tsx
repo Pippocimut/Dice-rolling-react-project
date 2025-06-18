@@ -1,16 +1,18 @@
-import {RollButton} from "./components/RollButton";
-import {useState} from "react";
-import {type ButtonData, useButtonList} from "../../data/buttonListDAO.ts";
-import {type Tag} from "../../data/tagsDAO.ts";
-import {CreateButtonDialog} from "./components/CreateButtonDialog";
-import {EditButtonDialog} from "./components/EditButtonDialog";
-import {TagsSideBar} from "./components/TagsSideBar";
+import { RollButton } from "./components/RollButton";
+import { useState } from "react";
+import { type ButtonData, useButtonList } from "../../data/buttonListDAO.ts";
+import { type Tag } from "../../data/tagsDAO.ts";
+import { CreateButtonDialog } from "./components/CreateButtonDialog";
+import { EditButtonDialog } from "./components/EditButtonDialog";
+import { TagsSideBar } from "./components/TagsSideBar";
+import { useButtonPressedHistory, type ButtonPressRecord } from "../../data/rollHistoryDAO.ts";
 
 export function Main() {
     const [buttonList, updateButtonList] = useButtonList()
     const [isOpenCreateDialog, setIsOpenCreateDialog] = useState(false)
     const [isOpenEditDialog, setIsOpenEditDialog] = useState(false)
     const [selectedTag, setSelectedTag] = useState<Tag>()
+    const [buttonHistory] = useButtonPressedHistory();
 
     const [selectedButtonIndex, setSelectedButtonIndex] = useState<number | null>(null)
 
@@ -27,7 +29,7 @@ export function Main() {
 
     return (
         <div className={"flex flex-row h-screen w-full justify-start items-start"}>
-            <TagsSideBar selectedTag={selectedTag} setSelectedTag={setSelectedTag}/>
+            <TagsSideBar selectedTag={selectedTag} setSelectedTag={setSelectedTag} />
             <div className={"flex flex-col h-full gap-20 w-full items-center justify-around"}>
                 <ul id="buttons"
                     className={"flex flex-row flex-wrap gap-2 m-4 p-4 w-full justify-center items-center h-fit"}>
@@ -37,10 +39,11 @@ export function Main() {
                         }
                         return (<div className={"flex flex-row"} key={index}>
                             <RollButton rolls={buttonData.rolls} name={buttonData.name}
-                                        deleteButton={() => removeButton(index)}
-                                        editButton={() => editButton(index)}
-                                        color={buttonData.color}
-                                        key={index}/>
+                                deleteButton={() => removeButton(index)}
+                                editButton={() => editButton(index)}
+                                color={buttonData.color}
+                                tag={buttonData.tag}
+                                key={index} />
                         </div>)
                     })}
                     <button
@@ -53,7 +56,7 @@ export function Main() {
                 <CreateButtonDialog
                     isOpen={isOpenCreateDialog}
                     onClose={() => setIsOpenCreateDialog(false)}
-                    tag={selectedTag}/>
+                    tag={selectedTag} />
 
                 {selectedButtonIndex !== null ?
                     <EditButtonDialog
@@ -63,7 +66,20 @@ export function Main() {
                         deleteButton={() => {
                             updateButtonList(buttonList.filter((_: object, i: number) => i !== selectedButtonIndex))
                             setIsOpenEditDialog(false)
-                        }}/> : null}
+                        }} /> : null}
+            </div>
+            <div className={"w-90 h-screen bg-gray-600"}>
+                <ul id="history"
+                    className={"flex flex-row flex-wrap gap-2 m-4 p-4 w-full justify-center items-center h-fit"}>
+                    {buttonHistory && buttonHistory.map((historyData: ButtonPressRecord, index: number) => {
+                        return (
+                            <div className={"p-4 m-4 text-white " + historyData.color + " h-fit max-w-80 text-left"}>
+                                <h3 className={"mr-auto font-bold text-xl"}>{historyData.name}</h3>
+                                <p>{historyData.tag}</p>
+                            </div>
+                        )
+                    })}
+                </ul>
             </div>
         </div>)
 }

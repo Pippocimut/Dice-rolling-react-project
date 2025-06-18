@@ -1,6 +1,7 @@
 import {toast} from "react-toastify";
 import type {Roll} from "../../types";
 import {evaluate} from "mathjs"
+import { useButtonPressedHistory, type ButtonPressRecord, type RollResult } from "../../../../data/rollHistoryDAO";
 
 type Props = {
     rolls: Roll[];
@@ -8,12 +9,15 @@ type Props = {
     deleteButton: () => void;
     editButton: () => void;
     color: string;
+    tag?: string;
 }
 
-export function RollButton({rolls, name, editButton, color}: Props) {
+export function RollButton({rolls, name, editButton, color, tag}: Props) {
+
+    const [buttonHistory, setButtonHistory] = useButtonPressedHistory();
 
     const handleOnClick = () => {
-        const results = []
+        const results : RollResult[] = []
         for (const roll of rolls) {
             const { name, equation} = roll;
 
@@ -76,6 +80,15 @@ export function RollButton({rolls, name, editButton, color}: Props) {
             results.push({name, total, totalAdv, totalDis})
 
         }
+
+        const newHistory = [ ...buttonHistory, {
+                name: name,
+                color: color,
+                tag: tag,
+                rollResult: results,
+            } as ButtonPressRecord ]
+
+        setButtonHistory(newHistory);
 
         toast.success(<div className={"flex flex-col items-start"}>
                 {results.map(({name, total, totalAdv, totalDis}) => (
