@@ -73,7 +73,7 @@ export function Main() {
                     className={"flex flex-row flex-wrap gap-2 m-4 p-4 w-full justify-center items-center h-fit"}>
                     {buttonHistory && buttonHistory.map((historyData: ButtonPressRecord, index: number) => {
                         return (
-                            <div className={"p-4 m-4 text-white " + historyData.color + " h-fit max-w-80 text-left"}>
+                            <div key={index} className={"p-4 m-4 text-white " + historyData.color + " h-fit max-w-80 text-left"}>
                                 <h3 className={"mr-auto font-bold text-xl"}>{historyData.name}</h3>
                                 <p>{historyData.tag}</p>
                             </div>
