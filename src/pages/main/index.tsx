@@ -9,6 +9,7 @@ import {
   useButtonPressedHistory,
   type ButtonPressRecord,
 } from "../../data/rollHistoryDAO.ts";
+import Sidebar from "./components/TagsSideBar/Sidebar.tsx";
 
 export function Main() {
   const [buttonList, updateButtonList] = useButtonList();
@@ -101,7 +102,7 @@ export function Main() {
           />
         ) : null}
       </div>
-      <div className={"w-90 h-screen bg-gray-600"}>
+      <Sidebar direction={"right"}>
         <ul
           id="history"
           className={
@@ -113,8 +114,12 @@ export function Main() {
               (historyData: ButtonPressRecord, index: number) => {
                 return (
                   <div
-                    className={`p-4 m-4 text-white ${historyData.color} h-fit max-w-80 text-left`}
                     key={index}
+                    className={
+                      "p-4 m-4 text-white " +
+                      historyData.color +
+                      " h-fit max-w-80 text-left"
+                    }
                   >
                     <h3 className={"mr-auto font-bold text-xl"}>
                       {historyData.name}
@@ -125,7 +130,7 @@ export function Main() {
               }
             )}
         </ul>
-      </div>
+      </Sidebar>
     </div>
   );
 }
