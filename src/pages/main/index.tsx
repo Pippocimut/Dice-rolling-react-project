@@ -1,11 +1,11 @@
-import { RollButton } from "./components/RollButton";
-import { useState } from "react";
-import { type ButtonData, useButtonList } from "../../data/buttonListDAO.ts";
-import { type Tag } from "../../data/tagsDAO.ts";
-import { CreateButtonDialog } from "./components/CreateButtonDialog";
-import { EditButtonDialog } from "./components/EditButtonDialog";
-import { TagsSideBar } from "./components/TagsSideBar";
-import { useButtonPressedHistory, type ButtonPressRecord } from "../../data/rollHistoryDAO.ts";
+import {RollButton} from "./components/RollButton";
+import {useState} from "react";
+import {type ButtonData, useButtonList} from "../../data/buttonListDAO.ts";
+import {type Tag} from "../../data/tagsDAO.ts";
+import {CreateButtonDialog} from "./components/CreateButtonDialog";
+import {EditButtonDialog} from "./components/EditButtonDialog";
+import {TagsSideBar} from "./components/TagsSideBar";
+import {useButtonPressedHistory, type ButtonPressRecord} from "../../data/rollHistoryDAO.ts";
 import Sidebar from "./components/TagsSideBar/Sidebar.tsx";
 
 export function Main() {
@@ -30,7 +30,7 @@ export function Main() {
 
     return (
         <div className={"flex flex-row h-screen w-full justify-start items-start"}>
-            <TagsSideBar selectedTag={selectedTag} setSelectedTag={setSelectedTag} />
+            <TagsSideBar selectedTag={selectedTag} setSelectedTag={setSelectedTag}/>
             <div className={"flex flex-col h-full gap-20 w-full items-center justify-around"}>
                 <ul id="buttons"
                     className={"flex flex-row flex-wrap gap-2 m-4 p-4 w-full justify-center items-center h-fit"}>
@@ -40,11 +40,11 @@ export function Main() {
                         }
                         return (<div className={"flex flex-row"} key={index}>
                             <RollButton rolls={buttonData.rolls} name={buttonData.name}
-                                deleteButton={() => removeButton(index)}
-                                editButton={() => editButton(index)}
-                                color={buttonData.color}
-                                tag={buttonData.tag}
-                                key={index} />
+                                        deleteButton={() => removeButton(index)}
+                                        editButton={() => editButton(index)}
+                                        color={buttonData.color}
+                                        tag={buttonData.tag}
+                                        key={index}/>
                         </div>)
                     })}
                     <button
@@ -57,7 +57,7 @@ export function Main() {
                 <CreateButtonDialog
                     isOpen={isOpenCreateDialog}
                     onClose={() => setIsOpenCreateDialog(false)}
-                    tag={selectedTag} />
+                    tag={selectedTag}/>
 
                 {selectedButtonIndex !== null ?
                     <EditButtonDialog
@@ -67,20 +67,29 @@ export function Main() {
                         deleteButton={() => {
                             updateButtonList(buttonList.filter((_: object, i: number) => i !== selectedButtonIndex))
                             setIsOpenEditDialog(false)
-                        }} /> : null}
+                        }}/> : null}
             </div>
             <Sidebar direction={"right"}>
-                <ul id="history"
-                    className={"flex flex-row flex-wrap gap-2 m-4 p-4 w-full justify-center items-center h-fit"}>
-                    {buttonHistory && buttonHistory.map((historyData: ButtonPressRecord, index: number) => {
-                        return (
-                            <div key={index} className={"p-4 m-4 text-white " + historyData.color + " h-fit max-w-80 text-left"}>
-                                <h3 className={"mr-auto font-bold text-xl"}>{historyData.name}</h3>
-                                <p>{historyData.tag}</p>
-                            </div>
-                        )
-                    })}
-                </ul>
+                {buttonHistory && buttonHistory.map((historyData: ButtonPressRecord, index: number) => {
+                    return (
+                        <div key={index}
+                             className={"p-4 w-full my-4 text-white " + historyData.color + " h-fit max-w-80 text-left"}>
+                            <h3 className={"mr-auto font-bold text-xl"}>{historyData.name}</h3>
+                            <p>{historyData.tag}</p>
+
+                            {historyData.rollResult && historyData.rollResult.map((rollResult, index) => {
+                                return (
+                                    <div key={index} className={"text-left py-4 px-4"}>
+                                        <p>Roll for: {rollResult.name}</p>
+                                        <p>Total: {rollResult.total}</p>
+                                        <p>With Advantage: {rollResult.totalAdv}</p>
+                                        <p>With Disadvantage: {rollResult.totalDis}</p>
+                                    </div>
+                                )
+                            })}
+                        </div>
+                    )
+                })}
             </Sidebar>
         </div>)
 }
