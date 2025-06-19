@@ -82,13 +82,13 @@ const RollButton = ({ rolls, name, editButton, color, tag }: Props) => {
       results.push({ name, total, totalAdv, totalDis });
 
       setButtonHistory([
+        ...buttonHistory,
         {
           name: name,
           color: color,
           tag: tag,
           rollResult: results,
         } as ButtonPressRecord,
-        ...buttonHistory,
       ]);
     }
 

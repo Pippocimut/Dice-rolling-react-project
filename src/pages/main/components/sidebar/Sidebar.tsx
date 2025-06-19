@@ -1,20 +1,36 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type Props = {
-  direction?: "left" | "right";
+  direction: "left" | "right";
   children: React.ReactNode;
 };
 
-const Sidebar = ({ children, direction = "left" }: Props) => {
+export default function Sidebar({ children, direction = "left" }: Props) {
   const [expanded, setExpanded] = useState(false);
+
+  const listRef = useRef<HTMLUListElement>(null);
+
+  // This effect will run when the component mounts and when children change
+  useEffect(() => {
+    if (listRef.current) {
+      listRef.current.scrollTop = listRef.current.scrollHeight;
+    }
+  }, [children, expanded]);
 
   return (
     <aside
       className={
-        "min-h-screen h-fit" + ` transition-all ${expanded ? "w-60" : "w-15"}`
+        "min-h-screen max-h-screen h-screen " +
+        ` transition-all ${expanded ? "w-120" : "w-15"}`
       }
     >
-      <nav className="min-h-screen h-full flex flex-col bg-neutral-700 border-r shadow-sm">
+      <nav
+        className={
+          "h-full flex flex-col bg-neutral-700 " +
+          (direction === "right" ? "border-l" : "border-r") +
+          " shadow-sm"
+        }
+      >
         <div
           className={
             "p-4 pb-2 flex " +
@@ -32,9 +48,9 @@ const Sidebar = ({ children, direction = "left" }: Props) => {
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
               className={
                 "icon icon-tabler icons-tabler-outline icon-tabler-menu-2"
               }
@@ -48,15 +64,14 @@ const Sidebar = ({ children, direction = "left" }: Props) => {
         </div>
 
         <ul
-          className={`flex-1 px-3 w-full ${
+          ref={listRef}
+          className={`flex-1 px-3 w-full my-6 ${
             expanded ? "block" : "hidden"
-          } transition-all`}
+          } transition-all h-full overflow-y-auto`}
         >
           {children}
         </ul>
       </nav>
     </aside>
   );
-};
-
-export default Sidebar;
+}
