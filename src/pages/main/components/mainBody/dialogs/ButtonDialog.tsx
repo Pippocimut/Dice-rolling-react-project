@@ -8,14 +8,22 @@ import {
 
 const ButtonDialog = ({
   isOpen,
+  onClose,
   children,
 }: {
   isOpen: boolean;
+  onClose: () => void;
   children: React.ReactNode;
 }) => {
   return (
     <Transition appear show={isOpen} as={Fragment}>
-      <Dialog as="div" className="relative z-50" onClose={() => {}}>
+      <Dialog
+        as="div"
+        className="relative z-50"
+        onClose={() => {
+          onClose();
+        }}
+      >
         <TransitionChild
           as={Fragment}
           enter="ease-out duration-300"

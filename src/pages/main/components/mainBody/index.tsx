@@ -48,15 +48,26 @@ const MainBody = ({ selectedTag }: Props) => {
         openCreateDialog={() => setIsOpenCreateDialog(true)}
       />
 
-      <ButtonDialog isOpen={isOpenCreateDialog || isOpenEditDialog}>
-        {isOpenCreateDialog && (
-          <ButtonCreatePopup
-            function={"create"}
-            onClose={() => setIsOpenCreateDialog(false)}
-            tag={selectedTag}
-          />
-        )}
-        {selectedButtonIndex !== null && isOpenEditDialog && (
+      <ButtonDialog
+        isOpen={isOpenCreateDialog}
+        onClose={() => {
+          setIsOpenCreateDialog(false);
+        }}
+      >
+        <ButtonCreatePopup
+          function={"create"}
+          onClose={() => setIsOpenCreateDialog(false)}
+          tag={selectedTag}
+        />
+      </ButtonDialog>
+
+      <ButtonDialog
+        isOpen={isOpenEditDialog}
+        onClose={() => {
+          setIsOpenEditDialog(false);
+        }}
+      >
+        {selectedButtonIndex !== null && (
           <ButtonCreatePopup
             function={"edit"}
             button={buttonList[selectedButtonIndex]}
