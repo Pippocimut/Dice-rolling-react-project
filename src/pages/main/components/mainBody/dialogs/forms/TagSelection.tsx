@@ -15,22 +15,27 @@ export const colors = [
   "bg-indigo-500",
 ];
 
-const TagSelection = ({
-  tag,
-  setTag,
-}: {
+type Props = {
   tag: Tag;
-  setTag: (value: Tag) => void;
-}) => {
+  setTag: (value: Tag) => void,
+};
+
+const TagSelection = ({ tag, setTag, }: Props) => {
+
   const [name, setName] = useState<string>(tag.name);
   const [color, setColor] = useState<string>(tag.color);
+
+  useEffect(() => {
+    setName(tag.name);
+    setColor(tag.color);
+  }, [tag]);
 
   useEffect(() => {
     setTag({
       name: name,
       color: color,
     });
-  }, [name, color]);
+  }, [name, color, setTag]);
 
   return (
     <div className={"flex flex-row gap-2 relative"}>

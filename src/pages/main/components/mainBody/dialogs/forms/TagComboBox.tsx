@@ -6,13 +6,12 @@ import {
 } from "@headlessui/react";
 import { useTags } from "../../../../../../data/tagsDAO";
 
-const TagComboBox = ({
-  tag,
-  setTag,
-}: {
+type Props = {
   tag: string;
   setTag: (value: string) => void;
-}) => {
+}
+
+const TagComboBox = ({ tag, setTag }: Props) => {
   const [tags] = useTags();
 
   const handleTagChange = (value: string | null) => {

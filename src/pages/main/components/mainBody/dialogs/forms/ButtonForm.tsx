@@ -7,21 +7,21 @@ import {
 import { type Tag, useTags } from "../../../../../../data/tagsDAO.ts";
 import type { Roll } from "../../../../types.ts";
 import RollInput from "./RollInput.tsx";
-import CreateDialog from "../CreateDialog.tsx";
+import CreateDialog from "../RollDialog.tsx";
 import TagSelection from "./TagComboBox.tsx";
 
 type Props =
   | {
-      function: "create";
-      onClose: () => void;
-      tag?: Tag;
-    }
+    function: "create";
+    onClose: () => void;
+    tag?: Tag;
+  }
   | {
-      function: "edit";
-      button?: ButtonData;
-      deleteButton: () => void;
-      onClose: () => void;
-    };
+    function: "edit";
+    button?: ButtonData;
+    deleteButton: () => void;
+    onClose: () => void;
+  };
 
 const ButtonForm = (props: Props) => {
   const [name, setName] = useState(
@@ -32,8 +32,8 @@ const ButtonForm = (props: Props) => {
     props.function === "edit"
       ? props.button?.color || ""
       : props.tag
-      ? props.tag.color
-      : colors[Math.floor(Math.random() * colors.length)]
+        ? props.tag.color
+        : colors[Math.floor(Math.random() * colors.length)]
   );
 
   const [rolls, setRolls] = useState<Roll[]>(
@@ -44,8 +44,8 @@ const ButtonForm = (props: Props) => {
     props.function === "edit"
       ? props.button?.tag || ""
       : props.tag
-      ? props.tag.name
-      : ""
+        ? props.tag.name
+        : ""
   );
 
   const [isOpenDialog, setIsOpenDialog] = useState(false);

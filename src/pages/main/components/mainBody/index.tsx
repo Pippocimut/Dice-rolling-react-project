@@ -2,7 +2,6 @@ import { useCallback, useState } from "react";
 import { useButtonList } from "../../../../data/buttonListDAO.ts";
 import type { Tag } from "../../../../data/tagsDAO.ts";
 import ButtonList from "./ButtonList.tsx";
-import ButtonForm from "./dialogs/forms/ButtonForm.tsx";
 import CreateButtonForm from "./dialogs/forms/CreateButtonForm.tsx";
 import ButtonDialog from "./dialogs/ButtonDialog.tsx";
 
@@ -36,11 +35,7 @@ const MainBody = ({ selectedTag }: Props) => {
   }, []);
 
   return (
-    <div
-      className={
-        "flex flex-col h-full gap-20 w-full items-center justify-around"
-      }
-    >
+    <div className={"flex flex-col h-full gap-20 w-full items-center justify-around"}>
       <ButtonList
         buttonList={buttonList}
         selectedTag={selectedTag}
@@ -56,8 +51,9 @@ const MainBody = ({ selectedTag }: Props) => {
         }}
       >
         <CreateButtonForm
-          onClose={() => setIsOpenCreateDialog(false)}
-          tag={selectedTag}
+          mode={"create"}
+          close={() => setIsOpenCreateDialog(false)}
+          selectedTag={selectedTag}
         />
       </ButtonDialog>
 
@@ -68,18 +64,10 @@ const MainBody = ({ selectedTag }: Props) => {
         }}
       >
         {selectedButtonIndex !== null && (
-          <ButtonForm
-            function={"edit"}
-            button={buttonList[selectedButtonIndex]}
-            deleteButton={() => {
-              updateButtonList(
-                buttonList.filter(
-                  (_: object, i: number) => i !== selectedButtonIndex
-                )
-              );
-              setIsOpenEditDialog(false);
-            }}
-            onClose={() => setIsOpenEditDialog(false)}
+          <CreateButtonForm
+            mode={"edit"}
+            close={() => setIsOpenEditDialog(false)}
+            selectedButton={buttonList[selectedButtonIndex]}
           />
         )}
       </ButtonDialog>

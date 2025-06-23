@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import {
   type ButtonData,
@@ -7,27 +7,45 @@ import {
 import { type Tag, useTags } from "../../../../../../data/tagsDAO.ts";
 import type { Roll } from "../../../../types.ts";
 import RollInput from "./RollInput.tsx";
-import CreateDialog from "../CreateDialog.tsx";
+import CreateDialog from "../RollDialog.tsx";
 import TagSelection, { colors } from "./TagSelection.tsx";
 import RollsList from "./RollsList.tsx";
 
 type Props = {
-  onClose: () => void;
-  tag?: Tag;
+  mode: "create";
+  close: () => void;
+  selectedTag?: Tag;
+  selectedButton?: never
+} | {
+  mode: "edit";
+  close: () => void;
+  selectedTag?: never;
+  selectedButton: ButtonData;
 };
 
-const CreateButtonForm = (props: Props) => {
+const CreateButtonForm = ({ mode, close, selectedTag, selectedButton }: Props) => {
+
   const [name, setName] = useState("");
-
   const [rolls, setRolls] = useState<Roll[]>([]);
+  const [tag, setTag] = useState<Tag>(
+    selectedTag ? selectedTag : {
+      name: "",
+      color: colors[Math.floor(Math.random() * colors.length)],
+    }
+  );
 
-  const [tag, setTag] = useState<Tag>({
-    name: "",
-    color: colors[Math.floor(Math.random() * colors.length)],
-  });
+  useEffect(() => {
+    if (mode === "edit") {
+      setName(selectedButton.name);
+      setRolls(selectedButton.rolls);
+      setTag({
+        name: selectedButton.tag || "",
+        color: selectedButton.color,
+      });
+    }
+  }, [selectedButton]);
 
   const [isOpenNewRollDialog, setIsOpenNewRollDialog] = useState(false);
-
   const [tags, updateTagList] = useTags();
   const [buttonList, updateButtonList] = useButtonList();
 
@@ -46,7 +64,7 @@ const CreateButtonForm = (props: Props) => {
       name: name,
       rolls: rolls,
       color: tag.color,
-      tag: tag ? tag.name : undefined,
+      tag: tag.name ? tag.name : undefined,
     };
 
     updateButtonList([...buttonList, newButton]);
@@ -62,17 +80,21 @@ const CreateButtonForm = (props: Props) => {
     }
 
     setRolls([]);
-    props.onClose();
+    close();
   };
 
+  const deleteButton = () => {
+    updateButtonList(
+      buttonList.filter((button: object) => button !== selectedButton)
+    );
+    close();
+  }
+
   return (
-    <div
-      className={
-        "flex flex-col gap-2 p-4 h-fit w-fit justify-center items-center"
-      }
-    >
+    <div className={"flex flex-col gap-2 p-4 h-fit w-fit justify-center items-center"}>
+
       <div className={"flex flex-row gap-2 w-full justify-end items-end"}>
-        <button className={"px-4 text-6xl"} onClick={props.onClose}>
+        <button className={"px-4 text-6xl"} onClick={close}>
           X
         </button>
       </div>
@@ -80,7 +102,7 @@ const CreateButtonForm = (props: Props) => {
       <div>
         <h1 className={"text-4xl font-bold"}>
           {" "}
-          Create Button
+          {selectedButton ? "Edit" : "Create"} Button
           {" "}
         </h1>
       </div>
@@ -92,6 +114,7 @@ const CreateButtonForm = (props: Props) => {
           }
           type={"text"}
           placeholder={"Button's Name"}
+          value={name}
           onChange={(e) => setName(e.target.value)}
         />
       </div>
@@ -115,9 +138,19 @@ const CreateButtonForm = (props: Props) => {
           className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
           onClick={createNewButton}
         >
-          Create Button
+          {mode === "edit" ? "Edit" : "Create"} Button
         </button>
+        {mode === "edit" && (
+          <button
+            id={"delete"}
+            className="mt-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+            onClick={deleteButton}
+          >
+            Delete Button
+          </button>
+        )}
       </div>
+
       <CreateDialog
         isOpen={isOpenNewRollDialog}
         onClose={() => setIsOpenNewRollDialog(false)}

@@ -1,4 +1,4 @@
-const CreateDialog = ({
+const RollDialog = ({
   isOpen,
   onClose,
   children,
@@ -25,4 +25,4 @@ const CreateDialog = ({
   );
 };
 
-export default CreateDialog;
+export default RollDialog;
