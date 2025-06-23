@@ -2,7 +2,7 @@ import {
   useButtonPressedHistory,
   type ButtonPressRecord,
 } from "../../../../data/rollHistoryDAO";
-import Sidebar from "./Sidebar";
+import Sidebar from "./Sidebar.tsx";
 
 const HistorySideBar = () => {
   const [buttonHistory] = useButtonPressedHistory();

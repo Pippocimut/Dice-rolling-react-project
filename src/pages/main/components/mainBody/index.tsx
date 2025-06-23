@@ -2,7 +2,8 @@ import { useCallback, useState } from "react";
 import { useButtonList } from "../../../../data/buttonListDAO.ts";
 import type { Tag } from "../../../../data/tagsDAO.ts";
 import ButtonList from "./ButtonList.tsx";
-import ButtonCreatePopup from "./dialogs/ButtonCreatePopup.tsx";
+import ButtonForm from "./dialogs/forms/ButtonForm.tsx";
+import CreateButtonForm from "./dialogs/forms/CreateButtonForm.tsx";
 import ButtonDialog from "./dialogs/ButtonDialog.tsx";
 
 type Props = {
@@ -54,8 +55,7 @@ const MainBody = ({ selectedTag }: Props) => {
           setIsOpenCreateDialog(false);
         }}
       >
-        <ButtonCreatePopup
-          function={"create"}
+        <CreateButtonForm
           onClose={() => setIsOpenCreateDialog(false)}
           tag={selectedTag}
         />
@@ -68,7 +68,7 @@ const MainBody = ({ selectedTag }: Props) => {
         }}
       >
         {selectedButtonIndex !== null && (
-          <ButtonCreatePopup
+          <ButtonForm
             function={"edit"}
             button={buttonList[selectedButtonIndex]}
             deleteButton={() => {

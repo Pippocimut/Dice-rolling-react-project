@@ -1,32 +1,14 @@
 import { useState } from "react";
-import {
-  Combobox,
-  ComboboxInput,
-  ComboboxOption,
-  ComboboxOptions,
-} from "@headlessui/react";
 import { toast } from "react-toastify";
 import {
   type ButtonData,
   useButtonList,
-} from "../../../../../data/buttonListDAO.ts";
-import { type Tag, useTags } from "../../../../../data/tagsDAO.ts";
-import type { Roll } from "../../../types.ts";
-import { RollInput } from "../RollInput.tsx";
-import { Index } from "./CreateDialog.tsx";
-
-const colors = [
-  "bg-red-500",
-  "bg-green-500",
-  "bg-blue-500",
-  "bg-yellow-500",
-  "bg-pink-500",
-  "bg-purple-500",
-  "bg-orange-500",
-  "bg-teal-500",
-  "bg-gray-500",
-  "bg-indigo-500",
-];
+} from "../../../../../../data/buttonListDAO.ts";
+import { type Tag, useTags } from "../../../../../../data/tagsDAO.ts";
+import type { Roll } from "../../../../types.ts";
+import RollInput from "./RollInput.tsx";
+import CreateDialog from "../CreateDialog.tsx";
+import TagSelection from "./TagComboBox.tsx";
 
 type Props =
   | {
@@ -41,7 +23,7 @@ type Props =
       onClose: () => void;
     };
 
-const ButtonCreatePopup = (props: Props) => {
+const ButtonForm = (props: Props) => {
   const [name, setName] = useState(
     props.function === "edit" ? props.button?.name || "" : ""
   );
@@ -91,9 +73,7 @@ const ButtonCreatePopup = (props: Props) => {
 
     if (props.function === "edit") {
       const newButtonList = buttonList.map((button: ButtonData) => {
-        if (props.button === undefined) return button;
-
-        if (button.name === props.button.name) {
+        if (props.button && button.name === props.button.name) {
           return newButton;
         }
         return button;
@@ -117,17 +97,6 @@ const ButtonCreatePopup = (props: Props) => {
     props.onClose();
   };
 
-  const handleTagChange = (value: string | null) => {
-    setTag(value ?? "");
-  };
-
-  const filteredTags =
-    tag == ""
-      ? tags
-      : tags.filter((tagI) =>
-          tagI.name.toLowerCase().includes(tag.toLowerCase())
-        );
-
   return (
     <div
       className={
@@ -139,12 +108,14 @@ const ButtonCreatePopup = (props: Props) => {
           X
         </button>
       </div>
+
       <div>
         <h1 className={"text-4xl font-bold"}>
           {" "}
           {props.function === "edit" ? "Edit Button" : "Create Button"}{" "}
         </h1>
       </div>
+
       <div className={"flex flex-row gap-2"}>
         <input
           className={
@@ -156,59 +127,19 @@ const ButtonCreatePopup = (props: Props) => {
           onChange={(e) => setName(e.target.value)}
         />
       </div>
-      <div className={"flex flex-row gap-2 relative"}>
-        <Combobox value={tag} onChange={handleTagChange}>
-          <ComboboxInput
-            placeholder={"Tag"}
-            onChange={(e) => setTag(e.target.value)}
-            className={
-              "p-4 mx-4 my-auto border-2 border-gray-500 rounded-lg w-60 text-left max-h-10 align-middle"
-            }
-            displayValue={(tag: string) => tag || ""}
-          />
-          {!(filteredTags.length === 0 && tag !== "") && (
-            <ComboboxOptions
-              className={
-                "absolute z-10 top-18 overflow-auto text-base shadow-lg ring-1 bg-neutral-800 ring-black ring-opacity-5 focus:outline-none sm:text-sm my-2 mx-4 border-2 border-gray-500 rounded-lg w-60 text-left"
-              }
-            >
-              {filteredTags.map((tag) => (
-                <ComboboxOption
-                  value={tag.name}
-                  key={tag.name}
-                  className={
-                    "cursor-pointer w-full select-none py-2 px-4  bg-neutral-800 hover:text-white hover:bg-neutral-500 rounded-md"
-                  }
-                >
-                  {tag.name}
-                </ComboboxOption>
-              ))}
-            </ComboboxOptions>
-          )}
-        </Combobox>
-        <select
-          className={"p-4 m-4 w-15 h-15 border-2 rounded-lg " + buttonColor}
-          value={buttonColor}
-          onChange={(e) => setButtonColor(e.target.value)}
-        >
-          {colors.map((color) => (
-            <option
-              value={color}
-              key={color}
-              className={"w-2 h-2 " + color}
-            ></option>
-          ))}
-        </select>
-      </div>
+
+      <TagSelection tag={tag} setTag={setTag} />
 
       <div className={"flex flex-row gap-2"}>
         <button className={"px-6 m-4"} onClick={() => setRolls([])}>
           Clear rolls
         </button>
+
         <button className={"px-6 m-4"} onClick={() => setIsOpenDialog(true)}>
           Add roll
         </button>
       </div>
+
       <div className={"flex flex-col gap-2 w-full"}>
         {rolls.map((roll, index) => (
           <div
@@ -263,16 +194,19 @@ const ButtonCreatePopup = (props: Props) => {
           </button>
         )}
       </div>
-      <Index isOpen={isOpenDialog} onClose={() => setIsOpenDialog(false)}>
+      <CreateDialog
+        isOpen={isOpenDialog}
+        onClose={() => setIsOpenDialog(false)}
+      >
         <RollInput
           createRoll={(roll: Roll) => {
             setRolls((prev) => [...prev, roll]);
             setIsOpenDialog(false);
           }}
         />
-      </Index>
+      </CreateDialog>
     </div>
   );
 };
 
-export default ButtonCreatePopup;
+export default ButtonForm;

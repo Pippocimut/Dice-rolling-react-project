@@ -3,7 +3,7 @@ import Sidebar from "./Sidebar.tsx";
 
 type Props = {
   selectedTag?: Tag;
-  setSelectedTag: (tag: Tag | undefined) => void;
+  setSelectedTag: (tag: Tag) => void;
 };
 
 const TagsSideBar = (props: Props) => {
