@@ -2,7 +2,7 @@ import { useCallback, useState } from "react";
 import { useButtonList } from "../../../../data/buttonListDAO.ts";
 import type { Tag } from "../../../../data/tagsDAO.ts";
 import ButtonList from "./ButtonList.tsx";
-import CreateButtonForm from "./dialogs/forms/CreateButtonForm.tsx";
+import CreateButtonForm from "./dialogs/forms/ButtonForm.tsx";
 import ButtonDialog from "./dialogs/ButtonDialog.tsx";
 
 type Props = {
@@ -35,7 +35,11 @@ const MainBody = ({ selectedTag }: Props) => {
   }, []);
 
   return (
-    <div className={"flex flex-col h-full gap-20 w-full items-center justify-around"}>
+    <div
+      className={
+        "flex flex-col h-full gap-20 w-full items-center justify-around"
+      }
+    >
       <ButtonList
         buttonList={buttonList}
         selectedTag={selectedTag}
@@ -67,7 +71,7 @@ const MainBody = ({ selectedTag }: Props) => {
           <CreateButtonForm
             mode={"edit"}
             close={() => setIsOpenEditDialog(false)}
-            selectedButton={buttonList[selectedButtonIndex]}
+            selectedButtonIndex={selectedButtonIndex}
           />
         )}
       </ButtonDialog>

@@ -1,7 +1,7 @@
 import type { Roll } from "../../../../types.ts";
 import { useState } from "react";
 
-const RollInput = ({ createRoll }: { createRoll: (roll: Roll) => void }) => {
+const RollForm = ({ createRoll }: { createRoll: (roll: Roll) => void }) => {
   const labelClassName = "text-left";
   const dieInputClassname =
     "p-4 w-50 border-2 border-gray-500 rounded-lg text-right";
@@ -49,4 +49,4 @@ const RollInput = ({ createRoll }: { createRoll: (roll: Roll) => void }) => {
   );
 };
 
-export default RollInput;
+export default RollForm;

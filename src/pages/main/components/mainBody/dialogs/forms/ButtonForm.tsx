@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import {
   type ButtonData,
@@ -6,52 +6,61 @@ import {
 } from "../../../../../../data/buttonListDAO.ts";
 import { type Tag, useTags } from "../../../../../../data/tagsDAO.ts";
 import type { Roll } from "../../../../types.ts";
-import RollInput from "./RollInput.tsx";
-import CreateDialog from "../RollDialog.tsx";
-import TagSelection from "./TagComboBox.tsx";
+import RollForm from "./RollForm.tsx";
+import RollDialog from "../RollDialog.tsx";
+import TagSelection, { colors } from "./TagSelection.tsx";
+import RollsList from "./RollsList.tsx";
 
 type Props =
   | {
-    function: "create";
-    onClose: () => void;
-    tag?: Tag;
-  }
+      mode: "create";
+      close: () => void;
+      selectedTag?: Tag;
+      selectedButtonIndex?: never;
+    }
   | {
-    function: "edit";
-    button?: ButtonData;
-    deleteButton: () => void;
-    onClose: () => void;
-  };
+      mode: "edit";
+      close: () => void;
+      selectedTag?: never;
+      selectedButtonIndex: number;
+    };
 
-const ButtonForm = (props: Props) => {
-  const [name, setName] = useState(
-    props.function === "edit" ? props.button?.name || "" : ""
+const ButtonForm = ({
+  mode,
+  close,
+  selectedTag,
+  selectedButtonIndex,
+}: Props) => {
+  const [name, setName] = useState("");
+  const [rolls, setRolls] = useState<Roll[]>([]);
+  const [tag, setTag] = useState<Tag>(
+    selectedTag
+      ? selectedTag
+      : {
+          name: "",
+          color: colors[Math.floor(Math.random() * colors.length)],
+        }
   );
+  const [deleted, setDeleted] = useState(false);
 
-  const [buttonColor, setButtonColor] = useState<string>(
-    props.function === "edit"
-      ? props.button?.color || ""
-      : props.tag
-        ? props.tag.color
-        : colors[Math.floor(Math.random() * colors.length)]
-  );
-
-  const [rolls, setRolls] = useState<Roll[]>(
-    props.function === "edit" ? props.button?.rolls || [] : []
-  );
-
-  const [tag, setTag] = useState<string>(
-    props.function === "edit"
-      ? props.button?.tag || ""
-      : props.tag
-        ? props.tag.name
-        : ""
-  );
-
-  const [isOpenDialog, setIsOpenDialog] = useState(false);
-
-  const [tags, updateTagList] = useTags();
   const [buttonList, updateButtonList] = useButtonList();
+  const selectedButton = useMemo(() => {
+    if (mode == "edit") return buttonList[selectedButtonIndex];
+  }, [mode, buttonList]);
+
+  useEffect(() => {
+    if (mode === "edit" && !deleted) {
+      setName(selectedButton.name);
+      setRolls(selectedButton.rolls);
+      setTag({
+        name: selectedButton.tag || "",
+        color: selectedButton.color,
+      });
+    }
+  }, [selectedButton]);
+
+  const [isOpenNewRollDialog, setIsOpenNewRollDialog] = useState(false);
+  const [tags, updateTagList] = useTags();
 
   const createNewButton = () => {
     if (name == "") {
@@ -67,13 +76,15 @@ const ButtonForm = (props: Props) => {
     const newButton: ButtonData = {
       name: name,
       rolls: rolls,
-      color: buttonColor,
-      tag: tag !== "" ? tag : undefined,
+      color: tag.color,
+      tag: tag.name ? tag.name : undefined,
     };
 
-    if (props.function === "edit") {
+    if (mode === "edit") {
       const newButtonList = buttonList.map((button: ButtonData) => {
-        if (props.button && button.name === props.button.name) {
+        if (selectedButton === undefined) return button;
+
+        if (button.name === selectedButton.name) {
           return newButton;
         }
         return button;
@@ -83,19 +94,27 @@ const ButtonForm = (props: Props) => {
       updateButtonList([...buttonList, newButton]);
     }
 
-    if (tag !== "" && !tags?.map((tag) => tag.name).includes(tag)) {
+    if (tag.name !== "" && !tags?.map((tag) => tag.name).includes(tag.name)) {
       updateTagList([
         ...tags,
         {
-          name: tag,
-          color: buttonColor,
+          name: tag.name,
+          color: tag.color,
         },
       ]);
     }
 
     setRolls([]);
-    props.onClose();
+    close();
   };
+
+  const deleteButton = useCallback(() => {
+    updateButtonList(
+      buttonList.filter((_: object, i: number) => i !== selectedButtonIndex)
+    );
+    setDeleted(true);
+    close();
+  }, [buttonList]);
 
   return (
     <div
@@ -104,15 +123,15 @@ const ButtonForm = (props: Props) => {
       }
     >
       <div className={"flex flex-row gap-2 w-full justify-end items-end"}>
-        <button className={"px-4 text-6xl"} onClick={props.onClose}>
-          X
+        <button className={"px-4 text-6xl"} onClick={close}>
+          ✕
         </button>
       </div>
 
       <div>
         <h1 className={"text-4xl font-bold"}>
           {" "}
-          {props.function === "edit" ? "Edit Button" : "Create Button"}{" "}
+          {mode === "edit" ? "Edit" : "Create"} Button{" "}
         </h1>
       </div>
 
@@ -135,76 +154,45 @@ const ButtonForm = (props: Props) => {
           Clear rolls
         </button>
 
-        <button className={"px-6 m-4"} onClick={() => setIsOpenDialog(true)}>
+        <button
+          className={"px-6 m-4"}
+          onClick={() => setIsOpenNewRollDialog(true)}
+        >
           Add roll
         </button>
       </div>
 
-      <div className={"flex flex-col gap-2 w-full"}>
-        {rolls.map((roll, index) => (
-          <div
-            key={index}
-            className={
-              "flex flex-col w-full justify-between items-center border-2 border-gray-500 rounded-lg shadow-lg"
-            }
-          >
-            <div
-              className={
-                "flex flex-row p-2 gap-2 w-full justify-between items-center"
-              }
-            >
-              <p className={"m-4"}>
-                {" "}
-                <span className={"font-bold"}>{roll.name}</span>:{" "}
-                {roll.equation.length > 20
-                  ? roll.equation.substring(0, 25) + "..."
-                  : roll.equation}{" "}
-              </p>
-              <button
-                className={
-                  "mt-2 w-10 bg-red-500 text-white rounded hover:bg-red-600 p-2"
-                }
-                onClick={() =>
-                  setRolls((prevRolls) =>
-                    prevRolls.filter((_, i) => i !== index)
-                  )
-                }
-              >
-                {" "}
-                X
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
+      <RollsList rolls={rolls} setRolls={setRolls} />
+
       <div className="p-4 flex flex-row gap-2 w-full justify-center items-center">
         <button
           className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
           onClick={createNewButton}
         >
-          {props.function === "edit" ? "Edit" : "Create"} Button
+          {mode === "edit" ? "Edit" : "Create"} Button
         </button>
-        {props.function === "edit" && (
+        {mode === "edit" && (
           <button
             id={"delete"}
             className="mt-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-            onClick={() => props.deleteButton()}
+            onClick={deleteButton}
           >
             Delete Button
           </button>
         )}
       </div>
-      <CreateDialog
-        isOpen={isOpenDialog}
-        onClose={() => setIsOpenDialog(false)}
+
+      <RollDialog
+        isOpen={isOpenNewRollDialog}
+        onClose={() => setIsOpenNewRollDialog(false)}
       >
-        <RollInput
+        <RollForm
           createRoll={(roll: Roll) => {
             setRolls((prev) => [...prev, roll]);
-            setIsOpenDialog(false);
+            setIsOpenNewRollDialog(false);
           }}
         />
-      </CreateDialog>
+      </RollDialog>
     </div>
   );
 };

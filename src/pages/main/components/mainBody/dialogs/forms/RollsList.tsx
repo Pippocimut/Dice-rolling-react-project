@@ -1,12 +1,19 @@
 import { useCallback } from "react";
 import type { Roll } from "../../../../types";
 
-
-const RollsList = ({ rolls, setRolls }: { rolls: Roll[], setRolls: React.Dispatch<React.SetStateAction<Roll[]>> }) => {
-
-  const handleDeleteRoll = useCallback((index: number) => {
-    setRolls((prevRolls) => prevRolls.filter((_, i) => i !== index));
-  }, [setRolls]);
+const RollsList = ({
+  rolls,
+  setRolls,
+}: {
+  rolls: Roll[];
+  setRolls: React.Dispatch<React.SetStateAction<Roll[]>>;
+}) => {
+  const handleDeleteRoll = useCallback(
+    (index: number) => {
+      setRolls((prevRolls) => prevRolls.filter((_, i) => i !== index));
+    },
+    [setRolls]
+  );
 
   return (
     <div className={"flex flex-col gap-2 w-full"}>
@@ -33,10 +40,12 @@ const RollsList = ({ rolls, setRolls }: { rolls: Roll[], setRolls: React.Dispatc
               className={
                 "mt-2 w-10 bg-red-500 text-white rounded hover:bg-red-600 p-2"
               }
-              onClick={() => { handleDeleteRoll(index); }}
+              onClick={() => {
+                handleDeleteRoll(index);
+              }}
             >
               {" "}
-              X
+              ✕
             </button>
           </div>
         </div>
