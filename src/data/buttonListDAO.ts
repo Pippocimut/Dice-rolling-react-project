@@ -1,23 +1,23 @@
-import {useCookies} from "react-cookie";
-import type {Roll} from "../pages/main/types.ts";
+import { useCookies } from "react-cookie";
+import type { Roll } from "../pages/main/types.ts";
 
 export type ButtonData = {
-    name: string,
-    rolls: Roll[],
-    color: string,
-    tag?: string,
-}
+  name: string;
+  rolls: Roll[];
+  color: string;
+  tag?: string;
+};
 
-export function useButtonList() {
-    const {0: cookies, 1: setCookie} = useCookies(["buttonList"]);
+export const useButtonList = () => {
+  const { 0: cookies, 1: setCookie } = useCookies(["buttonList"]);
 
-    if (!cookies.buttonList) {
-        setCookie("buttonList", []);
-    }
+  if (!cookies.buttonList) {
+    setCookie("buttonList", []);
+  }
 
-    const updateButtonList = (buttonList: ButtonData[]) => {
-        setCookie("buttonList", buttonList);
-    };
+  const updateButtonList = (buttonList: ButtonData[]) => {
+    setCookie("buttonList", buttonList);
+  };
 
-    return [cookies.buttonList, updateButtonList];
-}
+  return [cookies.buttonList, updateButtonList];
+};

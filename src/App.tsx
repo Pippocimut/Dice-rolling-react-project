@@ -1,14 +1,14 @@
-import './App.css'
-import {Main} from "./pages/main";
-import {ToastContainer} from "react-toastify";
+import "./App.css";
+import { Main } from "./pages/main";
+import { ToastContainer } from "react-toastify";
 
 function App() {
-    return (
-        <>
-            <ToastContainer/>
-            <Main/>
-        </>
-    )
+  return (
+    <>
+      <ToastContainer />
+      <Main />
+    </>
+  );
 }
 
-export default App
+export default App;
