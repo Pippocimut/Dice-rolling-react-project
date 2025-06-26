@@ -1,4 +1,3 @@
-import { toast } from "react-toastify";
 import type { Roll } from "../../types";
 import { evaluate } from "mathjs";
 import {
@@ -69,10 +68,6 @@ const calculateRolls = (rolls: Roll[]) => {
       }
     }
 
-    console.log(normaledEquation);
-    console.log(advantageEquation);
-    console.log(disadvantageEquation);
-
     total += evaluate(normaledEquation);
     totalAdv += evaluate(advantageEquation);
     totalDis += evaluate(disadvantageEquation);
@@ -98,19 +93,6 @@ const RollButton = ({ rolls, name, editButton, color, tag }: Props) => {
         rollResult: results,
       } as ButtonPressRecord,
     ]);
-
-    toast.success(
-      <div className={"flex flex-col items-start"}>
-        {results.map(({ name, total, totalAdv, totalDis }, index: number) => (
-          <div className={"text-left py-4"} key={index}>
-            <p>Roll for: {name}</p>
-            <p>Total: {total}</p>
-            <p>With Advantage: {totalAdv}</p>
-            <p>With Disadvantage: {totalDis}</p>
-          </div>
-        ))}
-      </div>
-    );
   }, [buttonHistory]);
 
   return (

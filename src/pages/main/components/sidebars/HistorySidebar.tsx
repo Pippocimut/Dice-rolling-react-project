@@ -8,7 +8,7 @@ const HistorySideBar = () => {
   const [buttonHistory] = useButtonPressedHistory();
 
   return (
-    <Sidebar direction={"right"}>
+    <Sidebar direction={"right"} defaulExpanded={true}>
       {buttonHistory &&
         buttonHistory.map((historyData: ButtonPressRecord, index: number) => {
           return (
