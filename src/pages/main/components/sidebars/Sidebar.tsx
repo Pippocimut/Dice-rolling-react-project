@@ -11,7 +11,6 @@ export default function Sidebar({children, direction = "left", defaulExpanded = 
 
     const listRef = useRef<HTMLUListElement>(null);
 
-    // This effect will run when the component mounts and when children change
     useEffect(() => {
         if (listRef.current) {
             listRef.current.scrollTop = listRef.current.scrollHeight;
