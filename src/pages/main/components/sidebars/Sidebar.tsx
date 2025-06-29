@@ -29,8 +29,7 @@ export default function Sidebar({children, direction = "left", defaulExpanded = 
                     "h-full flex flex-col bg-neutral-700 " +
                     (direction === "right" ? "border-l" : "border-r") +
                     " shadow-sm"
-                }
-            >
+                }>
                 <div
                     className={
                         "p-4 pb-2 flex " +
@@ -62,15 +61,9 @@ export default function Sidebar({children, direction = "left", defaulExpanded = 
                         </svg>
                     </button>
                 </div>
-
-                <ul
-                    ref={listRef}
-                    className={`flex-1 px-3 w-full my-6 ${
-                        expanded ? "block" : "hidden"
-                    } transition-all h-full overflow-y-auto`}
-                >
+                <div className={"flex-1 px-3 w-full h-full "+ (expanded ? "block" : "hidden")}>
                     {children}
-                </ul>
+                </div>
             </nav>
         </aside>
     );

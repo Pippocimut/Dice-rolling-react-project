@@ -8,8 +8,12 @@ type Props = {
 
 const TagsSideBar = (props: Props) => {
   const [tags, updateTags] = useTags();
+
   return (
     <Sidebar direction="left">
+      <ul
+          className={`flex-1 px-3 w-full my-6 block  transition-all h-full overflow-y-auto`}
+      >
       {tags.map((tag, index: number) => {
         if (tag.name !== "") {
           return (
@@ -44,6 +48,7 @@ const TagsSideBar = (props: Props) => {
         }
         return null;
       })}
+      </ul>
     </Sidebar>
   );
 };

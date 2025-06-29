@@ -6,7 +6,12 @@ export const useExportAll = () => {
     const [tags] = useTags();
 
     return {
-        buttonList: buttonList,
-        tags: tags,
+        sets: [{
+            name: "All" + Math.random().toString(36).substring(7),
+            data: {
+                buttonList: buttonList,
+                tags: tags,
+            }
+        }]
     }
 };
