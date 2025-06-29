@@ -5,12 +5,8 @@ export const useExportAll = () => {
     const [buttonList] = useButtonList();
     const [tags] = useTags();
 
-    const updateAll = () => {
-        throw new Error("Not implemented");
-    }
-
-    return [{
+    return {
         buttonList: buttonList,
         tags: tags,
-    }, updateAll]
+    }
 };
