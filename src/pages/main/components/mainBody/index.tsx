@@ -1,11 +1,13 @@
 import {useCallback, useState, useRef, useEffect} from "react";
-import {useButtonList} from "../../../../data/buttonListDAO.ts";
-import type {Tag} from "../../../../data/tagsDAO.ts";
+import {type ButtonData, useButtonList} from "../../../../data/buttonListDAO.ts";
+import {type Tag} from "../../../../data/tagsDAO.ts";
 import ButtonList from "./ButtonList.tsx";
 import CreateButtonForm from "./dialogs/forms/ButtonForm.tsx";
-import ButtonDialog from "./dialogs/ButtonDialog.tsx";
+import DefaultDialog from "./dialogs/DefaultDialog.tsx";
 import {useExportAll} from "../../../../data/exportAllDAO.ts";
 import { useImportAll } from "../../../../data/importAllDAO.ts";
+import ExportSelectForm from "./dialogs/forms/ExportSelectForm.tsx";
+import {toast} from "react-toastify";
 
 type Props = {
     selectedTag?: Tag;
@@ -15,13 +17,14 @@ const MainBody = ({selectedTag}: Props) => {
     const [buttonList, updateButtonList] = useButtonList();
     const [isOpenCreateDialog, setIsOpenCreateDialog] = useState(false);
     const [isOpenEditDialog, setIsOpenEditDialog] = useState(false);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+
     const exportAllData = useExportAll();
     const importAllData = useImportAll()
     const [selectedButtonIndex, setSelectedButtonIndex] = useState<number | null>(null);
 
     const exportLinkRef = useRef<HTMLAnchorElement | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
-
 
     useEffect(() => {
         // Create link if it doesn't exist yet
@@ -57,8 +60,16 @@ const MainBody = ({selectedTag}: Props) => {
         setIsOpenEditDialog(true);
     }, []);
 
-    const exportAll = useCallback(() => {
+    const exportAll = useCallback((tags:string[],buttons:string[]) => {
+        console.log("Doing the export")
         if (!exportLinkRef.current) return;
+
+        exportAllData.sets[0].data = {
+            buttonList: exportAllData.sets[0].data.buttonList.filter((button:ButtonData) => buttons.includes(button.name)),
+            tags: exportAllData.sets[0].data.tags.filter((tag:Tag) => tags.includes(tag.name))
+        }
+
+        console.log(exportAllData)
 
         const jsonData = JSON.stringify(exportAllData, null, 2);
         const blob = new Blob([jsonData], {type: 'application/json'});
@@ -115,7 +126,12 @@ const MainBody = ({selectedTag}: Props) => {
             />
 
             <div className={"flex flex-row items-center justify-center gap-20 w-full"}>
-                <button className={"w-fit border-2 border-gray-300 rounded-2xl p-4"} onClick={exportAll}>
+                <button className={"w-fit border-2 border-gray-300 rounded-2xl p-4"} onClick={() => {
+                    if (buttonList.length === 0)
+                        toast.error("You must have at least one button to export")
+                    else
+                        setIsDialogOpen(true)
+                }}>
                     Export
                 </button>
                 <button className={"w-fit border-2 border-gray-300 rounded-2xl p-4"} onClick={importAll}>
@@ -131,7 +147,7 @@ const MainBody = ({selectedTag}: Props) => {
                 openCreateDialog={() => setIsOpenCreateDialog(true)}
             />
 
-            <ButtonDialog
+            <DefaultDialog
                 isOpen={isOpenCreateDialog}
                 onClose={() => {
                     setIsOpenCreateDialog(false);
@@ -142,9 +158,9 @@ const MainBody = ({selectedTag}: Props) => {
                     close={() => setIsOpenCreateDialog(false)}
                     selectedTag={selectedTag}
                 />
-            </ButtonDialog>
+            </DefaultDialog>
 
-            <ButtonDialog
+            <DefaultDialog
                 isOpen={isOpenEditDialog}
                 onClose={() => {
                     setIsOpenEditDialog(false);
@@ -157,7 +173,11 @@ const MainBody = ({selectedTag}: Props) => {
                         selectedButtonIndex={selectedButtonIndex}
                     />
                 )}
-            </ButtonDialog>
+            </DefaultDialog>
+
+            <DefaultDialog isOpen={isDialogOpen} onClose={() => {setIsDialogOpen(false)}}>
+                <ExportSelectForm close={() => setIsDialogOpen(false)} exportAll={exportAll}/>
+            </DefaultDialog>
         </div>
     );
 };

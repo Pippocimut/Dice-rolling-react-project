@@ -5,7 +5,7 @@ import { ToastContainer } from "react-toastify";
 function App() {
   return (
     <>
-      <ToastContainer newestOnTop={true} limit={1}/>
+      <ToastContainer newestOnTop={true}/>
       <Main />
     </>
   );

@@ -23,7 +23,32 @@ export const useImportAll = () => {
 
         for (const set of data.sets) {
             newButtonList.push(...set.data.buttonList.filter(button => !buttonList.some((b: ButtonData) => b.name === button.name)));
-            newTags.push(...set.data.tags.filter(tag => !tags.some(t => t.name === tag.name)));
+
+            const setTags = set.data.tags.filter(tag => !tags.some(t => t.name === tag.name))
+
+            const buttonTags = set.data.buttonList.map((button: ButtonData) => {
+                if (!button.tag) return;
+                return {
+                    name: button.tag,
+                    color: button.color,
+                }
+            }).filter(tag => tag !== undefined)
+                .filter(tag => !tags.some(t => t.name === tag.name))
+                .reduce((acc: Tag[], curr: Tag) => {
+                    if (!curr) return acc;
+                    if (acc.some(t => t.name === curr.name)) {
+                        return acc;
+                    }
+                    return [...acc, curr];
+                }, [])
+
+            console.log(buttonTags);
+
+
+            const mergedTags = [...setTags, ...buttonTags.filter(tag => !setTags.some(t => t.name === tag.name))];
+
+            newTags.push(...mergedTags);
+
         }
 
         updateButtonList([
