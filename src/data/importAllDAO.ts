@@ -1,39 +1,27 @@
-import {type ButtonData, useButtonList} from "./buttonListDAO.ts";
-import {type Tag, useTags} from "./tagsDAO.ts";
 import {useCallback} from "react";
 
+import {useSelector} from "react-redux";
+import type {RootState} from "../store"; // Adjust the import path as needed
+import {updateButtonSets, type ButtonSet, type ButtonData, type Tag} from "../store/buttonSets/buttonSetSlice.ts";
+
 export type importType = {
-    sets: {
-        name: string,
-        data: {
-            buttonList: ButtonData[],
-            tags: Tag[],
-        }
-    }[]
+    sets: ButtonSet[]
 }
 
 export const useImportAll = () => {
-    const [buttonList, updateButtonList] = useButtonList();
-    const [tags, updateTags] = useTags();
+    const buttonSets = useSelector((state: RootState) => state.buttonSet.sets)
 
     return useCallback((data: importType) => {
 
-        const newButtonList: ButtonData[] = [];
-        const newTags: Tag[] = [];
-
+        //TODO: Make it so there is only 1 update at the end of the loop and not multiple inside the loop
         for (const set of data.sets) {
-            newButtonList.push(...set.data.buttonList.filter(button => !buttonList.some((b: ButtonData) => b.name === button.name)));
-
-            const setTags = set.data.tags.filter(tag => !tags.some(t => t.name === tag.name))
-
-            const buttonTags = set.data.buttonList.map((button: ButtonData) => {
+            set.tags = set.buttonList.map((button: ButtonData) => {
                 if (!button.tag) return;
                 return {
                     name: button.tag,
                     color: button.color,
                 }
             }).filter(tag => tag !== undefined)
-                .filter(tag => !tags.some(t => t.name === tag.name))
                 .reduce((acc: Tag[], curr: Tag) => {
                     if (!curr) return acc;
                     if (acc.some(t => t.name === curr.name)) {
@@ -42,24 +30,8 @@ export const useImportAll = () => {
                     return [...acc, curr];
                 }, [])
 
-            console.log(buttonTags);
-
-
-            const mergedTags = [...setTags, ...buttonTags.filter(tag => !setTags.some(t => t.name === tag.name))];
-
-            newTags.push(...mergedTags);
-
+            updateButtonSets([...buttonSets, set]);
         }
 
-        updateButtonList([
-            ...buttonList,
-            ...newButtonList,
-        ]);
-
-        updateTags([
-            ...tags,
-            ...newTags,
-        ]);
-
-    }, [buttonList, tags])
+    }, [buttonSets])
 };

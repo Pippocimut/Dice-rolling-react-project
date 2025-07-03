@@ -30,7 +30,6 @@ const calculateRolls = (rolls: Roll[]) => {
     let advantageEquation = "";
     let disadvantageEquation = "";
 
-    console.log(equation);
     const equationComponents = equation
       .split(/(\s*[+\-*/()^]\s*)/g)
       .filter(Boolean)

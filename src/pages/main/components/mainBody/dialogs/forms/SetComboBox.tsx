@@ -8,53 +8,48 @@ import {useSelector} from "react-redux";
 import type {RootState} from "../../../../../../store";
 
 type Props = {
-    selectedSet: string;
-    tag: string;
-    setTag: (value: string) => void;
+    set: string,
+    setSet: (value: string) => void;
 }
 
-const TagComboBox = ({tag, setTag, selectedSet}: Props) => {
-
+const TagComboBox = ({set, setSet}: Props) => {
     const buttonSets = useSelector((state: RootState) => state.buttonSet.sets)
 
-    const tags = buttonSets.find((buttonSet) => buttonSet.name === selectedSet)?.tags ?? []
+    const setsList = buttonSets.map((buttonSet) => buttonSet.name)
 
-    const handleTagChange = (value: string | null) => {
-        setTag(value ?? "");
+    const handleSetChange = (value: string | null) => {
+        setSet(value ?? "");
     };
 
-    const filteredTags = tags.filter((tagI) =>{
-        console.log(tags)
-        console.log(tagI)
-        return tagI.name.toLowerCase().includes(tag.toLowerCase())
-    }
+    const filteredSets = setsList.filter((setI) =>
+        setI.toLowerCase().includes(set.toLowerCase())
     );
 
     return (
-        <Combobox value={tag} onChange={handleTagChange}>
+        <Combobox value={set} onChange={handleSetChange}>
             <ComboboxInput
                 placeholder={"Tag"}
-                onChange={(e) => setTag(e.target.value)}
+                onChange={(e) => setSet(e.target.value)}
                 className={
                     "p-4 mx-4 my-auto border-2 border-gray-500 rounded-lg w-60 text-left max-h-10 align-middle"
                 }
                 displayValue={(tag: string) => tag || ""}
             />
-            {!(filteredTags.length === 0 && tag !== "") && (
+            {!(filteredSets.length === 0 && set !== "") && (
                 <ComboboxOptions
                     className={
-                        "absolute z-10 top-18 overflow-auto text-base shadow-lg ring-1 bg-neutral-800 ring-black ring-opacity-5 focus:outline-none sm:text-sm my-2 mx-4 border-2 border-gray-500 rounded-lg w-60 text-left"
+                        " overflow-auto text-base shadow-lg ring-1 bg-neutral-800 ring-black ring-opacity-5 focus:outline-none sm:text-sm my-2 mx-4 border-2 border-gray-500 rounded-lg w-60 text-left"
                     }
                 >
-                    {filteredTags.map((tag) => (
+                    {filteredSets.map((set) => (
                         <ComboboxOption
-                            value={tag.name}
-                            key={tag.name}
+                            value={set}
+                            key={set}
                             className={
                                 "cursor-pointer w-full select-none py-2 px-4  bg-neutral-800 hover:text-white hover:bg-neutral-500 rounded-md"
                             }
                         >
-                            {tag.name}
+                            {set}
                         </ComboboxOption>
                     ))}
                 </ComboboxOptions>

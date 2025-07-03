@@ -1,5 +1,5 @@
 import { useCookies } from "react-cookie";
-import type { ButtonData } from "./buttonListDAO.ts";
+import type {ButtonData} from "../store/buttonSets/buttonSetSlice.ts";
 
 export type RollResult = {
   name: string;

@@ -1,15 +1,14 @@
 import {useCallback, useEffect, useMemo, useState} from "react";
 import {toast} from "react-toastify";
-import {
-    type ButtonData,
-    useButtonList,
-} from "../../../../../../data/buttonListDAO.ts";
-import {type Tag, useTags} from "../../../../../../data/tagsDAO.ts";
 import type {Roll} from "../../../../types.ts";
 import RollForm from "./RollForm.tsx";
 import RollDialog from "../RollDialog.tsx";
 import TagSelection, {colors} from "./TagSelection.tsx";
 import RollsList from "./RollsList.tsx";
+import type {ButtonData, ButtonSet, Tag} from "../../../../../../store/buttonSets/buttonSetSlice.ts";
+import {useDispatch, useSelector} from "react-redux";
+import type {RootState} from "../../../../../../store/index.ts";
+import {updateButtonSets} from "../../../../../../store/buttonSets/buttonSetSlice.ts";
 
 type Props =
     | {
@@ -17,12 +16,14 @@ type Props =
     close: () => void;
     selectedTag?: Tag;
     selectedButtonIndex?: never;
+    selectedButtonSetIndex: number;
 }
     | {
     mode: "edit";
     close: () => void;
     selectedTag?: never;
     selectedButtonIndex: number;
+    selectedButtonSetIndex: number;
 };
 
 const ButtonForm = ({
@@ -30,9 +31,16 @@ const ButtonForm = ({
                         close,
                         selectedTag,
                         selectedButtonIndex,
+                        selectedButtonSetIndex
                     }: Props) => {
+
+    const buttonSets = useSelector((state: RootState) => state.buttonSet.sets)
+
+
     const [name, setName] = useState("");
     const [rolls, setRolls] = useState<Roll[]>([]);
+    const dispatch = useDispatch();
+    const [set, setSet] = useState<string>(buttonSets[selectedButtonSetIndex]?.name || "Default")
     const [tag, setTag] = useState<Tag>(
         selectedTag
             ? selectedTag
@@ -43,24 +51,25 @@ const ButtonForm = ({
     );
     const [deleted, setDeleted] = useState(false);
 
-    const [buttonList, updateButtonList] = useButtonList();
     const selectedButton = useMemo(() => {
-        if (mode == "edit") return buttonList[selectedButtonIndex];
-    }, [mode, buttonList]);
+        if (mode == "edit") {
+            return buttonSets[selectedButtonSetIndex].buttonList[selectedButtonIndex];
+        }
+    }, [mode, buttonSets]);
 
     useEffect(() => {
-        if (mode === "edit" && !deleted) {
+        if (mode === "edit" && !deleted && selectedButton !== undefined) {
             setName(selectedButton.name);
             setRolls(selectedButton.rolls);
             setTag({
                 name: selectedButton.tag || "",
                 color: selectedButton.color,
             });
+            setSet(buttonSets[selectedButtonSetIndex].name);
         }
     }, [selectedButton]);
 
     const [isOpenNewRollDialog, setIsOpenNewRollDialog] = useState(false);
-    const [tags, updateTagList] = useTags();
 
     const createNewButton = () => {
         if (name == "") {
@@ -81,7 +90,7 @@ const ButtonForm = ({
         };
 
         if (mode === "edit") {
-            const newButtonList = buttonList.map((button: ButtonData) => {
+            const newButtonList = buttonSets[selectedButtonSetIndex].buttonList.map((button: ButtonData) => {
                 if (selectedButton === undefined) return button;
 
                 if (button.name === selectedButton.name) {
@@ -89,19 +98,46 @@ const ButtonForm = ({
                 }
                 return button;
             });
-            updateButtonList(newButtonList);
-        } else {
-            updateButtonList([...buttonList, newButton]);
-        }
 
-        if (tag.name !== "" && !tags?.map((tag) => tag.name).includes(tag.name)) {
-            updateTagList([
-                ...tags,
-                {
+            const {tags} = {...buttonSets[selectedButtonSetIndex]};
+
+            if (tag.name !== "" &&
+                !tags?.map((tag) => tag.name).includes(tag.name)) {
+                buttonSets[selectedButtonSetIndex].tags.push({
                     name: tag.name,
                     color: tag.color,
-                },
-            ]);
+                });
+            }
+
+            const updatedButtonSet = {
+                ...buttonSets[selectedButtonSetIndex],
+                buttonList: newButtonList,
+                tags: tags
+            };
+
+            const newButtonSets = buttonSets.map((set, idx) =>
+                idx === selectedButtonSetIndex ? updatedButtonSet : set
+            );
+
+            dispatch(updateButtonSets(newButtonSets));
+        } else {
+            if (!set) return
+            const indexOfButtonSet = buttonSets.findIndex((setObject: ButtonSet) => setObject.name === set)
+            if (indexOfButtonSet === -1) {
+                throw new Error("Button set not found")
+            }
+
+            const updatedButtonSet = {
+                ...buttonSets[indexOfButtonSet],
+                buttonList: [...buttonSets[indexOfButtonSet].buttonList, newButton],
+                tags: [...buttonSets[indexOfButtonSet].tags, tag]
+            };
+
+            const newButtonSets = buttonSets.map((set, idx) =>
+                idx === indexOfButtonSet ? updatedButtonSet : set
+            );
+
+            dispatch(updateButtonSets(newButtonSets));
         }
 
         setRolls([]);
@@ -109,12 +145,11 @@ const ButtonForm = ({
     };
 
     const deleteButton = useCallback(() => {
-        updateButtonList(
-            buttonList.filter((_: object, i: number) => i !== selectedButtonIndex)
-        );
+        buttonSets[selectedButtonSetIndex].buttonList = buttonSets[selectedButtonSetIndex].buttonList.filter((_: object, i: number) => i !== selectedButtonIndex)
+        updateButtonSets(buttonSets);
         setDeleted(true);
         close();
-    }, [buttonList]);
+    }, [buttonSets]);
 
     return (
         <div className={"flex flex-col gap-2 p-4 h-fit w-fit justify-center items-center"}>
@@ -131,7 +166,7 @@ const ButtonForm = ({
                 </h1>
             </div>
 
-            <div className={"flex flex-row gap-2"}>
+            <div className={"flex flex-col gap-2"}>
                 <input
                     className={
                         "p-4 m-4 w-70 border-2 border-gray-500 rounded-lg text-left"
@@ -143,7 +178,8 @@ const ButtonForm = ({
                 />
             </div>
 
-            <TagSelection tag={tag} setTag={setTag}/>
+            <TagSelection tag={tag} setTag={setTag}
+                          selectedSet={buttonSets[selectedButtonSetIndex]?.name || "Default"}/>
 
             <div className={"flex flex-row gap-2"}>
                 <button className={"px-6 m-4"} onClick={() => setRolls([])}>

@@ -1,25 +1,33 @@
 import {useCallback, useState, useRef, useEffect} from "react";
-import {type ButtonData, useButtonList} from "../../../../data/buttonListDAO.ts";
-import {type Tag} from "../../../../data/tagsDAO.ts";
 import ButtonList from "./ButtonList.tsx";
 import CreateButtonForm from "./dialogs/forms/ButtonForm.tsx";
 import DefaultDialog from "./dialogs/DefaultDialog.tsx";
-import {useExportAll} from "../../../../data/exportAllDAO.ts";
-import { useImportAll } from "../../../../data/importAllDAO.ts";
+import {useImportAll} from "../../../../data/importAllDAO.ts";
 import ExportSelectForm from "./dialogs/forms/ExportSelectForm.tsx";
 import {toast} from "react-toastify";
+import {
+    type ButtonData,
+    type ButtonSet,
+    type Tag,
+    updateButtonSets
+} from "../../../../store/buttonSets/buttonSetSlice.ts";
+import {useDispatch, useSelector} from "react-redux";
+import type {RootState} from "../../../../store";
 
 type Props = {
     selectedTag?: Tag;
+    selectedSet?: string
 };
 
-const MainBody = ({selectedTag}: Props) => {
-    const [buttonList, updateButtonList] = useButtonList();
+const MainBody = ({selectedTag, selectedSet}: Props) => {
+    const dispatch = useDispatch();
+
+    const buttonSets = useSelector((state: RootState) => state.buttonSet.sets)
+
     const [isOpenCreateDialog, setIsOpenCreateDialog] = useState(false);
     const [isOpenEditDialog, setIsOpenEditDialog] = useState(false);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-    const exportAllData = useExportAll();
     const importAllData = useImportAll()
     const [selectedButtonIndex, setSelectedButtonIndex] = useState<number | null>(null);
 
@@ -45,14 +53,14 @@ const MainBody = ({selectedTag}: Props) => {
     }, []);
 
     const removeButton = useCallback(
-        (index: number) => {
-            updateButtonList(
-                buttonList.filter((_: object, i: number) => i !== index)
-            );
+        (index: number,) => {
+            const indexOfButtonSet = buttonSets.findIndex((setObject: ButtonSet) => setObject.name === selectedSet)
+            const newButtonList = buttonSets[indexOfButtonSet].buttonList.filter((button: object, i: number) => i !== index)
+            dispatch(updateButtonSets(newButtonList));
             setIsOpenEditDialog(false);
             setSelectedButtonIndex(null);
         },
-        [buttonList]
+        [buttonSets]
     );
 
     const editButton = useCallback((index: number) => {
@@ -60,18 +68,36 @@ const MainBody = ({selectedTag}: Props) => {
         setIsOpenEditDialog(true);
     }, []);
 
-    const exportAll = useCallback((tags:string[],buttons:string[]) => {
-        console.log("Doing the export")
+    const exportAll = useCallback((tags: string[], buttons: string[], setName: string) => {
+
         if (!exportLinkRef.current) return;
 
-        exportAllData.sets[0].data = {
-            buttonList: exportAllData.sets[0].data.buttonList.filter((button:ButtonData) => buttons.includes(button.name)),
-            tags: exportAllData.sets[0].data.tags.filter((tag:Tag) => tags.includes(tag.name))
-        }
+        const buttonListExport = buttonSets.reduce((acc: ButtonData[], set) => {
+            acc.push(...set.buttonList.filter((button: ButtonData) => buttons.includes(button.name)))
+            return acc
+        }, [])
+        const tagsExport = buttonSets.reduce((acc: Tag[], set) => {
+            acc.push(...set.tags.filter((tag: Tag) => tags.includes(tag.name)))
+            return acc
+        }, [])
 
-        console.log(exportAllData)
+        const exportSet = {
+            name: setName,
+            buttonList: buttonListExport,
+            tags: [...tagsExport, ...buttonListExport.reduce((acc: Tag[], button: ButtonData) => {
+                if (button.tag && !tags.includes(button.tag) && !tagsExport.map((tag) => tag.name).includes(button.tag)) {
+                    acc.push({
+                        name: button.tag,
+                        color: button.color,
+                    })
+                }
+                return acc
+            }, [])
+    ]
+    }
 
-        const jsonData = JSON.stringify(exportAllData, null, 2);
+
+        const jsonData = JSON.stringify(exportSet, null, 2);
         const blob = new Blob([jsonData], {type: 'application/json'});
         const url = URL.createObjectURL(blob);
 
@@ -79,7 +105,7 @@ const MainBody = ({selectedTag}: Props) => {
         exportLinkRef.current.click();
 
         URL.revokeObjectURL(url);
-    }, [exportAllData]);
+    }, [buttonSets]);
 
     const handleFileSelected = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
@@ -110,7 +136,6 @@ const MainBody = ({selectedTag}: Props) => {
     }, []);
 
 
-
     return (
         <div
             className={
@@ -122,12 +147,12 @@ const MainBody = ({selectedTag}: Props) => {
                 type="file"
                 accept=".json,application/json"
                 onChange={handleFileSelected}
-                style={{ display: 'none' }}
+                style={{display: 'none'}}
             />
 
             <div className={"flex flex-row items-center justify-center gap-20 w-full"}>
                 <button className={"w-fit border-2 border-gray-300 rounded-2xl p-4"} onClick={() => {
-                    if (buttonList.length === 0)
+                    if (buttonSets.length === 0)
                         toast.error("You must have at least one button to export")
                     else
                         setIsDialogOpen(true)
@@ -140,7 +165,7 @@ const MainBody = ({selectedTag}: Props) => {
             </div>
 
             <ButtonList
-                buttonList={buttonList}
+                buttonSetName={selectedSet || "Default"}
                 selectedTag={selectedTag}
                 removeButton={removeButton}
                 editButton={editButton}
@@ -157,6 +182,7 @@ const MainBody = ({selectedTag}: Props) => {
                     mode={"create"}
                     close={() => setIsOpenCreateDialog(false)}
                     selectedTag={selectedTag}
+                    selectedButtonSetIndex={buttonSets.findIndex((set) => set.name === selectedSet)}
                 />
             </DefaultDialog>
 
@@ -171,11 +197,14 @@ const MainBody = ({selectedTag}: Props) => {
                         mode={"edit"}
                         close={() => setIsOpenEditDialog(false)}
                         selectedButtonIndex={selectedButtonIndex}
+                        selectedButtonSetIndex={buttonSets.findIndex((set) => set.name === selectedSet)}
                     />
                 )}
             </DefaultDialog>
 
-            <DefaultDialog isOpen={isDialogOpen} onClose={() => {setIsDialogOpen(false)}}>
+            <DefaultDialog isOpen={isDialogOpen} onClose={() => {
+                setIsDialogOpen(false)
+            }}>
                 <ExportSelectForm close={() => setIsDialogOpen(false)} exportAll={exportAll}/>
             </DefaultDialog>
         </div>
