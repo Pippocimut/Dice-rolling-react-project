@@ -25,7 +25,7 @@ const RollForm = ({ createRoll }: { createRoll: (roll: Roll) => void }) => {
       <input
         type={"text"}
         placeholder={"Roll Name"}
-        value={"New roll"}
+        value={roll.name}
         className={dieInputClassname}
         onChange={handleNameChange}
       />

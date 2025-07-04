@@ -24,17 +24,14 @@ const TagComboBox = ({tag, setTag, selectedSet}: Props) => {
     };
 
     const filteredTags = tags.filter((tagI) =>{
-        console.log(tags)
-        console.log(tagI)
         return tagI.name.toLowerCase().includes(tag.toLowerCase())
-    }
-    );
+    });
 
     return (
         <Combobox value={tag} onChange={handleTagChange}>
             <ComboboxInput
                 placeholder={"Tag"}
-                onChange={(e) => setTag(e.target.value)}
+                onChange={(e) => setTag("-1@"+e.target.value)}
                 className={
                     "p-4 mx-4 my-auto border-2 border-gray-500 rounded-lg w-60 text-left max-h-10 align-middle"
                 }
@@ -48,7 +45,7 @@ const TagComboBox = ({tag, setTag, selectedSet}: Props) => {
                 >
                     {filteredTags.map((tag) => (
                         <ComboboxOption
-                            value={tag.name}
+                            value={`${tag.id}@${tag.name}`}
                             key={tag.name}
                             className={
                                 "cursor-pointer w-full select-none py-2 px-4  bg-neutral-800 hover:text-white hover:bg-neutral-500 rounded-md"

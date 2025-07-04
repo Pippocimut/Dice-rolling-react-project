@@ -1,9 +1,15 @@
 import {configureStore} from "@reduxjs/toolkit";
-import buttonSetReducer from "./buttonSets/buttonSetSlice.ts"
+import buttonSetReducer from "./button-sets/buttonSetSlice.ts"
+import exportMenuReducer from "./export-menu/exportMenuSlice.ts"
+import historySidebarReducer from "./history-sidebar/historySidebarSlice.ts";
+import selectedReducer from "./selected/selectedSlice.ts";
 
 export const store = configureStore({
     reducer: {
-        buttonSet: buttonSetReducer
+        buttonSet: buttonSetReducer,
+        exportMenu: exportMenuReducer,
+        historySidebar: historySidebarReducer,
+        selected: selectedReducer
     },
 })
 

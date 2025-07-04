@@ -1,7 +1,7 @@
 import RollButton from "./RollButton";
 import type {RootState} from "../../../../store";
 import {useSelector} from "react-redux";
-import type {ButtonData, Tag} from "../../../../store/buttonSets/buttonSetSlice.ts";
+import type {ButtonData, Tag} from "../../../../store/button-sets/buttonSetSlice.ts";
 import {useMemo} from "react";
 
 type Props = {
@@ -33,7 +33,7 @@ const ButtonList = ({
         >
             {buttonSet &&
                 buttonSet.buttonList.map((buttonData: ButtonData, index: number) => {
-                    if (!selectedTag || buttonData.tag === selectedTag.name) {
+                    if (!selectedTag || buttonData.tag === selectedTag.id) {
                         return (
                             <div className={"flex flex-row"} key={index}>
                                 <RollButton
