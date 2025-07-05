@@ -36,7 +36,7 @@ const historySidebarSlice = createSlice({
         clearHistory: (state) => {
             state.rollHistory = [];
             state.extended = false;
-            document.cookie = "buttonPressHistory=";
+            document.cookie = "buttonPressHistory="+JSON.stringify(state.rollHistory);
         },
         addRoll: (state, action) => {
             state.rollHistory.push(action.payload);

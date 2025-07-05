@@ -64,17 +64,17 @@ const MainBody = () => {
         setIsOpenEditDialog(true);
     }, []);
 
-    const exportAll = useCallback((tags: string[], buttons: string[], setName: string) => {
+    const exportAll = useCallback((tags: number[], buttons: number[], setName: string) => {
 
         if (!exportLinkRef.current) return;
 
         const buttonListExport = buttonSets.reduce((acc: ButtonData[], set) => {
-            acc.push(...set.buttonList.filter((button: ButtonData) => buttons.includes(button.name) && !acc.map((b) => b.name).includes(button.name)))
+            acc.push(...set.buttonList.filter((button: ButtonData) => buttons.includes(button.id)))
             return acc
         }, [])
 
         const tagsExport = buttonSets.reduce((acc: Tag[], set) => {
-            acc.push(...set.tags.filter((tag: Tag) => tags.includes(tag.name) && !acc.map((t) => t.name).includes(tag.name)))
+            acc.push(...set.tags.filter((tag: Tag) => tags.includes(tag.id)))
             return acc
         }, [])
 

@@ -23,15 +23,17 @@ const TagComboBox = ({tag, setTag, selectedSet}: Props) => {
         setTag(value ?? "");
     };
 
-    const filteredTags = tags.filter((tagI) =>{
-        return tagI.name.toLowerCase().includes(tag.toLowerCase())
+    const filteredTags = tags.filter((tagI) => {
+        const name = tagI.name.split("@")[1]
+        if (!name || name === "") return true
+        return tagI.name.toLowerCase().includes(name.toLowerCase())
     });
 
     return (
         <Combobox value={tag} onChange={handleTagChange}>
             <ComboboxInput
                 placeholder={"Tag"}
-                onChange={(e) => setTag("-1@"+e.target.value)}
+                onChange={(e) => setTag("-1@" + e.target.value)}
                 className={
                     "p-4 mx-4 my-auto border-2 border-gray-500 rounded-lg w-60 text-left max-h-10 align-middle"
                 }

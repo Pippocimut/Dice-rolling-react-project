@@ -18,14 +18,14 @@ export type ButtonData = {
 export type ButtonSet = {
     id: number;
     name: string;
-    nextButtonId: number;
-    nextTagId: number;
     tags: Tag[];
     buttonList: ButtonData[];
 }
 
 interface buttonSetState {
     nextSetId: number;
+    nextButtonId: number;
+    nextTagId: number;
     sets: ButtonSet[]
 }
 
@@ -33,11 +33,11 @@ const initialState: buttonSetState =
     document.cookie.includes("buttonSetsList") ? JSON.parse(decodeURIComponent(document.cookie.split("buttonSetsList=")[1].split(';')[0])) as buttonSetState
         : {
             nextSetId: 1,
+            nextTagId: 4,
+            nextButtonId: 1,
             sets:
                 [{
                     id: 1,
-                    nextButtonId: 1,
-                    nextTagId: 4,
                     name: "Default",
                     tags: [
                         {
@@ -87,7 +87,7 @@ const buttonSetSlice = createSlice({
             if (index === -1) return;
 
             if (tag.id === -1) {
-                tag.id = set.nextTagId++;
+                tag.id = state.nextTagId++;
                 set.tags.push(tag)
             }
 
@@ -106,7 +106,7 @@ const buttonSetSlice = createSlice({
 
             if (set.tags.find(t => t.name === tag.name)) return;
 
-            tag.id = set.nextTagId++;
+            tag.id = state.nextTagId++;
             set.tags.push(tag);
 
             document.cookie = "buttonSetsList=" + JSON.stringify(state);
@@ -120,11 +120,11 @@ const buttonSetSlice = createSlice({
             if (!set) return;
 
             if (tag.id === -1) {
-                tag.id = set.nextTagId++;
+                tag.id = state.nextTagId++;
                 set.tags.push(tag);
             }
 
-            button.id = set.nextButtonId++;
+            button.id = state.nextButtonId++;
             button.tag = tag.id;
 
             set.buttonList.push(button);
@@ -135,22 +135,22 @@ const buttonSetSlice = createSlice({
             const set = action.payload;
             set.id = state.nextSetId;
             state.nextSetId++;
-            set.nextButtonId = 0;
-            set.nextTagId = 0;
+            state.nextButtonId = 0;
+            state.nextTagId = 0;
 
             set.tags = set.tags.map((tag: Tag) => {
-                set.nextTagId++;
+                state.nextTagId++;
                 return {
                     ...tag,
-                    id: set.nextTagId
+                    id: state.nextTagId
                 }
             })
 
             set.buttonList = set.buttonList.map((button: ButtonData) => {
-                set.nextButtonId++;
+                state.nextButtonId++;
                 return {
                     ...button,
-                    id: set.nextButtonId
+                    id: state.nextButtonId
                 }
             })
 

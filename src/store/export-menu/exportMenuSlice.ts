@@ -2,9 +2,9 @@ import {createSlice} from "@reduxjs/toolkit";
 import type {ButtonData, ButtonSet, Tag} from "../button-sets/buttonSetSlice.ts";
 
 export type exportMenuState = {
-    sets: string[],
-    tags: Record<string, string[]>,
-    buttons: Record<string, string[]>
+    sets: number[],
+    tags: Record<number, number[]>,
+    buttons: Record<number, number[]>
 }
 
 const initialState: exportMenuState = {
@@ -19,45 +19,45 @@ const buttonSetSlice = createSlice({
     reducers: {
         onCheckedSetChange: (state, action: { payload: ButtonSet }) => {
             const newSet = action.payload;
-            if (state.sets?.includes(newSet.name)) {
-                state.sets = state.sets.filter((checkedSet) => checkedSet !== newSet.name)
+            if (state.sets?.includes(newSet.id)) {
+                state.sets = state.sets.filter((checkedSet) => checkedSet !== newSet.id)
             } else {
-                state.sets.push(newSet.name);
-                state.tags[newSet.name] = [...state.tags[newSet.name] ?? [], ...newSet.tags.map(tag => tag.name)];
-                state.buttons[newSet.name] = [...state.buttons[newSet.name] ?? [], ...newSet.buttonList.map(button => button.name)];
+                state.sets.push(newSet.id);
+                state.tags[newSet.id] = [...state.tags[newSet.id] ?? [], ...newSet.tags.map(tag => tag.id)];
+                state.buttons[newSet.id] = [...state.buttons[newSet.id] ?? [], ...newSet.buttonList.map(button => button.id)];
             }
         },
         onCheckedTagsChange: (state, action: {
-            payload: { setName: string, newTag: Tag, relatedButtons: string[] }
+            payload: { setID: number, newTag: Tag, relatedButtons: number[] }
         }) => {
-            const {setName, newTag, relatedButtons} = action.payload;
+            const {setID, newTag, relatedButtons} = action.payload;
 
-            if (state.tags[setName]?.includes(newTag.name)) {
-                state.sets = state.sets.filter((checkedSet) => checkedSet != setName)
-                state.tags[setName] = state.tags[setName].filter((checkedTag) => checkedTag !== newTag.name)
+            if (state.tags[setID]?.includes(newTag.id)) {
+                state.sets = state.sets.filter((checkedSet) => checkedSet != setID)
+                state.tags[setID] = state.tags[setID].filter((checkedTag) => checkedTag !== newTag.id)
 
             } else {
 
-                state.tags[setName] = state.tags[setName] ?? []
-                state.tags[setName].push(newTag.name)
+                state.tags[setID] = state.tags[setID] ?? []
+                state.tags[setID].push(newTag.id)
 
-                state.buttons[setName] = state.buttons[setName] ?? []
-                state.buttons[setName]?.push(...relatedButtons)
+                state.buttons[setID] = state.buttons[setID] ?? []
+                state.buttons[setID]?.push(...relatedButtons)
             }
 
         },
         onCheckedButtonsChange: (state, action: {
-            payload: { setName: string, newButton: ButtonData }
+            payload: { setID: number, newButton: ButtonData }
         }) => {
-            const {setName, newButton} = action.payload;
-            if (state.buttons[setName]?.includes(newButton.name)) {
-                state.sets = state.sets.filter((checkedSet) => checkedSet != setName);
-                state.buttons[setName] = state.buttons[setName]?.filter((checkedButton) => checkedButton !== newButton.name) ?? []
-                state.tags[setName] = state.tags[setName]?.filter((checkedTag) => checkedTag != newButton.tag) ?? [];
+            const {setID, newButton} = action.payload;
+            if (state.buttons[setID]?.includes(newButton.id)) {
+                state.sets = state.sets.filter((checkedSet) => checkedSet != setID);
+                state.buttons[setID] = state.buttons[setID]?.filter((checkedButton) => checkedButton !== newButton.id) ?? []
+                state.tags[setID] = state.tags[setID]?.filter((checkedTag) => checkedTag != newButton.tag) ?? [];
 
             } else {
-                state.buttons[setName] = state.buttons[setName] ?? [];
-                state.buttons[setName].push(newButton.name);
+                state.buttons[setID] = state.buttons[setID] ?? [];
+                state.buttons[setID].push(newButton.id);
             }
         },
         selectAllSets: (state, action: {
@@ -65,18 +65,18 @@ const buttonSetSlice = createSlice({
         }) => {
             const {buttonSets} = action.payload
 
-            state.sets = buttonSets.map(set => set.name)
+            state.sets = buttonSets.map(set => set.id)
             state.tags = {
                 ...buttonSets.reduce((acc, set) => {
-                    acc[set.name] = set.tags.map(tag => tag.name)
+                    acc[set.id] = set.tags.map(tag => tag.id)
                     return acc
-                }, {} as Record<string, string[]>)
+                }, {} as Record<number, number[]>)
             }
             state.buttons = {
                 ...buttonSets.reduce((acc, set) => {
-                    acc[set.name] = set.buttonList.map(button => button.name)
+                    acc[set.id] = set.buttonList.map(button => button.id)
                     return acc
-                }, {} as Record<string, string[]>)
+                }, {} as Record<number, number[]>)
             }
         },
         clearAll: (state) => {

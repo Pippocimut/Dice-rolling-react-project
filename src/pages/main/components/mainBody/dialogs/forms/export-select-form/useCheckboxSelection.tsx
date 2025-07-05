@@ -18,14 +18,14 @@ function useCheckboxSelection() {
     return {
         checkedData,
         onCheckedSetChange: (set: ButtonSet) => dispatch(onCheckedSetChange(set)),
-        onCheckedTagsChange: (setName: string) => (newTag: Tag) => dispatch(onCheckedTagsChange({
-            setName,
+        onCheckedTagsChange: (setID: number) => (newTag: Tag) => dispatch(onCheckedTagsChange({
+            setID,
             newTag,
-            relatedButtons: buttonSets.find(buttonSet => buttonSet.name === setName)?.buttonList.filter(button => button.tag === newTag.id).map(button => button.name) ?? []
+            relatedButtons: buttonSets.find(buttonSet => buttonSet.id === setID)?.buttonList.filter(button => button.tag === newTag.id).map(button => button.id) ?? []
         })),
-        onCheckedButtonsChange: (setName: string) => (newButton: ButtonData) => dispatch(
+        onCheckedButtonsChange: (setID: number) => (newButton: ButtonData) => dispatch(
             onCheckedButtonsChange({
-                setName,
+                setID,
                 newButton
             })
         ),

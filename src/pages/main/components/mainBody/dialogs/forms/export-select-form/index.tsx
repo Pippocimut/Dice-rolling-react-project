@@ -7,7 +7,7 @@ import {SetList} from "./SetList.tsx";
 
 type Props = {
     close: () => void,
-    exportData: (tags: string[], buttons: string[], setName: string) => void,
+    exportData: (tags: number[], buttons: number[], setName: string) => void,
 }
 
 export default function Index({close, exportData}: Props) {
@@ -30,12 +30,12 @@ export default function Index({close, exportData}: Props) {
             return;
         }
 
-        const allTags = Object.entries(checkedData.tags).reduce((acc: string[], {1: value}) => {
+        const allTags = Object.entries(checkedData.tags).reduce((acc: number[], {1: value}) => {
             acc.push(...value)
             return acc
         }, [])
 
-        const allButtons = Object.entries(checkedData.buttons).reduce((acc: string[], {1: value}) => {
+        const allButtons = Object.entries(checkedData.buttons).reduce((acc: number[], {1: value}) => {
             acc.push(...value)
             return acc
         }, [])
