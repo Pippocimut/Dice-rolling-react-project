@@ -8,7 +8,8 @@ export type RollResult = {
     totalDis: number;
 };
 
-export type ButtonPressRecord = Omit<ButtonData, "rolls"> & {
+export type ButtonPressRecord = Omit<ButtonData, "rolls" | "id"> & {
+    username: string;
     date: string;
     rollResult: RollResult[];
 };
@@ -36,9 +37,9 @@ const historySidebarSlice = createSlice({
         clearHistory: (state) => {
             state.rollHistory = [];
             state.extended = false;
-            document.cookie = "buttonPressHistory="+JSON.stringify(state.rollHistory);
+            document.cookie = "buttonPressHistory=" + JSON.stringify(state.rollHistory);
         },
-        addRoll: (state, action) => {
+        addRoll: (state, action: { payload: ButtonPressRecord }) => {
             state.rollHistory.push(action.payload);
             state.extended = true;
             document.cookie = "buttonPressHistory=" + JSON.stringify(state.rollHistory);

@@ -1,9 +1,14 @@
 import type {Roll} from "../../types";
 import {evaluate} from "mathjs";
-import {useCallback} from "react";
+import {useContext} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {addRoll, type RollResult} from "../../../../store/history-sidebar/historySidebarSlice.ts";
+import {
+    addRoll,
+    type ButtonPressRecord,
+    type RollResult
+} from "../../../../store/history-sidebar/historySidebarSlice.ts";
 import type {RootState} from "../../../../store";
+import {SocketContext} from "../../../../context/SocketContext.ts";
 
 type Props = {
     rolls: Roll[];
@@ -77,22 +82,31 @@ const calculateRolls = (rolls: Roll[]) => {
 };
 
 const RollButton = ({rolls, name, editButton, color, tag}: Props) => {
-    const buttonHistory = useSelector((state: RootState) => state.historySidebar.rollHistory)
+    const userName = useSelector((state: RootState) => state.socket.userName)
+    const {emitRoll} = useContext(SocketContext)
     const dispatch = useDispatch()
 
-    const handleOnClick = useCallback(() => {
+    const handleOnClick = () => {
+        console.log("clicked")
         const results: RollResult[] = calculateRolls(rolls);
         const date = new Date();
 
-        dispatch(addRoll({
+        const roll: ButtonPressRecord = {
+            username: "You",
             name: name,
             color: color,
             tag: tag,
             date: date.toLocaleString(),
             rollResult: results,
-        }))
+        }
 
-    }, [buttonHistory]);
+        dispatch(addRoll(roll))
+        emitRoll({
+            ...roll,
+            username: userName ?? "Anonymous"
+        })
+
+    };
 
     return (
         <button

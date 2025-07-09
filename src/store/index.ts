@@ -3,13 +3,15 @@ import buttonSetReducer from "./button-sets/buttonSetSlice.ts"
 import exportMenuReducer from "./export-menu/exportMenuSlice.ts"
 import historySidebarReducer from "./history-sidebar/historySidebarSlice.ts";
 import selectedReducer from "./selected/selectedSlice.ts";
+import socketReducer from "./socket/socketSlice.ts";
 
 export const store = configureStore({
     reducer: {
         buttonSet: buttonSetReducer,
         exportMenu: exportMenuReducer,
         historySidebar: historySidebarReducer,
-        selected: selectedReducer
+        selected: selectedReducer,
+        socket: socketReducer
     },
 })
 

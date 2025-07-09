@@ -94,6 +94,7 @@ const HistorySideBar = () => {
                                         >
 
                                             <p className={"ml-auto text-sm w-fit"}>{historyData.date}</p>
+                                            <p>From: {historyData.username}</p>
                                             <h3 className={"mr-auto font-bold text-xl"}>
                                                 {historyData.name}
                                             </h3>

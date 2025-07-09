@@ -1,4 +1,4 @@
-import {useCallback, useState, useRef, useEffect} from "react";
+import {useCallback, useState, useRef, useEffect, useContext} from "react";
 import ButtonList from "./ButtonList.tsx";
 import CreateButtonForm from "./dialogs/forms/ButtonForm.tsx";
 import DefaultDialog from "./dialogs/DefaultDialog.tsx";
@@ -13,9 +13,17 @@ import {
 } from "../../../../store/button-sets/buttonSetSlice.ts";
 import {useDispatch, useSelector} from "react-redux";
 import type {RootState} from "../../../../store";
+import {SocketContext} from "../../../../context/SocketContext.ts";
+import {emitUserName} from "../../../../store/socket/socketSlice.ts";
 
 const MainBody = () => {
     const dispatch = useDispatch();
+
+    const {roomName: roomNameFromStore, userName: userNameFromStore} = useSelector((state: RootState) => state.socket)
+
+    const [roomName, setRoomName] = useState("Default");
+
+    const {connect} = useContext(SocketContext);
 
     const buttonSets = useSelector((state: RootState) => state.buttonSet.sets)
     const selectedTag = useSelector((state: RootState) => state.selected.selectedTag)
@@ -137,18 +145,47 @@ const MainBody = () => {
                 style={{display: 'none'}}
             />
 
-            <div className={"flex flex-row items-center justify-center gap-20 w-full"}>
-                <button className={"w-fit border-2 border-gray-300 rounded-2xl p-4"} onClick={() => {
-                    if (buttonSets.length === 0)
-                        toast.error("You must have at least one button to export")
-                    else
-                        setIsDialogOpen(true)
-                }}>
-                    Export
-                </button>
-                <button className={"w-fit border-2 border-gray-300 rounded-2xl p-4"} onClick={importAll}>
-                    Import
-                </button>
+            <div className={"flex flex-col gap-20"}>
+                <div className={"flex flex-col gap-4 w-full"}>
+                    <h2 className={"text-4xl font-bold"}>
+                        Current Room: {roomNameFromStore}
+                    </h2>
+                    <label className={"text-2xl"}>
+                        Your Name: {userNameFromStore}
+                    </label>
+                    <input
+                        className={"w-fit border-2 border-gray-300 rounded-2xl p-4 mx-auto"}
+                        type={"text"} placeholder={"Enter a room name"} value={userNameFromStore} onChange={(e) => {
+                        dispatch(emitUserName(e.target.value))
+                    }}/>
+                </div>
+
+
+                <div className={"flex flex-row items-center justify-center gap-20 w-full"}>
+                    <button className={"w-fit border-2 border-gray-300 rounded-2xl p-4"} onClick={() => {
+                        if (buttonSets.length === 0)
+                            toast.error("You must have at least one button to export")
+                        else
+                            setIsDialogOpen(true)
+                    }}>
+                        Export
+                    </button>
+                    <button className={"w-fit border-2 border-gray-300 rounded-2xl p-4"} onClick={importAll}>
+                        Import
+                    </button>
+                    <div className={"w-fit border-2 border-gray-300 rounded-2xl p-4"}>
+
+                        <input type={"text"} placeholder={"Enter a room name"} value={roomName}
+                               onChange={(e) => setRoomName(e.target.value)}/>
+                        <button onClick={() => {
+                            if (connect) {
+                                connect(roomName);
+                            }
+                        }}>
+                            Connect to room
+                        </button>
+                    </div>
+                </div>
             </div>
 
             <ButtonList
