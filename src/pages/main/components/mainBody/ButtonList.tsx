@@ -4,10 +4,13 @@ import {useSelector} from "react-redux";
 import type {ButtonData, Tag} from "../../../../store/button-sets/buttonSetSlice.ts";
 import {useMemo} from "react";
 
+import {SortableList} from "./dnd/SortableList.tsx";
+
 type Props = {
     buttonSetName: string;
     selectedTag?: Tag;
     removeButton: (index: number) => void;
+    updateButtons: (buttonList: ButtonData[]) => void;
     editButton: (index: number) => void;
     openCreateDialog: () => void;
 };
@@ -17,6 +20,7 @@ const ButtonList = ({
                         selectedTag,
                         removeButton,
                         editButton,
+                        updateButtons,
                         openCreateDialog,
                     }: Props) => {
     const buttonSets = useSelector((state: RootState) => state.buttonSet.sets)
@@ -24,41 +28,35 @@ const ButtonList = ({
         return buttonSets.find((buttonSet) => buttonSet.name === buttonSetName) || null;
     }, [buttonSets, buttonSetName]);
 
+    const items = buttonSet?.buttonList.map((buttonData: ButtonData) => {
+        if (!selectedTag || buttonData.tag === selectedTag.id) {
+            return buttonData
+        }
+    }).filter(item => item !== undefined) ?? []
+
     return (
-        <ul
-            id="buttons"
-            className={
-                "flex flex-row flex-wrap gap-2 m-4 p-4 w-full justify-center items-center h-fit"
+        <SortableList
+            openCreateDialog={openCreateDialog}
+            items={items}
+            onChange={updateButtons}
+            renderItem={(buttonData) => {
+                return (
+                    <SortableList.Item id={buttonData.id}>
+                        <div className={"flex flex-row"} key={buttonData.id}>
+                            <RollButton
+                                rolls={buttonData.rolls}
+                                name={buttonData.name}
+                                deleteButton={() => removeButton(buttonData.id)}
+                                editButton={() => editButton(buttonData.id)}
+                                color={buttonData.color}
+                                tag={buttonData.tag}
+                                key={buttonData.id}
+                            />
+                        </div>
+                    </SortableList.Item>)
             }
-        >
-            {buttonSet &&
-                buttonSet.buttonList.map((buttonData: ButtonData, index: number) => {
-                    if (!selectedTag || buttonData.tag === selectedTag.id) {
-                        return (
-                            <div className={"flex flex-row"} key={index}>
-                                <RollButton
-                                    rolls={buttonData.rolls}
-                                    name={buttonData.name}
-                                    deleteButton={() => removeButton(index)}
-                                    editButton={() => editButton(index)}
-                                    color={buttonData.color}
-                                    tag={buttonData.tag}
-                                    key={index}
-                                />
-                            </div>
-                        );
-                    }
-                })
             }
-            <button
-                className={
-                    "w-30 h-30 flex items-center justify-center bg-neutral-700 hover:outline-2 rounded-lg"
-                }
-                onClick={openCreateDialog}
-            >
-                <span className={"text-6xl pb-3"}>✚</span>
-            </button>
-        </ul>
+        />
     );
 };
 

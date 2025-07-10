@@ -4,15 +4,15 @@ import type {Socket} from "socket.io-client";
 
 export type SocketContextType = {
     socket: Socket | null,
-    connect: (roomName: string) => void,
+    connect: (roomName: string,userName:string) => void,
     disconnect: () => void,
     emitRoll: (data: ButtonPressRecord) => void,
 }
 
 export const SocketContext = createContext<SocketContextType>({
     socket: null,
-    connect: (roomName: string) => {
-        console.log("connecting: to room: " + roomName);
+    connect: (roomName: string, userName:string) => {
+        console.log(`connecting: ${userName} to room:  ${roomName}`);
     },
     disconnect: () => {
     },

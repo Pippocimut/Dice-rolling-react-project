@@ -30,13 +30,13 @@ const HistorySideBar = () => {
     return (
         <aside
             className={
-                "min-h-screen max-h-screen h-screen " +
-                ` transition-all ${sidebarExtended ? "w-140" : "w-15"}`
+                "min-h-screen transition-all" +
+                ` transition-all ${sidebarExtended ? "w-150" : "w-15"}`
             }
         >
             <nav
                 className={
-                    "h-full flex flex-col bg-neutral-700 border-l shadow-sm"
+                    "min-h-screen h-full flex flex-col bg-neutral-700 border-l"
                 }>
                 <div
                     className={
@@ -66,7 +66,7 @@ const HistorySideBar = () => {
 
                     </button>
                 </div>
-                <div className={"flex-1 px-3 w-full h-full " + (sidebarExtended ? "block" : "hidden")}>
+                <div className={"flex-1  w-full h-full " + (sidebarExtended ? "block" : "hidden")}>
                     <div className="flex flex-col h-full w-full">
                         <button className={"w-full p-4"} onClick={() => {
                             dispatch(clearHistory())

@@ -9,6 +9,7 @@ import {
 } from "../../../../store/history-sidebar/historySidebarSlice.ts";
 import type {RootState} from "../../../../store";
 import {SocketContext} from "../../../../context/SocketContext.ts";
+import {SortableItemContext} from "./dnd/SortableItem.tsx";
 
 type Props = {
     rolls: Roll[];
@@ -87,7 +88,6 @@ const RollButton = ({rolls, name, editButton, color, tag}: Props) => {
     const dispatch = useDispatch()
 
     const handleOnClick = () => {
-        console.log("clicked")
         const results: RollResult[] = calculateRolls(rolls);
         const date = new Date();
 
@@ -108,14 +108,17 @@ const RollButton = ({rolls, name, editButton, color, tag}: Props) => {
 
     };
 
+
+    const {attributes, listeners, ref} = useContext(SortableItemContext);
+
     return (
-        <button
-            className={`w-30 h-30 rounded-lg ${color} hover:outline-2 `}
-            onClick={handleOnClick}
-            onContextMenu={(e) => {
-                e.preventDefault();
-                editButton();
-            }}
+        <button {...attributes} {...listeners} ref={ref}
+                className={`w-30 h-30 rounded-lg ${color} hover:outline-2 `}
+                onClick={handleOnClick}
+                onContextMenu={(e) => {
+                    e.preventDefault();
+                    editButton();
+                }}
         >
             <span className={"text-xl"}>{name} </span>
         </button>

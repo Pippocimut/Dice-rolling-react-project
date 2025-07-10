@@ -131,6 +131,18 @@ const buttonSetSlice = createSlice({
 
             document.cookie = "buttonSetsList=" + JSON.stringify(state);
         },
+        sendNewButtonList: (state, action) => {
+            const {
+                setName,
+                buttons
+            } = action.payload;
+
+            const setIndex = state.sets.findIndex(set => set.name === setName);
+            if (setIndex === -1) return;
+            state.sets[setIndex].buttonList = buttons;
+
+            document.cookie = "buttonSetsList=" + JSON.stringify(state);
+        },
         addNewSet: (state, action: { payload: ButtonSet }) => {
             const set = action.payload;
             set.id = state.nextSetId;
@@ -158,12 +170,13 @@ const buttonSetSlice = createSlice({
         },
         deleteButtonOfSet: (state, action) => {
             const setName = action.payload.setName;
-            const index = action.payload.index;
+            const id = action.payload.id;
 
-            const set = state.sets.find(set => set.name === setName);
-            if (!set) return;
+            const findIndex = state.sets.findIndex(set => set.name === setName);
+            if (findIndex === -1) return;
 
-            set.buttonList.splice(index, 1);
+            state.sets[findIndex].buttonList = state.sets[findIndex].buttonList.filter(button => button.id !== id);
+
             document.cookie = "buttonSetsList=" + JSON.stringify(state);
         },
         deleteTagOfSet: (state, action) => {
@@ -182,11 +195,11 @@ const buttonSetSlice = createSlice({
 export const {
     updateButtonSets,
     addButtonToSet,
-    addTagToSet,
     updateButtonOfSet,
     deleteButtonOfSet,
     deleteTagOfSet,
-    addNewSet
+    addNewSet,
+    sendNewButtonList
 } = buttonSetSlice.actions
 
 export default buttonSetSlice.reducer

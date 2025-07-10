@@ -19,14 +19,14 @@ type Props =
     mode: "create";
     close: () => void;
     selectedTag?: Tag;
-    selectedButtonIndex?: never;
+    selectedButtonId?: never;
     selectedSetName: string;
 }
     | {
     mode: "edit";
     close: () => void;
     selectedTag?: never;
-    selectedButtonIndex: number;
+    selectedButtonId: number;
     selectedSetName: string;
 };
 
@@ -34,7 +34,7 @@ const ButtonForm = ({
                         mode,
                         close,
                         selectedTag,
-                        selectedButtonIndex,
+                        selectedButtonId,
                         selectedSetName
                     }: Props) => {
 
@@ -44,10 +44,10 @@ const ButtonForm = ({
 
         const selectedButton = useMemo(() => {
             if (mode == "edit") {
-                if (selectedButtonIndex === undefined || selectedButtonIndex === -1) return undefined;
-                return buttonSets.find((set) => set.name === selectedSetName)!.buttonList[selectedButtonIndex];
+                if (selectedButtonId === undefined || selectedButtonId === -1) return undefined;
+                return buttonSets.find((set) => set.name === selectedSetName)!.buttonList.find((button) => button.id === selectedButtonId);
             }
-        }, [mode, buttonSets, selectedButtonIndex]);
+        }, [mode, buttonSets, selectedButtonId]);
 
         const isEditing = mode === "edit" && selectedButton !== undefined;
         const [name, setName] = useState(isEditing ? selectedButton.name : "");
@@ -95,7 +95,7 @@ const ButtonForm = ({
         };
 
         const deleteButton = useCallback(() => {
-            dispatch(deleteButtonOfSet({setName: selectedSetName, index: selectedButtonIndex}))
+            dispatch(deleteButtonOfSet({setName: selectedSetName, id: selectedButtonId}))
             close();
         }, [buttonSets]);
 

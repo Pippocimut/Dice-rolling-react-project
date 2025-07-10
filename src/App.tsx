@@ -9,6 +9,7 @@ function App() {
             <SocketProvider>
                 <ToastContainer newestOnTop={true}/>
                 <Main/>
+
             </SocketProvider>
         </>
     );

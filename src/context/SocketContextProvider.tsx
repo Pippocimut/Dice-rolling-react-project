@@ -3,16 +3,17 @@ import {io, Socket} from 'socket.io-client';
 import {SocketContext} from './SocketContext';
 import {addRoll, type ButtonPressRecord} from "../store/history-sidebar/historySidebarSlice.ts";
 import {useDispatch} from "react-redux";
-import {emitRoomName} from "../store/socket/socketSlice.ts";
+import {emitRoomName, emitUserName} from "../store/socket/socketSlice.ts";
 
-const SOCKET_SERVER_URL = 'https://socket-dice-server-819188550192.europe-west1.run.app';
+const SOCKET_SERVER_URL = "localhost:3000"
+//'https://socket-dice-server-819188550192.europe-west1.run.app';
 
 export const SocketProvider = ({children}: { children: ReactNode }) => {
 
     const [socket, setSocket] = useState<Socket | null>(null);
     const dispatch = useDispatch()
 
-    const connect = (roomName: string) => {
+    const connect = (roomName: string,userName:string) => {
         // Disconnect existing connection if any
         if (socket) {
             socket.disconnect();
@@ -30,6 +31,7 @@ export const SocketProvider = ({children}: { children: ReactNode }) => {
 
         setSocket(newSocket);
         dispatch(emitRoomName(roomName))
+        dispatch(emitUserName(userName))
     };
 
     const disconnect = () => {

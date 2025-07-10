@@ -3,6 +3,9 @@ import type {RootState} from "../../../../store";
 import {deleteTagOfSet} from "../../../../store/button-sets/buttonSetSlice.ts";
 import {setSelectedTag, setSelectedSet} from "../../../../store/selected/selectedSlice.ts";
 import {useEffect, useRef, useState} from "react";
+import {Settings} from "./components/Settings.tsx";
+import {Connect} from "./components/Connect.tsx";
+
 
 const TagsSideBar = () => {
     const buttonSets = useSelector((state: RootState) => state.buttonSet.sets)
@@ -25,17 +28,16 @@ const TagsSideBar = () => {
         }
     }, [tagList, currentSet, expanded]);
 
-
     return (
-        <aside
+        <div
             className={
-                "min-h-screen max-h-screen h-screen " +
-                ` transition-all ${expanded ? "w-120" : "w-15"}`
+                " min-h-screen bg-neutral-700 border-r" +
+                ` transition-all ${expanded ? "w-150" : "w-15"}`
             }
         >
             <nav
                 className={
-                    "h-full flex flex-col bg-neutral-700  border-r shadow-sm"
+                    "flex-1 flex-col h-full w-full"
                 }>
                 <div
                     className={
@@ -67,14 +69,15 @@ const TagsSideBar = () => {
                         </svg>
                     </button>
                 </div>
-                <div className={"flex-1 px-3 w-full h-full " + (expanded ? "block" : "hidden")}>
-                    <select className={"w-2/3 p-4 mx-4 rounded-2xl border-2 border-gray-300"} onChange={(e) => {
+                <div className={"px-3 w-full " + (expanded ? "block" : "hidden")}>
+                    <label className={"p-4"}>Current Set</label>
+                    <select className={"w-2/3 p-4 mx-4 mt-2 rounded-2xl border-2 border-gray-300"} onChange={(e) => {
                         dispatch(setSelectedSet(e.target.value))
                     }}>
                         {buttonSets.map((buttonSet, index) => {
                             return <option
                                 className={"w-full text-black"}
-                                {...(buttonSet.name == selectedButtonSet ? {selected: true} : {})}
+                                {...(buttonSet.name == selectedButtonSet ? {defaultValue: buttonSet.name} : {})}
                                 key={index}>{buttonSet.name}</option>
                         })}
 
@@ -122,9 +125,12 @@ const TagsSideBar = () => {
                             return null;
                         })}
                     </ul>
+
+                    <Settings/>
+                    <Connect/>
                 </div>
             </nav>
-        </aside>
+        </div>
     );
 };
 
