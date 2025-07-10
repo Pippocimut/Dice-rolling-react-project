@@ -5,8 +5,7 @@ import {addRoll, type ButtonPressRecord} from "../store/history-sidebar/historyS
 import {useDispatch} from "react-redux";
 import {emitRoomName, emitUserName} from "../store/socket/socketSlice.ts";
 
-const SOCKET_SERVER_URL = "localhost:3000"
-//'https://socket-dice-server-819188550192.europe-west1.run.app';
+const SOCKET_SERVER_URL = 'https://socket-dice-server-819188550192.europe-west1.run.app';
 
 export const SocketProvider = ({children}: { children: ReactNode }) => {
 
