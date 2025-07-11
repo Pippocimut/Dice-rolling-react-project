@@ -3,6 +3,7 @@ import type {ReactNode} from "react";
 import {
     DndContext,
     MouseSensor,
+    TouchSensor,
     useSensor,
     useSensors
 } from "@dnd-kit/core";
@@ -41,14 +42,21 @@ export function SortableList<T extends BaseItem>({
         [active, items]
     );
     const sensors = useSensors(
-            useSensor(MouseSensor, {
-                activationConstraint: {
-                    delay: 250,      // 250 milliseconds delay
-                    tolerance: 10,    // 5 pixels of movement tolerance
-                    distance: 3
-                }
-            })
-        );
+        useSensor(MouseSensor, {
+            activationConstraint: {
+                delay: 250,      // 250 milliseconds delay
+                tolerance: 10,    // 5 pixels of movement tolerance
+                distance: 3
+            }
+        }),
+        useSensor(TouchSensor, {
+            activationConstraint: {
+                delay: 100,
+                tolerance: 10,
+                distance: 3
+            }
+        })
+    );
     return (
         <DndContext
             sensors={sensors}
@@ -85,7 +93,9 @@ export function SortableList<T extends BaseItem>({
                 </ul>
             </SortableContext>
             <SortableOverlay>
-                {activeItem ? <div>{renderItem(activeItem)} <button value={"Hello"} name={"Baby"}/> </div> : null}
+                {activeItem ? <div>{renderItem(activeItem)}
+                    <button value={"Hello"} name={"Baby"}/>
+                </div> : null}
             </SortableOverlay>
         </DndContext>
     );

@@ -1,6 +1,7 @@
 import type {Roll} from "../../types";
 import {evaluate} from "mathjs";
 import {useContext} from "react";
+import { useDoubleTap } from 'use-double-tap';
 import {useDispatch, useSelector} from "react-redux";
 import {
     addRoll,
@@ -82,6 +83,7 @@ const calculateRolls = (rolls: Roll[]) => {
     return results;
 };
 
+
 const RollButton = ({rolls, name, editButton, color, tag}: Props) => {
     const userName = useSelector((state: RootState) => state.socket.userName)
     const {emitRoll} = useContext(SocketContext)
@@ -108,20 +110,24 @@ const RollButton = ({rolls, name, editButton, color, tag}: Props) => {
 
     };
 
-
     const {attributes, listeners, ref} = useContext(SortableItemContext);
 
+    const bind = useDoubleTap((event) => {
+        event.preventDefault();
+        editButton()
+    });
+
     return (
-        <button {...attributes} {...listeners} ref={ref}
-                className={`w-30 h-30 rounded-lg ${color} hover:outline-2 `}
-                onClick={handleOnClick}
-                onContextMenu={(e) => {
-                    e.preventDefault();
-                    editButton();
-                }}
-        >
-            <span className={"text-xl"}>{name} </span>
-        </button>
+            <button {...attributes} {...listeners} {...bind} ref={ref}
+                    className={`w-30 h-30 rounded-lg ${color} hover:outline-2 `}
+                    onClick={handleOnClick}
+                    onContextMenu={(e) => {
+                        e.preventDefault();
+                        editButton();
+                    }}
+            >
+                <span className={"text-xl"}>{name} </span>
+            </button>
     );
 };
 
