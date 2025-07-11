@@ -1,7 +1,6 @@
 import type {Roll} from "../../types";
 import {evaluate} from "mathjs";
 import {useContext} from "react";
-import { useDoubleTap } from 'use-double-tap';
 import {useDispatch, useSelector} from "react-redux";
 import {
     addRoll,
@@ -19,6 +18,7 @@ type Props = {
     editButton: () => void;
     color: string;
     tag?: number;
+    editMode: boolean;
 };
 
 const calculateRolls = (rolls: Roll[]) => {
@@ -84,7 +84,7 @@ const calculateRolls = (rolls: Roll[]) => {
 };
 
 
-const RollButton = ({rolls, name, editButton, color, tag}: Props) => {
+const RollButton = ({rolls, name, editButton, color, tag, editMode}: Props) => {
     const userName = useSelector((state: RootState) => state.socket.userName)
     const {emitRoll} = useContext(SocketContext)
     const dispatch = useDispatch()
@@ -112,22 +112,18 @@ const RollButton = ({rolls, name, editButton, color, tag}: Props) => {
 
     const {attributes, listeners, ref} = useContext(SortableItemContext);
 
-    const bind = useDoubleTap((event) => {
-        event.preventDefault();
-        editButton()
-    });
-
     return (
-            <button {...attributes} {...listeners} {...bind} ref={ref}
-                    className={`w-30 h-30 rounded-lg ${color} hover:outline-2 `}
-                    onClick={handleOnClick}
-                    onContextMenu={(e) => {
-                        e.preventDefault();
-                        editButton();
-                    }}
-            >
-                <span className={"text-xl"}>{name} </span>
-            </button>
+        <button {...attributes} {...listeners} ref={ref}
+                className={`w-30 h-30 rounded-lg ${color} hover:outline-2 ${
+                    editMode ? "border-2 border-amber-300" : ""
+                }`}
+                onClick={editMode ? editButton : handleOnClick}
+                onContextMenu={(e) => {
+                    e.preventDefault();
+                    editButton();
+                }}>
+            <span className={"text-xl"}>{name} </span>
+        </button>
     );
 };
 

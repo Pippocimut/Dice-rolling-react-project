@@ -1,4 +1,4 @@
-import {useCallback, useMemo, useState} from "react";
+import {type PropsWithChildren, useState} from "react";
 import {toast} from "react-toastify";
 import type {Roll} from "../../../../types.ts";
 import RollForm from "./RollForm.tsx";
@@ -6,53 +6,31 @@ import RollDialog from "../RollDialog.tsx";
 import TagSelection, {colors} from "./TagSelection.tsx";
 import RollsList from "./RollsList.tsx";
 import {type ButtonData, type Tag} from "../../../../../../store/button-sets/buttonSetSlice.ts";
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 import type {RootState} from "../../../../../../store";
-import {
-    addButtonToSet,
-    updateButtonOfSet,
-    deleteButtonOfSet
-} from "../../../../../../store/button-sets/buttonSetSlice.ts";
 
-type Props =
-    | {
-    mode: "create";
+type Props = {
+    title: string;
+    selectedButton: ButtonData;
+    submit: (data: { button: Partial<ButtonData>, tag: Tag, setName: string }) => void;
     close: () => void;
-    selectedTag?: Tag;
-    selectedButtonId?: never;
     selectedSetName: string;
 }
-    | {
-    mode: "edit";
-    close: () => void;
-    selectedTag?: never;
-    selectedButtonId: number;
-    selectedSetName: string;
-};
 
 const ButtonForm = ({
-                        mode,
                         close,
-                        selectedTag,
-                        selectedButtonId,
-                        selectedSetName
-                    }: Props) => {
+                        selectedButton,
+                        selectedSetName,
+                        title,
+                        submit,
+                        children
+                    }: PropsWithChildren<Props>) => {
 
         const buttonSets = useSelector((state: RootState) => state.buttonSet.sets)
-        const dispatch = useDispatch();
 
-
-        const selectedButton = useMemo(() => {
-            if (mode == "edit") {
-                if (selectedButtonId === undefined || selectedButtonId === -1) return undefined;
-                return buttonSets.find((set) => set.name === selectedSetName)!.buttonList.find((button) => button.id === selectedButtonId);
-            }
-        }, [mode, buttonSets, selectedButtonId]);
-
-        const isEditing = mode === "edit" && selectedButton !== undefined;
-        const [name, setName] = useState(isEditing ? selectedButton.name : "");
-        const [rolls, setRolls] = useState<Roll[]>(isEditing ? selectedButton.rolls : []);
-        const [color, setColor] = useState<string>(isEditing ? selectedButton.color : selectedTag?.color ?? colors[Math.floor(Math.random() * colors.length)]);
+        const [name, setName] = useState(selectedButton.name);
+        const [rolls, setRolls] = useState<Roll[]>(selectedButton.rolls);
+        const [color, setColor] = useState<string>(selectedButton.color);
 
         const buttonTag = buttonSets.find((set) => set.name === selectedSetName)!.tags.find((tag) => tag.id === selectedButton?.tag)
 
@@ -61,7 +39,7 @@ const ButtonForm = ({
             color: colors[Math.floor(Math.random() * colors.length)],
             name: ""
         }
-        const [tag, setTag] = useState<Tag>(selectedTag ?? buttonTag ?? defaultTag)
+        const [tag, setTag] = useState<Tag>(buttonTag ?? defaultTag)
 
         const [isOpenNewRollDialog, setIsOpenNewRollDialog] = useState(false);
 
@@ -84,20 +62,12 @@ const ButtonForm = ({
                 tag: tag.id ? tag.id : undefined,
             };
 
-            if (mode === "edit") {
-                dispatch(updateButtonOfSet({button: newButton, tag: tag, setName: selectedSetName}))
-            } else {
-                dispatch(addButtonToSet({button: newButton, tag: tag, setName: selectedSetName}))
-            }
+            submit({button: newButton, tag: tag, setName: selectedSetName})
+
 
             setRolls([]);
             close();
         };
-
-        const deleteButton = useCallback(() => {
-            dispatch(deleteButtonOfSet({setName: selectedSetName, id: selectedButtonId}))
-            close();
-        }, [buttonSets]);
 
         return (
             <div className={"flex flex-col gap-2 p-4 h-fit w-fit justify-center items-center"}>
@@ -109,8 +79,7 @@ const ButtonForm = ({
 
                 <div>
                     <h1 className={"text-4xl font-bold"}>
-                        {" "}
-                        {mode === "edit" ? "Edit" : "Create"} Button{" "}
+                        {title}
                     </h1>
                 </div>
 
@@ -147,14 +116,9 @@ const ButtonForm = ({
                 <div className="p-4 flex flex-row gap-2 w-full justify-center items-center">
                     <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
                             onClick={createNewButton}>
-                        {mode === "edit" ? "Edit" : "Create"} Button
+                        {title}
                     </button>
-                    {mode === "edit" && (
-                        <button id={"delete"} className="mt-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-                                onClick={deleteButton}>
-                            Delete Button
-                        </button>
-                    )}
+                    {children}
                 </div>
 
                 <RollDialog isOpen={isOpenNewRollDialog} onClose={() => setIsOpenNewRollDialog(false)}>

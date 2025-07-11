@@ -1,14 +1,16 @@
 import {useCallback, useState} from "react";
 import ButtonList from "./ButtonList.tsx";
-import CreateButtonForm from "./dialogs/forms/ButtonForm.tsx";
 import DefaultDialog from "./dialogs/DefaultDialog.tsx";
 import {
     type ButtonData,
-    type ButtonSet, sendNewButtonList,
+    type ButtonSet,
+    sendNewButtonList,
     updateButtonSets
 } from "../../../../store/button-sets/buttonSetSlice.ts";
 import {useDispatch, useSelector} from "react-redux";
 import type {RootState} from "../../../../store";
+import EditButtonForm from "./dialogs/forms/EditButtonForm.tsx";
+import CreateButtonForm from "./dialogs/forms/CreateButtonForm.tsx";
 
 const MainBody = () => {
     const dispatch = useDispatch();
@@ -21,7 +23,6 @@ const MainBody = () => {
     const [isOpenEditDialog, setIsOpenEditDialog] = useState(false);
 
     const [selectedButtonId, setSelectedButtonId] = useState<number | null>(null);
-
 
     const removeButton = useCallback(
         (index: number,) => {
@@ -39,14 +40,23 @@ const MainBody = () => {
         setIsOpenEditDialog(true);
     }, []);
 
+    const [editMode, setEditMode] = useState(false)
+
     return (
         <div
             className={
-                "flex flex-col min-h-screen gap-20 w-full items-center justify-around"
+                "flex flex-col min-h-screen gap-4 w-full items-center"
             }
         >
+            <button
+                className={"p-4 m-16 text-white rounded-lg " + (editMode ? "bg-red-500" : "bg-green-500")}
+                onClick={() => setEditMode((curr) => !curr)}>{
+                editMode ? "Disable Edit Mode" : "Enable Edit Mode"
+            }</button>
+
             <ButtonList
                 buttonSetName={selectedSet || "Default"}
+                editMode={editMode}
                 selectedTag={selectedTag}
                 removeButton={removeButton}
                 updateButtons={(newButtonList) => {
@@ -69,7 +79,6 @@ const MainBody = () => {
                 }}
             >
                 <CreateButtonForm
-                    mode={"create"}
                     close={() => setIsOpenCreateDialog(false)}
                     selectedTag={selectedTag}
                     selectedSetName={selectedSet!}
@@ -82,9 +91,8 @@ const MainBody = () => {
                     setIsOpenEditDialog(false);
                 }}
             >
-                {selectedButtonId !== null && (
-                    <CreateButtonForm
-                        mode={"edit"}
+                {selectedButtonId !== null && selectedButtonId !== -1 && (
+                    <EditButtonForm
                         close={() => {
                             setSelectedButtonId(-1)
                             setIsOpenEditDialog(false)

@@ -13,6 +13,7 @@ type Props = {
     updateButtons: (buttonList: ButtonData[]) => void;
     editButton: (index: number) => void;
     openCreateDialog: () => void;
+    editMode: boolean;
 };
 
 const ButtonList = ({
@@ -22,6 +23,7 @@ const ButtonList = ({
                         editButton,
                         updateButtons,
                         openCreateDialog,
+                        editMode
                     }: Props) => {
     const buttonSets = useSelector((state: RootState) => state.buttonSet.sets)
     const buttonSet = useMemo(() => {
@@ -44,6 +46,7 @@ const ButtonList = ({
                     <SortableList.Item id={buttonData.id}>
                         <div className={"flex flex-row"} key={buttonData.id}>
                             <RollButton
+                                editMode={editMode}
                                 rolls={buttonData.rolls}
                                 name={buttonData.name}
                                 deleteButton={() => removeButton(buttonData.id)}
