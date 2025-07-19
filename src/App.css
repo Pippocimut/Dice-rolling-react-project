@@ -18,6 +18,27 @@
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
+@keyframes borderGradientAnimation {
+  0% {
+    border-color: white;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+  }
+  25% {
+    border-color: gold;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
+  }
+  100% {
+    border-color: white;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+  }
+}
+
+.glowing-border {
+  border: 2px solid white;
+  animation: borderGradientAnimation 3s ease-in-out infinite;
+}
+
+
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);

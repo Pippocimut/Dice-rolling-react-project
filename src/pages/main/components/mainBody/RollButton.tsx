@@ -112,11 +112,13 @@ const RollButton = ({rolls, name, editButton, color, tag, editMode}: Props) => {
 
     const {attributes, listeners, ref} = useContext(SortableItemContext);
 
+
     return (
         <button {...attributes} {...listeners} ref={ref}
                 className={`w-30 h-30 rounded-lg ${color} hover:outline-2 ${
-                    editMode ? "border-2 border-amber-300" : ""
+                    editMode ? "glowing-border" : ""
                 }`}
+
                 onClick={editMode ? editButton : handleOnClick}
                 onContextMenu={(e) => {
                     e.preventDefault();

@@ -1,11 +1,10 @@
 import {useDispatch, useSelector} from "react-redux";
 import type {RootState} from "../../../../store";
 import {deleteTagOfSet} from "../../../../store/button-sets/buttonSetSlice.ts";
-import {setSelectedTag, setSelectedSet} from "../../../../store/selected/selectedSlice.ts";
+import {setSelectedTag} from "../../../../store/selected/selectedSlice.ts";
 import {useEffect, useRef, useState} from "react";
 import {Settings} from "./components/Settings.tsx";
 import {Connect} from "./components/Connect.tsx";
-import CreateButtonForm from "../mainBody/dialogs/forms/CreateButtonForm.tsx";
 import DefaultDialog from "../mainBody/dialogs/DefaultDialog.tsx";
 import {SetSelect} from "./components/SetSelect.tsx";
 
@@ -117,10 +116,13 @@ const TagsSideBar = () => {
                                                 if (currentSet.tags.length <= 1) {
                                                     dispatch(setSelectedTag(undefined));
                                                 }
+                                                console.log(currentSet.tags)
+                                                console.log(tag.name)
+                                                console.log(tag.id)
 
                                                 dispatch(deleteTagOfSet({
-                                                    setName: selectedButtonSetId,
-                                                    tagName: tag.name
+                                                    setId: selectedButtonSetId,
+                                                    tagId: tag.id
                                                 }))
                                             }
                                         }}

@@ -28,7 +28,7 @@ const EditButtonForm = ({
     const dispatch = useDispatch();
 
     const deleteButton = useCallback(() => {
-        dispatch(deleteButtonOfSet({setName: selectedSetId, id: selectedButton.id}))
+        dispatch(deleteButtonOfSet({setId: selectedSetId, id: selectedButton.id}))
         close();
     }, [buttonSet]);
 

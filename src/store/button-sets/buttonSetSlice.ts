@@ -183,25 +183,35 @@ const buttonSetSlice = createSlice({
             console.log(set);
             document.cookie = "buttonSetsList=" + JSON.stringify(state);
         },
-        deleteButtonOfSet: (state, action) => {
-            const setName = action.payload.setName;
+        deleteButtonOfSet: (state, action: {
+            payload: {
+                setId:number
+                id: number
+            }
+        }) => {
+            const setId = action.payload.setId;
             const id = action.payload.id;
 
-            const findIndex = state.sets.findIndex(set => set.name === setName);
+            const findIndex = state.sets.findIndex(set => set.id === setId);
             if (findIndex === -1) return;
 
             state.sets[findIndex].buttonList = state.sets[findIndex].buttonList.filter(button => button.id !== id);
 
             document.cookie = "buttonSetsList=" + JSON.stringify(state);
         },
-        deleteTagOfSet: (state, action) => {
-            const setName = action.payload.setName;
-            const tagName = action.payload.tagName;
+        deleteTagOfSet: (state, action:{
+            payload: {
+                setId: number,
+                tagId: number
+            }
+        }) => {
+            const setId = action.payload.setId;
+            const tagId = action.payload.tagId;
 
-            const set = state.sets.find(set => set.name === setName);
+            const set = state.sets.find(set => set.id === setId);
             if (!set) return;
 
-            set.tags = set.tags.filter(t => t.name !== tagName);
+            set.tags = set.tags.filter(t => t.id !== tagId);
             document.cookie = "buttonSetsList=" + JSON.stringify(state);
         }
     }

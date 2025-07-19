@@ -51,7 +51,7 @@ const MainBody = () => {
             }
         >
             <button
-                className={"p-4 m-16 text-white rounded-lg " + (editMode ? "bg-red-500" : "bg-green-500")}
+                className={"p-4 m-16 mr-auto text-white rounded-lg " + (editMode ? "bg-red-500" : "bg-green-500")}
                 onClick={() => setEditMode((curr) => !curr)}>{
                 editMode ? "Disable Edit Mode" : "Enable Edit Mode"
             }</button>
