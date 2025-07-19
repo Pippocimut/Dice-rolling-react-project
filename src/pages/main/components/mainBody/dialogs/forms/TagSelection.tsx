@@ -16,22 +16,21 @@ export const colors = [
 ];
 
 type Props = {
-    selectedSet: string
     tag: Tag;
     setTag: (value: Tag) => void,
     buttonColor: string,
     setButtonColor: (value: string) => void,
 };
 
-const TagSelection = ({tag, setTag, buttonColor, selectedSet, setButtonColor}: Props) => {
+const TagSelection = ({tag, setTag, buttonColor, setButtonColor}: Props) => {
 
     const [name, setName] = useState<string>(tag.name);
     const [id, setId] = useState<number>(tag.id);
     const [color, setColor] = useState<string>(buttonColor || tag.color);
 
+
     const setTagString = (tagString: string) => {
         const [id, name] = tagString.split("@");
-        console.log(id, name)
         setId(parseInt(id));
         setName(name);
     }
@@ -46,7 +45,7 @@ const TagSelection = ({tag, setTag, buttonColor, selectedSet, setButtonColor}: P
 
     return (
         <div className={"flex flex-row gap-2 relative"}>
-            <TagComboBox tag={name} setTag={setTagString} selectedSet={selectedSet}/>
+            <TagComboBox tag={name} setTag={setTagString}/>
             <select
                 className={"p-4 m-4 w-15 h-15 border-2 rounded-lg " + color}
                 value={color}

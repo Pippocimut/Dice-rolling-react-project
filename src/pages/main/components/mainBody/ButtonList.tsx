@@ -7,7 +7,6 @@ import {useMemo} from "react";
 import {SortableList} from "./dnd/SortableList.tsx";
 
 type Props = {
-    buttonSetName: string;
     selectedTag?: Tag;
     removeButton: (index: number) => void;
     updateButtons: (buttonList: ButtonData[]) => void;
@@ -17,7 +16,6 @@ type Props = {
 };
 
 const ButtonList = ({
-                        buttonSetName,
                         selectedTag,
                         removeButton,
                         editButton,
@@ -26,15 +24,27 @@ const ButtonList = ({
                         editMode
                     }: Props) => {
     const buttonSets = useSelector((state: RootState) => state.buttonSet.sets)
+    const selectedSetId = useSelector((state: RootState) => state.selected.selectedSetId)
+
     const buttonSet = useMemo(() => {
-        return buttonSets.find((buttonSet) => buttonSet.name === buttonSetName) || null;
-    }, [buttonSets, buttonSetName]);
+        return buttonSets.find((buttonSet) =>{
+            console.log("Button set id:",buttonSet.id)
+            console.log("Selected set id:",selectedSetId)
+            return buttonSet.id === selectedSetId
+        } );
+    }, [buttonSets, selectedSetId]);
 
     const items = buttonSet?.buttonList.map((buttonData: ButtonData) => {
         if (!selectedTag || buttonData.tag === selectedTag.id) {
             return buttonData
         }
     }).filter(item => item !== undefined) ?? []
+
+    console.log("Items:",items)
+    console.log("Button sets:",buttonSets)
+    console.log("Button set:",buttonSet)
+    console.log("Selected Set Id:",selectedSetId)
+    console.log("Selected Tag:",selectedTag)
 
     return (
         <SortableList

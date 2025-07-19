@@ -5,18 +5,22 @@ import {setSelectedTag, setSelectedSet} from "../../../../store/selected/selecte
 import {useEffect, useRef, useState} from "react";
 import {Settings} from "./components/Settings.tsx";
 import {Connect} from "./components/Connect.tsx";
-
+import CreateButtonForm from "../mainBody/dialogs/forms/CreateButtonForm.tsx";
+import DefaultDialog from "../mainBody/dialogs/DefaultDialog.tsx";
+import {SetSelect} from "./components/SetSelect.tsx";
 
 const TagsSideBar = () => {
     const buttonSets = useSelector((state: RootState) => state.buttonSet.sets)
 
-    const selectedTag = useSelector((state: RootState) => state.selected.selectedTag)
-    const selectedButtonSet = useSelector((state: RootState) => state.selected.selectedSet)
+    const selectedTagId = useSelector((state: RootState) => state.selected.selectedTagId)
+    const selectedButtonSetId = useSelector((state: RootState) => state.selected.selectedSetId)
 
     const dispatch = useDispatch()
 
-    const currentSet = buttonSets.find((buttonSet) => buttonSet.name == selectedButtonSet)
+    const currentSet = buttonSets.find((buttonSet) => buttonSet.id == selectedButtonSetId)
     const tagList = currentSet?.tags || []
+
+    const [isSettingsDialogOpen, setIsSettingsDialogOpen] = useState(false);
 
     const [expanded, setExpanded] = useState(false);
 
@@ -69,19 +73,22 @@ const TagsSideBar = () => {
                         </svg>
                     </button>
                 </div>
+                <button onClick={() => setIsSettingsDialogOpen(true)} className={`w-full p-4 ${expanded ? "block" : "hidden"}`}>
+                    Settings
+                </button>
+                <DefaultDialog
+                    isOpen={isSettingsDialogOpen}
+                    onClose={() => {
+                        setIsSettingsDialogOpen(false);
+                    }}
+                >
+                    <div>
+                        <SetSelect/>
+                        <Settings/>
+                        <Connect/>
+                    </div>
+                </DefaultDialog>
                 <div className={"px-3 w-full " + (expanded ? "block" : "hidden")}>
-                    <label className={"p-4"}>Current Set</label>
-                    <select className={"w-2/3 p-4 mx-4 mt-2 rounded-2xl border-2 border-gray-300"} onChange={(e) => {
-                        dispatch(setSelectedSet(e.target.value))
-                    }}>
-                        {buttonSets.map((buttonSet, index) => {
-                            return <option
-                                className={"w-full text-black"}
-                                {...(buttonSet.name == selectedButtonSet ? {defaultValue: buttonSet.name} : {})}
-                                key={index}>{buttonSet.name}</option>
-                        })}
-
-                    </select>
                     <ul
                         className={`flex-1 px-3 w-full my-6 block  transition-all h-[100hv-50px] overflow-y-auto`}
                     >
@@ -93,15 +100,15 @@ const TagsSideBar = () => {
                                             "w-full rounded-lg my-1 p-4 " +
                                             tag.color +
                                             " " +
-                                            (selectedTag?.name == tag.name
+                                            (selectedTagId == tag.id
                                                 ? " outline-4"
                                                 : " outline-none")
                                         }
                                         onClick={() => {
-                                            if (selectedTag && selectedTag.name == tag.name) {
+                                            if (selectedTagId && selectedTagId == tag.id) {
                                                 dispatch(setSelectedTag(undefined));
                                             } else {
-                                                dispatch(setSelectedTag(tag));
+                                                dispatch(setSelectedTag(tag.id));
                                             }
                                         }}
                                         onContextMenu={(e) => {
@@ -112,7 +119,7 @@ const TagsSideBar = () => {
                                                 }
 
                                                 dispatch(deleteTagOfSet({
-                                                    setName: selectedButtonSet,
+                                                    setName: selectedButtonSetId,
                                                     tagName: tag.name
                                                 }))
                                             }
@@ -126,8 +133,6 @@ const TagsSideBar = () => {
                         })}
                     </ul>
 
-                    <Settings/>
-                    <Connect/>
                 </div>
             </nav>
         </div>

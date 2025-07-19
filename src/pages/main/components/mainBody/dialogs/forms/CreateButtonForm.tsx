@@ -6,13 +6,11 @@ import {useDispatch} from "react-redux";
 type Props = {
     close: () => void;
     selectedTag?: Tag;
-    selectedSetName: string;
 }
 
 const CreateButtonForm = ({
                               close,
-                              selectedTag,
-                              selectedSetName
+                              selectedTag
                           }: Props) => {
     const dispatch = useDispatch();
     const defaultButton = {
@@ -24,7 +22,6 @@ const CreateButtonForm = ({
     }
 
     return <ButtonForm selectedButton={defaultButton}
-                       selectedSetName={selectedSetName}
                        title={"Create Button"} close={close}
                        submit={(data) => {
                            dispatch(addButtonToSet(data))

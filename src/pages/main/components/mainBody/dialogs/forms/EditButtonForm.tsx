@@ -7,16 +7,16 @@ import type {RootState} from "../../../../../../store";
 type Props = {
     close: () => void;
     selectedButtonId: number;
-    selectedSetName: string;
 };
 
 const EditButtonForm = ({
                             close,
-                            selectedButtonId,
-                            selectedSetName
+                            selectedButtonId
                         }: Props) => {
+
+    const selectedSetId = useSelector((state: RootState) => state.selected.selectedSetId)
     const buttonSet = useSelector((state: RootState) => state.buttonSet.sets.find(
-        (set) => set.name === selectedSetName
+        (set) => set.id === selectedSetId
     ))
 
     const selectedButton = buttonSet?.buttonList.find(
@@ -28,7 +28,7 @@ const EditButtonForm = ({
     const dispatch = useDispatch();
 
     const deleteButton = useCallback(() => {
-        dispatch(deleteButtonOfSet({setName: selectedSetName, id: selectedButton.id}))
+        dispatch(deleteButtonOfSet({setName: selectedSetId, id: selectedButton.id}))
         close();
     }, [buttonSet]);
 
@@ -37,7 +37,7 @@ const EditButtonForm = ({
             dispatch(updateButtonOfSet(data))
             close();
         }}
-        selectedButton={selectedButton} selectedSetName={selectedSetName} title={"Edit Button"} close={close}>
+        selectedButton={selectedButton}  title={"Edit Button"} close={close}>
         <button id={"delete"} className="mt-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
                 onClick={deleteButton}>
             Delete Button

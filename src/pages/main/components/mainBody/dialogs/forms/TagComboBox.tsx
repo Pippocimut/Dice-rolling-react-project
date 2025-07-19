@@ -8,16 +8,17 @@ import {useSelector} from "react-redux";
 import type {RootState} from "../../../../../../store";
 
 type Props = {
-    selectedSet: string;
     tag: string;
     setTag: (value: string) => void;
 }
 
-const TagComboBox = ({tag, setTag, selectedSet}: Props) => {
+const TagComboBox = ({tag, setTag}: Props) => {
 
     const buttonSets = useSelector((state: RootState) => state.buttonSet.sets)
 
-    const tags = buttonSets.find((buttonSet) => buttonSet.name === selectedSet)?.tags ?? []
+    const selectedSetId = useSelector((state: RootState) => state.selected.selectedSetId)
+
+    const tags = buttonSets.find((buttonSet) => buttonSet.id === selectedSetId)?.tags ?? []
 
     const handleTagChange = (value: string | null) => {
         setTag(value ?? "");

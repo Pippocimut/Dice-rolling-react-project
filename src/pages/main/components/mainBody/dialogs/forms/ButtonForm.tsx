@@ -12,27 +12,26 @@ import type {RootState} from "../../../../../../store";
 type Props = {
     title: string;
     selectedButton: ButtonData;
-    submit: (data: { button: Partial<ButtonData>, tag: Tag, setName: string }) => void;
+    submit: (data: { button: ButtonData, tag: Tag, setId: number }) => void;
     close: () => void;
-    selectedSetName: string;
 }
 
 const ButtonForm = ({
                         close,
                         selectedButton,
-                        selectedSetName,
                         title,
                         submit,
                         children
                     }: PropsWithChildren<Props>) => {
 
         const buttonSets = useSelector((state: RootState) => state.buttonSet.sets)
+        const selectedSetId = useSelector((state: RootState) => state.selected.selectedSetId)
 
         const [name, setName] = useState(selectedButton.name);
         const [rolls, setRolls] = useState<Roll[]>(selectedButton.rolls);
         const [color, setColor] = useState<string>(selectedButton.color);
 
-        const buttonTag = buttonSets.find((set) => set.name === selectedSetName)!.tags.find((tag) => tag.id === selectedButton?.tag)
+        const buttonTag = buttonSets.find((set) => set.id === selectedSetId)!.tags.find((tag) => tag.id === selectedButton?.tag)
 
         const defaultTag = {
             id: -1,
@@ -54,7 +53,7 @@ const ButtonForm = ({
                 return;
             }
 
-            const newButton: Partial<ButtonData> = {
+            const newButton: ButtonData = {
                 ...selectedButton,
                 name: name,
                 rolls: rolls,
@@ -62,8 +61,9 @@ const ButtonForm = ({
                 tag: tag.id ? tag.id : undefined,
             };
 
-            submit({button: newButton, tag: tag, setName: selectedSetName})
+            console.log(newButton)
 
+            submit({button: newButton, tag: tag, setId: selectedSetId})
 
             setRolls([]);
             close();
@@ -99,7 +99,7 @@ const ButtonForm = ({
                     tag={tag} setTag={setTag}
                     buttonColor={color}
                     setButtonColor={(value: string) => setColor(value)}
-                    selectedSet={selectedSetName ?? "Default"}/>
+                />
 
                 <div className={"flex flex-row gap-2"}>
                     <button className={"px-6 m-4"} onClick={() => setRolls([])}>

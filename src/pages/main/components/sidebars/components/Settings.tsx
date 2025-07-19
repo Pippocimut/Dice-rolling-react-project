@@ -94,7 +94,7 @@ export function Settings() {
 
 
     return (
-        <div className="w-full mt-auto p-4">
+        <div className="w-full flex flex-row mt-auto p-4">
             <input
                 ref={fileInputRef}
                 type="file"
@@ -107,7 +107,7 @@ export function Settings() {
             }}>
                 <ExportDisplay close={() => setIsDialogOpen(false)} exportData={exportAll}/>
             </DefaultDialog>
-            <div className="flex flex-col gap-4 px-4 rounded-md">
+            <div className="flex flex-row gap-4 w-full px-4 justify-center rounded-md">
                 <button className="w-full border-2 border-gray-300 rounded-2xl p-4" onClick={() => {
                     if (buttonSets.length === 0)
                         toast.error("You must have at least one button to export")

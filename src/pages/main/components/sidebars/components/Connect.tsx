@@ -3,6 +3,8 @@ import {useSelector} from "react-redux";
 import type {RootState} from "../../../../../store";
 import {SocketContext} from "../../../../../context/SocketContext.ts";
 
+const SOCKET_SERVER_URL = 'https://socket-dice-server-819188550192.europe-west1.run.app';
+
 export function Connect() {
     const [isSettingsExpanded, setIsSettingsExpanded] = useState(false);
 
@@ -12,11 +14,12 @@ export function Connect() {
     const [rooms, setRooms] = useState<string[]>([])
 
     const getRooms = async () => {
-        try{
-            const response = await fetch("http://localhost:3000/rooms")
+        try {
+            const response = await fetch(SOCKET_SERVER_URL + "/rooms")
             const data = await response.json()
             setRooms(data)
-        }catch(e){
+        } catch {
+            console.log("Connection attempt failed:")
         }
     }
 
@@ -101,8 +104,9 @@ export function Connect() {
                         <p className="text-xl">
                             Available rooms:
                         </p>
+                        {rooms.length == 0 && <p>No rooms available, create your own!</p>}
                         <div className="flex flex-col gap-4 w-full">
-                            {rooms.map((room,index) => {
+                            {rooms.map((room, index) => {
                                 return (
                                     <p key={index}> {room}</p>
                                 )

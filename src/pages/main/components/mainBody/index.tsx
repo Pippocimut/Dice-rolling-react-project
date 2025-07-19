@@ -16,8 +16,8 @@ const MainBody = () => {
     const dispatch = useDispatch();
 
     const buttonSets = useSelector((state: RootState) => state.buttonSet.sets)
-    const selectedTag = useSelector((state: RootState) => state.selected.selectedTag)
-    const selectedSet = useSelector((state: RootState) => state.selected.selectedSet)
+    const selectedTagId = useSelector((state: RootState) => state.selected.selectedTagId)
+    const selectedSetId = useSelector((state: RootState) => state.selected.selectedSetId)
 
     const [isOpenCreateDialog, setIsOpenCreateDialog] = useState(false);
     const [isOpenEditDialog, setIsOpenEditDialog] = useState(false);
@@ -26,7 +26,7 @@ const MainBody = () => {
 
     const removeButton = useCallback(
         (index: number,) => {
-            const indexOfButtonSet = buttonSets.findIndex((setObject: ButtonSet) => setObject.name === selectedSet)
+            const indexOfButtonSet = buttonSets.findIndex((setObject: ButtonSet) => setObject.id === selectedSetId)
             const newButtonList = buttonSets[indexOfButtonSet].buttonList.filter((_: object, i: number) => i !== index)
             dispatch(updateButtonSets(newButtonList));
             setIsOpenEditDialog(false);
@@ -42,6 +42,8 @@ const MainBody = () => {
 
     const [editMode, setEditMode] = useState(false)
 
+    const selectedTag = buttonSets.find((buttonSet) => buttonSet.id == selectedSetId)?.tags.find((tag) => tag.id == selectedTagId)
+
     return (
         <div
             className={
@@ -55,16 +57,15 @@ const MainBody = () => {
             }</button>
 
             <ButtonList
-                buttonSetName={selectedSet || "Default"}
                 editMode={editMode}
                 selectedTag={selectedTag}
                 removeButton={removeButton}
                 updateButtons={(newButtonList) => {
-                    const indexOfButtonSet = buttonSets.findIndex((setObject: ButtonSet) => setObject.name === selectedSet)
+                    const indexOfButtonSet = buttonSets.findIndex((setObject: ButtonSet) => setObject.id === selectedSetId)
                     const filter = (button: ButtonData) => newButtonList.find((newButton) => newButton.name === button.name) === undefined
                     const updatedButtonList = buttonSets[indexOfButtonSet].buttonList.filter(filter)
                     dispatch(sendNewButtonList({
-                        setName: selectedSet,
+                        setId: selectedSetId,
                         buttons: [...updatedButtonList, ...newButtonList]
                     }));
                 }}
@@ -81,7 +82,6 @@ const MainBody = () => {
                 <CreateButtonForm
                     close={() => setIsOpenCreateDialog(false)}
                     selectedTag={selectedTag}
-                    selectedSetName={selectedSet!}
                 />
             </DefaultDialog>
 
@@ -98,7 +98,6 @@ const MainBody = () => {
                             setIsOpenEditDialog(false)
                         }}
                         selectedButtonId={selectedButtonId}
-                        selectedSetName={selectedSet!}
                     />
                 )}
             </DefaultDialog>

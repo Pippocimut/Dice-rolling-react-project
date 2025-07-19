@@ -1,16 +1,13 @@
-
-
 import {createSlice} from "@reduxjs/toolkit";
-import type {Tag} from "../button-sets/buttonSetSlice.ts";
 
 export type exportMenuState = {
-    selectedSet : string,
-    selectedButton?: string,
-    selectedTag?: Tag,
+    selectedSetId : number,
+    selectedButtonId?: number,
+    selectedTagId?: number,
 }
 
 const initialState: exportMenuState = {
-    selectedSet: "Default"
+    selectedSetId: 1
 }
 
 const selectedSlice = createSlice({
@@ -18,13 +15,13 @@ const selectedSlice = createSlice({
     initialState,
     reducers: {
         setSelectedTag: (state, action) => {
-            state.selectedTag = action.payload;
+            state.selectedTagId = action.payload;
         },
         setSelectedButton: (state, action) => {
-            state.selectedButton = action.payload;
+            state.selectedButtonId = action.payload;
         },
         setSelectedSet: (state, action) => {
-            state.selectedSet = action.payload;
+            state.selectedSetId = action.payload;
         }
     }
 })

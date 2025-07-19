@@ -32,7 +32,7 @@ interface buttonSetState {
 const initialState: buttonSetState =
     document.cookie.includes("buttonSetsList") ? JSON.parse(decodeURIComponent(document.cookie.split("buttonSetsList=")[1].split(';')[0])) as buttonSetState
         : {
-            nextSetId: 1,
+            nextSetId: 2,
             nextTagId: 4,
             nextButtonId: 1,
             sets:
@@ -68,22 +68,23 @@ const buttonSetSlice = createSlice({
             state.sets = action.payload;
             document.cookie = "buttonSetsList=" + JSON.stringify(state);
         },
-        updateButtonOfSet: (state, action) => {
-            const setName = action.payload.setName;
+        updateButtonOfSet: (state, action: {
+            payload: {
+                setId: number,
+                button: ButtonData,
+                tag: Tag
+            }
+        }) => {
+            const setId = action.payload.setId;
             const button = action.payload.button;
             const tag = action.payload.tag;
 
-            const set = state.sets.find(set => set.name === setName);
+            const set = state.sets.find(set => set.id === setId);
             if (!set) return;
 
-            console.log("Updating this button now:", button)
 
             const index = set.buttonList.findIndex(Ibutton => Ibutton.id === button.id)
 
-            console.log(button, "index:", index)
-            console.log(set.buttonList)
-
-            console.log("Index of this button:", index)
             if (index === -1) return;
 
             if (tag.id === -1) {
@@ -111,12 +112,18 @@ const buttonSetSlice = createSlice({
 
             document.cookie = "buttonSetsList=" + JSON.stringify(state);
         },
-        addButtonToSet: (state, action) => {
-            const setName = action.payload.setName;
-            const button: ButtonData = action.payload.button;
+        addButtonToSet: (state, action: {
+            payload: {
+                setId: number,
+                button: Omit<ButtonData, "id">,
+                tag: Tag
+            }
+        }) => {
+            const setId = action.payload.setId;
+            const button: Omit<ButtonData, "id"> = action.payload.button;
             const tag: Tag = action.payload.tag;
 
-            const set = state.sets.find(set => set.name === setName) ?? state.sets.find(set => set.id === 1);
+            const set = state.sets.find(set => set.id === setId) ?? state.sets.find(set => set.id === 1);
             if (!set) return;
 
             if (tag.id === -1) {
@@ -124,20 +131,26 @@ const buttonSetSlice = createSlice({
                 set.tags.push(tag);
             }
 
-            button.id = state.nextButtonId++;
-            button.tag = tag.id;
-
-            set.buttonList.push(button);
+            set.buttonList.push({
+                ...button,
+                id: state.nextButtonId++,
+                tag: tag.id
+            });
 
             document.cookie = "buttonSetsList=" + JSON.stringify(state);
         },
-        sendNewButtonList: (state, action) => {
+        sendNewButtonList: (state, action: {
+            payload: {
+                setId: number,
+                buttons: ButtonData[]
+            }
+        }) => {
             const {
-                setName,
+                setId,
                 buttons
             } = action.payload;
 
-            const setIndex = state.sets.findIndex(set => set.name === setName);
+            const setIndex = state.sets.findIndex(set => set.id === setId);
             if (setIndex === -1) return;
             state.sets[setIndex].buttonList = buttons;
 
@@ -167,6 +180,8 @@ const buttonSetSlice = createSlice({
             })
 
             state.sets.push(set);
+            console.log(set);
+            document.cookie = "buttonSetsList=" + JSON.stringify(state);
         },
         deleteButtonOfSet: (state, action) => {
             const setName = action.payload.setName;
