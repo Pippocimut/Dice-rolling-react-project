@@ -48,6 +48,12 @@ const MainBody = () => {
 
     console.log(buttonSets.find((buttonSet) => buttonSet.id == selectedSetId))
 
+    let moreThanOneButton = false;
+    const buttonFound = buttonSets.find((buttonSet) => buttonSet.id === selectedSetId)
+    if (buttonFound) {
+        moreThanOneButton = buttonFound.buttonList.length > 0;
+    }
+
     return (
         <div
             className={
@@ -62,23 +68,23 @@ const MainBody = () => {
             </p>
 
             <div className={"flex flex-col items-center justify-center w-full mt-8 gap-16 "}>
-                    <button
-                        id="createButton"
-                        className={
-                            "w-45 h-30 flex items-center flex-row justify-center bg-blue-700 hover:outline-2 rounded-lg"
-                        }
-                        onClick={() => setIsOpenCreateDialog(true)}
-                    >
-                        <span className={"text-6xl flex flex-row"}>+<FaDiceD20 /></span>
-                    </button>
-                    {buttonSets?.find((buttonSet) => buttonSet.id == selectedSetId)?.buttonList?.length > 0 && <button
-                        id="editModeButton"
-                        className={"w-40 h-20 rounded-lg " + (editMode ? "bg-white border-4 border-blue-700 text-blue-700" : "bg-blue-700 text-white")}
-                        onClick={() => dispatch(toggleEditMode())}>{
-                        editMode ? "Done" :  <div
-                            className={"flex justify-center gap-2 items-center"}
-                        ><BsPencilFill/> <span className={"pr-4"}>Edit</span></div>
-                    }</button>}
+                <button
+                    id="createButton"
+                    className={
+                        "w-45 h-30 flex items-center flex-row justify-center bg-blue-700 hover:outline-2 rounded-lg"
+                    }
+                    onClick={() => setIsOpenCreateDialog(true)}
+                >
+                    <span className={"text-6xl flex flex-row"}>+<FaDiceD20/></span>
+                </button>
+                {moreThanOneButton && <button
+                    id="editModeButton"
+                    className={"w-40 h-20 rounded-lg " + (editMode ? "bg-white border-4 border-blue-700 text-blue-700" : "bg-blue-700 text-white")}
+                    onClick={() => dispatch(toggleEditMode())}>{
+                    editMode ? "Done" : <div
+                        className={"flex justify-center gap-2 items-center"}
+                    ><BsPencilFill/> <span className={"pr-4"}>Edit</span></div>
+                }</button>}
             </div>
             <ButtonList
                 editMode={editMode}
