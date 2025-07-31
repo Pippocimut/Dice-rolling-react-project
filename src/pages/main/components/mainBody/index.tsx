@@ -11,6 +11,10 @@ import {useDispatch, useSelector} from "react-redux";
 import type {RootState} from "../../../../store";
 import EditButtonForm from "./dialogs/forms/EditButtonForm.tsx";
 import CreateButtonForm from "./dialogs/forms/CreateButtonForm.tsx";
+import {toggleEditMode} from "../../../../store/selected/selectedSlice.ts";
+import {SlPencil} from "react-icons/sl";
+import {BsPencilFill} from "react-icons/bs";
+import {FaDiceD20} from "react-icons/fa";
 
 const MainBody = () => {
     const dispatch = useDispatch();
@@ -40,22 +44,43 @@ const MainBody = () => {
         setIsOpenEditDialog(true);
     }, []);
 
-    const [editMode, setEditMode] = useState(false)
-
+    const editMode = useSelector((state: RootState) => state.selected.editMode)
     const selectedTag = buttonSets.find((buttonSet) => buttonSet.id == selectedSetId)?.tags.find((tag) => tag.id == selectedTagId)
+
+    console.log(buttonSets.find((buttonSet) => buttonSet.id == selectedSetId))
 
     return (
         <div
             className={
-                "flex flex-col min-h-screen gap-4 w-full items-center"
+                "flex flex-col min-h-screen gap-4 w-full bg-neutral-900 items-center"
             }
         >
-            <button
-                className={"p-4 m-16 mr-auto text-white rounded-lg " + (editMode ? "bg-red-500" : "bg-green-500")}
-                onClick={() => setEditMode((curr) => !curr)}>{
-                editMode ? "Disable Edit Mode" : "Enable Edit Mode"
-            }</button>
+            <h1 className={"text-6xl font-bold m-8"}>
+                A dice roller app
+            </h1>
+            <p className={"text-2xl"}>
+                {buttonSets?.find((buttonSet) => buttonSet.id == selectedSetId)?.buttonList?.length === 0 ? "Create a dice roll set by pressing the button" : "Click on a button to roll it"}
+            </p>
 
+            <div className={"flex flex-col items-center justify-center w-full mt-8 gap-16 "}>
+                    <button
+                        id="createButton"
+                        className={
+                            "w-45 h-30 flex items-center flex-row justify-center bg-blue-700 hover:outline-2 rounded-lg"
+                        }
+                        onClick={() => setIsOpenCreateDialog(true)}
+                    >
+                        <span className={"text-6xl flex flex-row"}>+<FaDiceD20 /></span>
+                    </button>
+                    {buttonSets?.find((buttonSet) => buttonSet.id == selectedSetId)?.buttonList?.length > 0 && <button
+                        id="editModeButton"
+                        className={"w-40 h-20 rounded-lg " + (editMode ? "bg-white border-4 border-blue-700 text-blue-700" : "bg-blue-700 text-white")}
+                        onClick={() => dispatch(toggleEditMode())}>{
+                        editMode ? "Done" :  <div
+                            className={"flex justify-center gap-2 items-center"}
+                        ><BsPencilFill/> <span className={"pr-4"}>Edit</span></div>
+                    }</button>}
+            </div>
             <ButtonList
                 editMode={editMode}
                 selectedTag={selectedTag}

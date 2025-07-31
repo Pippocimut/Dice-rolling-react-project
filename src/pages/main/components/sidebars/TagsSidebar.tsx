@@ -34,7 +34,7 @@ const TagsSideBar = () => {
     return (
         <div
             className={
-                " min-h-screen bg-neutral-700 border-r" +
+                " min-h-screen bg-blue-700 border-r" +
                 ` transition-all ${expanded ? "w-150" : "w-15"}`
             }
         >

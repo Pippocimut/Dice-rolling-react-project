@@ -30,13 +30,13 @@ const HistorySideBar = () => {
     return (
         <aside
             className={
-                "min-h-screen transition-all" +
+                "min-h-screen transition bg-blue-700" +
                 ` transition-all ${sidebarExtended ? "w-150" : "w-15"}`
             }
         >
             <nav
                 className={
-                    "min-h-screen h-full flex flex-col bg-neutral-700 border-l"
+                    "min-h-screen h-full flex flex-col bg-blue-700 border-l"
                 }>
                 <div
                     className={

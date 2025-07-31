@@ -22,7 +22,7 @@ const CreateButtonForm = ({
     }
 
     return <ButtonForm selectedButton={defaultButton}
-                       title={"Create Button"} close={close}
+                       title={"Create dice rolls"} close={close}
                        submit={(data) => {
                            dispatch(addButtonToSet(data))
                            close()

@@ -78,7 +78,7 @@ const ButtonForm = ({
                 </div>
 
                 <div>
-                    <h1 className={"text-4xl font-bold"}>
+                    <h1 className={"text-4xl w-fit font-bold"}>
                         {title}
                     </h1>
                 </div>

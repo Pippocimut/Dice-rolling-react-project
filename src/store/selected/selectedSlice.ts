@@ -4,10 +4,12 @@ export type exportMenuState = {
     selectedSetId : number,
     selectedButtonId?: number,
     selectedTagId?: number,
+    editMode: boolean,
 }
 
 const initialState: exportMenuState = {
-    selectedSetId: 1
+    selectedSetId: 1,
+    editMode: false,
 }
 
 const selectedSlice = createSlice({
@@ -22,6 +24,9 @@ const selectedSlice = createSlice({
         },
         setSelectedSet: (state, action) => {
             state.selectedSetId = action.payload;
+        },
+        toggleEditMode: (state) => {
+            state.editMode = !state.editMode;
         }
     }
 })
@@ -30,6 +35,7 @@ export const {
     setSelectedTag,
     setSelectedButton,
     setSelectedSet,
+    toggleEditMode,
 } = selectedSlice.actions
 
 export default selectedSlice.reducer

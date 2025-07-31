@@ -44,7 +44,7 @@ const DefaultDialog = ({
                             leaveTo="opacity-0 scale-95"
                         >
                             <DialogPanel
-                                className="w-full max-w-md transform overflow-hidden rounded-2xl bg-neutral-700 p-6 text-left align-middle shadow-xl transition-all">
+                                className="flex flex-row justify-center w-full max-w-lg transform overflow-hidden rounded-2xl bg-neutral-700 p-6 text-left align-middle shadow-xl transition-all">
                                 {children}
                             </DialogPanel>
                         </TransitionChild>
