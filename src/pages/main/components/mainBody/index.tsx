@@ -79,7 +79,7 @@ const MainBody = () => {
                 </button>
                 {moreThanOneButton && <button
                     id="editModeButton"
-                    className={"w-40 h-20 rounded-lg hover:outline-2 text-lg" + (editMode ? "bg-white border-4 border-blue-700 text-blue-700" : "bg-blue-800 text-white")}
+                    className={"w-40 h-20 rounded-lg hover:outline-2 text-lg " + (editMode ? " bg-white border-4 border-blue-700 text-blue-700" : " bg-blue-800 text-white")}
                     onClick={() => dispatch(toggleEditMode())}>{
                     editMode ? <span className={"text-lg"}>Done</span> : <div
                         className={"flex justify-center gap-2 items-center"}
