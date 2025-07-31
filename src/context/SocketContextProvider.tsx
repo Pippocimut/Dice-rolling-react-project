@@ -1,7 +1,7 @@
 import {type ReactNode, useState} from 'react';
 import {io, Socket} from 'socket.io-client';
 import {SocketContext} from './SocketContext';
-import {addRoll, type ButtonPressRecord} from "../store/history-sidebar/historySidebarSlice.ts";
+import {addRollFromSocket, type ButtonPressRecord} from "../store/history-sidebar/historySidebarSlice.ts";
 import {useDispatch} from "react-redux";
 import {emitRoomName, emitUserName} from "../store/socket/socketSlice.ts";
 
@@ -25,7 +25,7 @@ export const SocketProvider = ({children}: { children: ReactNode }) => {
 
         newSocket.on("roll", (data: ButtonPressRecord) => {
             console.log("Received roll:")
-            dispatch(addRoll(data))
+            dispatch(addRollFromSocket(data))
         })
 
         setSocket(newSocket);

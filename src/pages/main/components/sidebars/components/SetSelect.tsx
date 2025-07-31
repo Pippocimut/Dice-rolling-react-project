@@ -2,15 +2,17 @@ import {setSelectedSet} from "../../../../../store/selected/selectedSlice.ts";
 import {useDispatch, useSelector} from "react-redux";
 import type {RootState} from "../../../../../store";
 
-export function SetSelect() {
+export function SetSelect(props: {
+    className?: string
+}) {
     const dispatch = useDispatch()
     const buttonSets = useSelector((state: RootState) => state.buttonSet.sets)
     const selectedButtonSetId = useSelector((state: RootState) => state.selected.selectedSetId)
 
     console.log("Selected set from dialog:",selectedButtonSetId)
 
-    return (<div className={"flex flex-row w-full"}>
-        <label className={"p-4 m-4"}>You are currently on: </label>
+    return (<div className={"flex flex-row justify-center w-full mx-auto "+ props.className}>
+        <label className={"p-4"}>Current set: </label>
         <select className={"w-40 px-4 h-10 my-auto rounded-2xl border-2 border-gray-300"} onChange={(e) => {
             console.log(e.target.value)
             dispatch(setSelectedSet(parseInt(e.target.value)))

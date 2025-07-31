@@ -4,7 +4,6 @@ import {useContext} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {
     addRoll,
-    type ButtonPressRecord,
     type RollResult
 } from "../../../../store/history-sidebar/historySidebarSlice.ts";
 import type {RootState} from "../../../../store";
@@ -28,8 +27,11 @@ const calculateRolls = (rolls: Roll[]) => {
         const {name, equation} = roll;
 
         let total = 0;
+        let result = "";
         let totalAdv = 0;
+        let resultAdv = "";
         let totalDis = 0;
+        let resultDis = "";
 
         let normaledEquation = "";
         let advantageEquation = "";
@@ -41,8 +43,16 @@ const calculateRolls = (rolls: Roll[]) => {
             .map((component) => component.trim());
 
         for (const component of equationComponents) {
-            if (component === " ") continue;
+            if (component === " ") {
+                result += component;
+                resultAdv += component;
+                resultDis += component;
+                continue;
+            }
             if (component.includes("d")) {
+                result += component + "(";
+                resultAdv += component + "(";
+                resultDis += component + "(";
                 const [numberOfRolls, sides] = component.split("d").map(Number);
                 normaledEquation += "( ";
                 advantageEquation += "( ";
@@ -57,15 +67,24 @@ const calculateRolls = (rolls: Roll[]) => {
                         advantageEquation += " + ";
                         disadvantageEquation += " + ";
                     }
+                    result += i === 0 ? result1 : "," + result1;
+                    resultAdv += i === 0 ? Math.max(result1, result2) : "," + Math.max(result1, result2);
+                    resultDis += i === 0 ? Math.min(result1, result2) : "," + Math.min(result1, result2);
                     normaledEquation += result1;
                     advantageEquation += Math.max(result1, result2);
                     disadvantageEquation += Math.min(result1, result2);
                 }
 
+                result += ")";
+                resultAdv += ")";
+                resultDis += ")";
                 normaledEquation += " )";
                 advantageEquation += " )";
                 disadvantageEquation += " )";
             } else {
+                result += " " + component + " ";
+                resultAdv += " " + component + " ";
+                resultDis += " " + component + " ";
                 normaledEquation += " " + component;
                 advantageEquation += " " + component;
                 disadvantageEquation += " " + component;
@@ -77,7 +96,7 @@ const calculateRolls = (rolls: Roll[]) => {
         totalDis += evaluate(disadvantageEquation);
 
 
-        results.push({name, total, totalAdv, totalDis});
+        results.push({name, total, result, resultDis, resultAdv, totalAdv, totalDis});
     }
 
     return results;
@@ -93,7 +112,8 @@ const RollButton = ({rolls, name, editButton, color, tag, editMode}: Props) => {
         const results: RollResult[] = calculateRolls(rolls);
         const date = new Date();
 
-        const roll: ButtonPressRecord = {
+        const roll = {
+            id: 0,
             username: "You",
             name: name,
             color: color,

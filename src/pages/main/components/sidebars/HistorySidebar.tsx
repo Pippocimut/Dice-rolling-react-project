@@ -1,31 +1,32 @@
-
 import {useEffect, useRef} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import type {RootState} from "../../../../store";
-import {type ButtonPressRecord, toggleExtended} from "../../../../store/history-sidebar/historySidebarSlice.ts";
-import { clearHistory} from "../../../../store/history-sidebar/historySidebarSlice.ts";
+import {
+    type ButtonPressRecord,
+    setSelectedResult,
+    toggleExtended
+} from "../../../../store/history-sidebar/historySidebarSlice.ts";
+import {clearHistory} from "../../../../store/history-sidebar/historySidebarSlice.ts";
 
 const HistorySideBar = () => {
 
     const buttonHistory = useSelector((state: RootState) => state.historySidebar.rollHistory)
     const sidebarExtended = useSelector((state: RootState) => state.historySidebar.extended)
+    const scrollDown = useSelector((state: RootState) => state.historySidebar.scrollDown)
+    const manuallySelectedResult = useSelector((state: RootState) => state.historySidebar.selectedResult)
+    const selectedResult = (manuallySelectedResult ?? buttonHistory[buttonHistory.length - 1]?.id) ?? 0
 
     const dispatch = useDispatch()
 
     useEffect(() => {
-        if (listRef.current) {
+        if (listRef.current && scrollDown) {
             listRef.current.scrollTop = listRef.current.scrollHeight;
         }
-    }, [buttonHistory]);
+    }, [buttonHistory, scrollDown, sidebarExtended]);
 
 
     const listRef = useRef<HTMLUListElement>(null);
 
-    useEffect(() => {
-        if (listRef.current) {
-            listRef.current.scrollTop = listRef.current.scrollHeight;
-        }
-    }, [sidebarExtended, buttonHistory]);
 
     return (
         <aside
@@ -68,9 +69,10 @@ const HistorySideBar = () => {
                 </div>
                 <div className={"flex-1 w-100 h-full " + (sidebarExtended ? "block" : "hidden")}>
                     <div className="flex flex-col h-full w-full">
-                        <button className={"w-40 mx-auto rounded-lg p-4 m-4 border-2 border-white hover:bg-blue-500"} onClick={() => {
-                            dispatch(clearHistory())
-                        }}>
+                        <button className={"w-40 mx-auto rounded-lg p-4 m-4 border-2 border-white hover:bg-blue-500"}
+                                onClick={() => {
+                                    dispatch(clearHistory())
+                                }}>
                             Clear History
                         </button>
                         <ul
@@ -79,17 +81,24 @@ const HistorySideBar = () => {
                         >
                             {buttonHistory &&
                                 buttonHistory.map((historyData: ButtonPressRecord, index: number) => {
-                                    const isLast = index === buttonHistory.length - 1;
-                                    const lastItemBorder = "border-4 border-white"
-                                    const border = isLast ? lastItemBorder : "";
+                                    const isSelected = selectedResult === historyData.id;
+                                    const lastItemBorder = "outline-4 outline-white text-white"
+                                    const hoverBehavior = "hover:outline-4 hover:outline-white"
+                                    const border = isSelected ? lastItemBorder : "text-neutral-300 opacity-70";
 
                                     return (
-                                        <li
+                                        <button
                                             key={index}
+                                            onClick={() => {
+                                                if (isSelected) {
+                                                    dispatch(setSelectedResult(null));
+                                                    return
+                                                }
+                                                dispatch(setSelectedResult(historyData.id))
+                                            }}
                                             className={
-                                                "p-4 my-4 w-full text-white rounded-lg " +
-                                                historyData.color +
-                                                " h-fit max-w-80 text-left " + border
+                                                "p-4 my-4 w-full rounded-lg h-fit max-w-80 text-left " +
+                                                historyData.color + " " + border + " " + hoverBehavior
                                             }
                                         >
 
@@ -98,23 +107,44 @@ const HistorySideBar = () => {
                                             <h3 className={"mr-auto font-bold text-xl"}>
                                                 {historyData.name}
                                             </h3>
+                                            <p className={"text-sm"}>
+                                                {historyData.id}
+                                            </p>
 
                                             {historyData.rollResult &&
                                                 historyData.rollResult.map((rollResult, index) => {
-
-
                                                     return (
                                                         <div key={index} className={"text-left py-4 px-4 "}>
-                                                            <p className={"font-bold"}>{rollResult.name}</p>
-                                                            <div className={"flex flex-col ml-2 "}>
-                                                                <p className={"text-lg font-bold"}>Total: {rollResult.total}</p>
-                                                                <p>With Advantage: {rollResult.totalAdv}</p>
-                                                                <p>With Disadvantage: {rollResult.totalDis}</p>
+                                                            <p className={"font-bold text-lg"}>{rollResult.name}</p>
+                                                            <div className={"flex flex-col ml-2 my-1"}>
+                                                                <div
+                                                                    className={"flex flex-row gap-1 flex-wrap text-lg font-bold"}>
+                                                                    <p>Total: </p>
+                                                                    <p>
+                                                                        {rollResult.result} = {rollResult.total}
+                                                                    </p>
+                                                                </div>
+                                                                <div className={"flex flex-row flex-wrap gap-1 my-1"}>
+                                                                    <p>With
+                                                                        Advantage:
+                                                                    </p>
+                                                                    <p>
+                                                                         {rollResult.resultAdv} = {rollResult.totalAdv}
+                                                                    </p>
+                                                                </div>
+                                                                <div className={"flex flex-row flex-wrap gap-1 my-1"}>
+                                                                    <p>With
+                                                                        Disadvantage:
+                                                                    </p>
+                                                                    <p>
+                                                                        {rollResult.resultDis} = {rollResult.totalDis}
+                                                                    </p>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     );
                                                 })}
-                                        </li>
+                                        </button>
                                     );
                                 })}
                         </ul>

@@ -53,6 +53,8 @@ const MainBody = () => {
     if (buttonFound) {
         moreThanOneButton = buttonFound.buttonList.length > 0;
     }
+    const {roomName} = useSelector((state: RootState) => state.socket)
+
 
     return (
         <div
@@ -66,6 +68,9 @@ const MainBody = () => {
             <p className={"text-2xl"}>
                 {buttonSets?.find((buttonSet) => buttonSet.id == selectedSetId)?.buttonList?.length === 0 ? "Create a dice roll set by pressing the button" : "Click on a button to roll it"}
             </p>
+            {roomName && roomName.length > 0 && <p className={"text-2xl"}>
+                 Connected to: <span className={"font-bold"}>{roomName}</span>
+            </p>}
 
             <div className={"flex flex-row items-center justify-center w-full mt-8 gap-16 "}>
                 <button

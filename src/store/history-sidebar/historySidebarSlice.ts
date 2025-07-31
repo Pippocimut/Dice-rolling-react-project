@@ -3,12 +3,15 @@ import type {ButtonData} from "../button-sets/buttonSetSlice.ts";
 
 export type RollResult = {
     name: string;
+    result: string;
     total: number;
     totalAdv: number;
+    resultAdv: string;
     totalDis: number;
+    resultDis: string;
 };
 
-export type ButtonPressRecord = Omit<ButtonData, "rolls" | "id"> & {
+export type ButtonPressRecord = Omit<ButtonData, "rolls"> & {
     username: string;
     date: string;
     rollResult: RollResult[];
@@ -16,11 +19,15 @@ export type ButtonPressRecord = Omit<ButtonData, "rolls" | "id"> & {
 
 export type exportMenuState = {
     extended: boolean,
+    scrollDown: boolean,
+    selectedResult: number | null,
     rollHistory: ButtonPressRecord[]
 }
 
 const initialState: exportMenuState = {
     extended: true,
+    selectedResult: null,
+    scrollDown: true,
     rollHistory: document.cookie.includes("buttonPressHistory") ? JSON.parse(decodeURIComponent(document.cookie.split("buttonPressHistory=")[1].split(';')[0])) : []
 }
 
@@ -40,9 +47,28 @@ const historySidebarSlice = createSlice({
             document.cookie = "buttonPressHistory=" + JSON.stringify(state.rollHistory);
         },
         addRoll: (state, action: { payload: ButtonPressRecord }) => {
-            state.rollHistory.push(action.payload);
+            const newId = state.rollHistory.length + 1
+            state.rollHistory.push({
+                ...action.payload,
+                id: newId,
+            });
+            state.extended = true;
+            state.scrollDown = true;
+            state.selectedResult = null;
+            document.cookie = "buttonPressHistory=" + JSON.stringify(state.rollHistory);
+        },
+        addRollFromSocket: (state, action: { payload: ButtonPressRecord }) => {
+            const newId = state.rollHistory.length + 1
+            state.rollHistory.push({
+                ...action.payload,
+                id: newId,
+            });
             state.extended = true;
             document.cookie = "buttonPressHistory=" + JSON.stringify(state.rollHistory);
+        },
+        setSelectedResult: (state, action: { payload: number | null }) => {
+            state.scrollDown = false;
+            state.selectedResult = action.payload;
         }
     }
 })
@@ -51,6 +77,8 @@ export const {
     toggleExtended,
     clearHistory,
     addRoll,
+    addRollFromSocket,
+    setSelectedResult
 } = historySidebarSlice.actions
 
 export default historySidebarSlice.reducer

@@ -40,9 +40,16 @@ export function Connect() {
     const {connect} = useContext(SocketContext);
 
     return (
-        <div className="w-full mt-auto p-4">
+        <div className="w-full mt-auto p-4 border-t-2 border-gray-500  bg-neutral-700">
+            <p className="text-xl">
+                Your Name: <span className={"font-bold"}>{userNameFromStore || "Is missing"}</span>
+            </p>
+            <p className="text-xl w-full mb-4">
+                Are connected to: <span
+                className={"font-bold"}>{roomNameFromStore?.length ?? 0 > 0 ? ` ${roomNameFromStore}` : "no room"}</span>
+            </p>
             <button
-                className="w-full flex justify-between items-center px-4 py-2 text-xl font-medium rounded-md focus:outline-none"
+                className="w-full flex justify-between items-center px-4 py-2 text-xl border-2 border-gray-500 font-medium rounded-md focus:outline-none"
                 onClick={() => setIsSettingsExpanded(!isSettingsExpanded)}
             >
                 <h2 className="text-xl text-left">Connect</h2>
@@ -57,7 +64,6 @@ export function Connect() {
                           clipRule="evenodd"/>
                 </svg>
             </button>
-
             <div
                 className={`mt-2 overflow-hidden transition-all bg-invisible duration-300 ease-in-out ${
                     isSettingsExpanded ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'
@@ -65,13 +71,7 @@ export function Connect() {
             >
                 <div className="flex flex-col gap-4 rounded-md">
                     <div className="flex flex-col gap-4 w-full">
-                        <p className="text-xl">
-                            Your Name: <span className={"font-bold"}>{userNameFromStore || "Is missing"}</span>
-                        </p>
-                        <p className="text-xl w-full">
-                            Are connected to: <span
-                            className={"font-bold"}>{roomNameFromStore?.length ?? 0 > 0 ? ` ${roomNameFromStore}` : "no room"}</span>
-                        </p>
+
                         <div className={"flex flex-row flex-wrap gap-4"}>
                             <input
                                 className="w-40 border-2 border-gray-300 rounded-2xl p-4 mx-auto"
@@ -92,8 +92,12 @@ export function Connect() {
                                     alert("Please enter a username")
                                 else if (roomName.length == 0)
                                     alert("Please enter a room name")
-                                else
+                                else {
                                     connect(roomName, userName);
+                                    setRoomName(roomName)
+                                    setUserName(userName)
+                                    setIsSettingsExpanded(false)
+                                }
                             }
                         }}
                                 className="w-full rounded-2xl p-4 border-2 border-gray-300">
@@ -105,10 +109,18 @@ export function Connect() {
                             Available rooms:
                         </p>
                         {rooms.length == 0 && <p>No rooms available, create your own!</p>}
-                        <div className="flex flex-col gap-4 w-full">
+                        <div className="flex flex-row flex-wrap gap-4 w-full">
                             {rooms.map((room, index) => {
                                 return (
-                                    <p key={index}> {room}</p>
+                                    <button key={index}
+                                            className="w-40 border-2 border-gray-300 rounded-2xl p-4 mr-auto"
+                                            onClick={() => {
+                                                const userNameConnect = userName.length == 0 ? "Guest" : userName;
+                                                connect(room, userNameConnect)
+                                                setRoomName(room)
+                                                setUserName(userNameConnect)
+                                                setIsSettingsExpanded(false)
+                                            }}> {room}</button>
                                 )
                             })}
                         </div>
