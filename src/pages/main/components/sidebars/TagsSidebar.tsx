@@ -72,7 +72,7 @@ const TagsSideBar = () => {
                         </svg>
                     </button>
                 </div>
-                <button onClick={() => setIsSettingsDialogOpen(true)} className={`w-full p-4 ${expanded ? "block" : "hidden"}`}>
+                <button onClick={() => setIsSettingsDialogOpen(true)} className={`w-40 mx-auto rounded-lg m-4 border-2 border-white hover:bg-blue-500 p-4 ${expanded ? "block" : "hidden"}`}>
                     Settings
                 </button>
                 <DefaultDialog
