@@ -68,7 +68,7 @@ const HistorySideBar = () => {
                 </div>
                 <div className={"flex-1  w-full h-full " + (sidebarExtended ? "block" : "hidden")}>
                     <div className="flex flex-col h-full w-full">
-                        <button className={"w-full p-4"} onClick={() => {
+                        <button className={"w-full p-4 m-4 border-2 border-white"} onClick={() => {
                             dispatch(clearHistory())
                         }}>
                             Clear History
@@ -80,14 +80,14 @@ const HistorySideBar = () => {
                             {buttonHistory &&
                                 buttonHistory.map((historyData: ButtonPressRecord, index: number) => {
                                     const isLast = index === buttonHistory.length - 1;
-                                    const lastItemBorder = "border-4 border-yellow-300"
+                                    const lastItemBorder = "border-4 border-white"
                                     const border = isLast ? lastItemBorder : "";
 
                                     return (
                                         <li
                                             key={index}
                                             className={
-                                                "p-4 my-2 w-full text-white " +
+                                                "p-4 my-2 w-full text-white m-4 rounded-lg " +
                                                 historyData.color +
                                                 " h-fit max-w-80 text-left " + border
                                             }
@@ -98,7 +98,6 @@ const HistorySideBar = () => {
                                             <h3 className={"mr-auto font-bold text-xl"}>
                                                 {historyData.name}
                                             </h3>
-                                            <p>{historyData.tag}</p>
 
                                             {historyData.rollResult &&
                                                 historyData.rollResult.map((rollResult, index) => {
