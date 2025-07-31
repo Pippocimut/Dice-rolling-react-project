@@ -12,7 +12,6 @@ import type {RootState} from "../../../../store";
 import EditButtonForm from "./dialogs/forms/EditButtonForm.tsx";
 import CreateButtonForm from "./dialogs/forms/CreateButtonForm.tsx";
 import {toggleEditMode} from "../../../../store/selected/selectedSlice.ts";
-import {SlPencil} from "react-icons/sl";
 import {BsPencilFill} from "react-icons/bs";
 import {FaDiceD20} from "react-icons/fa";
 
