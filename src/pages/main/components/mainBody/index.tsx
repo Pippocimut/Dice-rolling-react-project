@@ -71,7 +71,7 @@ const MainBody = () => {
                 <button
                     id="createButton"
                     className={
-                        "w-45 h-30 flex items-center flex-row justify-center bg-blue-700 hover:outline-2 rounded-lg"
+                        "w-45 h-30 flex items-center flex-row justify-center bg-blue-800 hover:outline-2 rounded-lg"
                     }
                     onClick={() => setIsOpenCreateDialog(true)}
                 >
@@ -79,11 +79,11 @@ const MainBody = () => {
                 </button>
                 {moreThanOneButton && <button
                     id="editModeButton"
-                    className={"w-40 h-20 rounded-lg hover:outline-2 " + (editMode ? "bg-white border-4 border-blue-700 text-blue-700" : "bg-blue-700 text-white")}
+                    className={"w-40 h-20 rounded-lg hover:outline-2 text-lg" + (editMode ? "bg-white border-4 border-blue-700 text-blue-700" : "bg-blue-800 text-white")}
                     onClick={() => dispatch(toggleEditMode())}>{
                     editMode ? "Done" : <div
                         className={"flex justify-center gap-2 items-center"}
-                    ><BsPencilFill/> <span className={"pr-4"}>Edit</span></div>
+                    ><BsPencilFill/> <span className={"pr-4 text-lg"}>Edit</span></div>
                 }</button>}
             </div>
             <ButtonList
