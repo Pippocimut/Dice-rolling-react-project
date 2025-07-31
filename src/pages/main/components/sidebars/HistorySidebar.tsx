@@ -68,7 +68,7 @@ const HistorySideBar = () => {
                 </div>
                 <div className={"flex-1  w-full h-full " + (sidebarExtended ? "block" : "hidden")}>
                     <div className="flex flex-col h-full w-full">
-                        <button className={"w-30 rounded-lg p-4 m-4 border-2 border-white"} onClick={() => {
+                        <button className={"w-40 mx-auto rounded-lg p-4 m-4 border-2 border-white"} onClick={() => {
                             dispatch(clearHistory())
                         }}>
                             Clear History
@@ -87,7 +87,7 @@ const HistorySideBar = () => {
                                         <li
                                             key={index}
                                             className={
-                                                "p-4 my-2 w-full text-white m-4 rounded-lg " +
+                                                "p-4 my-4 w-full text-white rounded-lg " +
                                                 historyData.color +
                                                 " h-fit max-w-80 text-left " + border
                                             }
