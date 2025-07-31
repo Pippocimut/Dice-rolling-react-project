@@ -67,7 +67,7 @@ const MainBody = () => {
                 {buttonSets?.find((buttonSet) => buttonSet.id == selectedSetId)?.buttonList?.length === 0 ? "Create a dice roll set by pressing the button" : "Click on a button to roll it"}
             </p>
 
-            <div className={"flex flex-col items-center justify-center w-full mt-8 gap-16 "}>
+            <div className={"flex flex-row items-center justify-center w-full mt-8 gap-16 "}>
                 <button
                     id="createButton"
                     className={
