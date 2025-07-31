@@ -68,7 +68,7 @@ const HistorySideBar = () => {
                 </div>
                 <div className={"flex-1 w-100 h-full " + (sidebarExtended ? "block" : "hidden")}>
                     <div className="flex flex-col h-full w-full">
-                        <button className={"w-40 mx-auto rounded-lg p-4 m-4 border-2 border-white"} onClick={() => {
+                        <button className={"w-40 mx-auto rounded-lg p-4 m-4 border-2 border-white hover:bg-blue-500"} onClick={() => {
                             dispatch(clearHistory())
                         }}>
                             Clear History
