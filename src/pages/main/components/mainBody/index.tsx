@@ -59,7 +59,7 @@ const MainBody = () => {
     return (
         <div
             className={
-                "flex flex-col min-h-screen mx-4 px-4 min-w-1/4 gap-4 w-full bg-[var(--background-color)] items-center"
+                "flex flex-col min-h-screen mx-4 px-4 min-w-1/4 gap-4 w-full bg-background items-center"
             }
         >
             <ToastContainer position="bottom-left"
@@ -76,20 +76,20 @@ const MainBody = () => {
                 Connected to: <span className={"font-bold"}>{roomName}</span>
             </p>}
 
-            <div className={"flex flex-row-reverse flex-wrap  items-center justify-center w-full mt-8 gap-8 "}>
+            <div className={"flex flex-row-reverse flex-wrap  items-center justify-center w-full m-8 gap-8 " + (moreThanOneButton ? " " : " h-full mb-64" )}>
                 <button
                     id="createButton"
                     className={
                         (moreThanOneButton ? "w-20 h-20 text-6xl" : "w-40 h-40 text-8xl") +
-                        " flex items-center flex-row justify-center bg-[var(--secondary-background-color)] hover:outline-2 rounded-lg"
+                        " flex items-center flex-row justify-center bg-secondary-background hover:outline-2 rounded-lg"
                     }
                     onClick={() => setIsOpenCreateDialog(true)}
                 >
-                    <span className={" text-[var(--white-text-color)] pb-3"}>+</span>
+                    <span className={" text-white-text pb-3"}>+</span>
                 </button>
                 {moreThanOneButton && <button
                     id="editModeButton"
-                    className={"w-20 h-20 rounded-lg hover:outline-2 text-2xl " + (editMode ? " bg-[var(--white-text-color)] border-4 border-[var(--secondary-background-color)] text-[var(--secondary-background-color)]" : " bg-[var(--secondary-background-color)] text-[var(--white-text-color)]")}
+                    className={"w-20 h-20 rounded-lg hover:outline-2 text-2xl " + (editMode ? " bg-white-text border-4 border-secondary-background text-secondary-background" : " bg-secondary-background text-white-text")}
                     onClick={() => dispatch(toggleEditMode())}>{
                     editMode ? <span className={"text-5xl pb-2 font-bold"}>&#10004;</span> : <div
                         className={"flex justify-center gap-2 items-center"}

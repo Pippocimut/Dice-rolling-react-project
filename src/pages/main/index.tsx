@@ -14,7 +14,7 @@ export function Main() {
     },[])
 
     return (
-        <div className={"flex items-stretch min-h-screen bg-background-color flex-row justify-start"}>
+        <div className={"flex items-stretch min-h-screen bg-background flex-row justify-start"}>
             <TagsSideBar/>
             <MainBody/>
         </div>

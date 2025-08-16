@@ -10,7 +10,7 @@ const RollDialog = ({
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 z-50 overflow-auto flex items-center justify-center">
-      <div className=" bg-black rounded-lg p-8 max-w-md w-full mx-4 shadow-xl">
+      <div className=" rounded-lg p-8 bg-background border-2 border-borders max-w-md w-full mx-4 shadow-xl">
         <div className="flex flex-row w-full justify-end items-center mb-4">
           <button
             onClick={onClose}

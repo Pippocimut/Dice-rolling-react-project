@@ -20,7 +20,7 @@ const RollForm = ({ createRoll }: { createRoll: (roll: Roll) => void }) => {
   };
 
   return (
-    <div className={"flex flex-col gap-2 w-full justify-center items-center"}>
+    <div className={"flex flex-col gap-2 w-full bg-background justify-center items-center"}>
       <label className={labelClassName}>Roll name: </label>
       <input
         type={"text"}
@@ -38,7 +38,7 @@ const RollForm = ({ createRoll }: { createRoll: (roll: Roll) => void }) => {
         onChange={handleEquationChange}
       />
       <button
-        className={"p-4 m-4"}
+        className={"p-4 m-4 border-2 border-borders rounded-lg"}
         onClick={() => {
           createRoll(roll);
         }}
