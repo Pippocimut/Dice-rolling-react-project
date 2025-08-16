@@ -10,6 +10,7 @@ export const colors = [
     "blue-roll-button",
     "purple-roll-button",
     "pink-roll-button",
+    "gray-roll-button"
 ];
 
 type Props = {

@@ -102,6 +102,11 @@ button {
     @apply text-white;
 }
 
+.gray-roll-button {
+    @apply bg-gray-600;
+    @apply text-white;
+}
+
 .orange-roll-button {
     @apply bg-orange-600;
     @apply text-white;
