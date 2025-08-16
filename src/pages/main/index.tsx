@@ -1,6 +1,5 @@
 import TagsSideBar from "./components/sidebars/TagsSidebar.tsx";
 import MainBody from "./components/mainBody/index.tsx";
-import HistorySideBar from "./components/sidebars/HistorySidebar.tsx";
 import {useSelector} from "react-redux";
 import type {RootState} from "../../store";
 import {useContext, useEffect} from "react";
@@ -18,7 +17,6 @@ export function Main() {
         <div className={"flex items-stretch min-h-screen bg-background-color flex-row justify-start"}>
             <TagsSideBar/>
             <MainBody/>
-            <HistorySideBar/>
         </div>
     );
 }

@@ -5,6 +5,7 @@ import {Settings} from "./components/Settings.tsx";
 import {Connect} from "./components/Connect.tsx";
 import DefaultDialog from "../mainBody/dialogs/DefaultDialog.tsx";
 import {SetSelect} from "./components/SetSelect.tsx";
+import HistoryPanel from "./RollHistoryPanel.tsx";
 
 const TagsSideBar = () => {
     const buttonSets = useSelector((state: RootState) => state.buttonSet.sets)
@@ -30,8 +31,8 @@ const TagsSideBar = () => {
         <div
             className={
                 ` fixed top-0 left-0 z-50 min-w-25 transition-all overflow-hidden transform duration-200 bg-[var(--background-color)]  ease-in-out py-4 text-[var(--text-color)]` +
-                ` ${expanded
-                    ? "w-1/4 px-4 max-w-100 h-screen border-r-4 border-[var(--secondary-background-color)] "
+                ` ${expanded 
+                    ? "w-1/3 px-4 max-w-100 min-w-65 h-screen max-h-screen border-r-4 border-[var(--secondary-background-color)] "
                     : "w-1/12 max-w-48 h-25"
                 }
 `}
@@ -85,6 +86,9 @@ const TagsSideBar = () => {
                         <Connect/>
                     </div>
                 </DefaultDialog>
+                <div className={"flex-1 w-full h-full " + (expanded ? "block" : "hidden")}>
+                    <HistoryPanel/>
+                </div>
                {/* <div className={"px-3 w-full " + (expanded ? "block" : "hidden")}>
                     <ul
                         className={`flex-1 px-3 w-full my-6 block  transition-all h-[100hv-50px] overflow-y-auto`}
