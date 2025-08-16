@@ -76,15 +76,16 @@ const MainBody = () => {
                 Connected to: <span className={"font-bold"}>{roomName}</span>
             </p>}
 
-            <div className={"flex flex-row flex-wrap items-center justify-center w-full mt-8 gap-8 "}>
+            <div className={"flex flex-row-reverse flex-wrap  items-center justify-center w-full mt-8 gap-8 "}>
                 <button
                     id="createButton"
                     className={
-                        "w-20 h-20 flex items-center flex-row justify-center bg-[var(--secondary-background-color)] hover:outline-2 rounded-lg"
+                        (moreThanOneButton ? "w-20 h-20 text-6xl" : "w-40 h-40 text-8xl") +
+                        " flex items-center flex-row justify-center bg-[var(--secondary-background-color)] hover:outline-2 rounded-lg"
                     }
                     onClick={() => setIsOpenCreateDialog(true)}
                 >
-                    <span className={"text-6xl text-[var(--white-text-color)] pb-3 flex flex-row"}>+</span>
+                    <span className={" text-[var(--white-text-color)] pb-3"}>+</span>
                 </button>
                 {moreThanOneButton && <button
                     id="editModeButton"
