@@ -126,7 +126,7 @@ const buttonSetSlice = createSlice({
             const set = state.sets.find(set => set.id === setId) ?? state.sets.find(set => set.id === 1);
             if (!set) return;
 
-            if (tag.id === -1) {
+            if (tag.id === -1 && tag.name.trim() !== "") {
                 tag.id = state.nextTagId++;
                 set.tags.push(tag);
             }

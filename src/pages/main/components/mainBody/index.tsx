@@ -13,7 +13,7 @@ import EditButtonForm from "./dialogs/forms/EditButtonForm.tsx";
 import CreateButtonForm from "./dialogs/forms/CreateButtonForm.tsx";
 import {toggleEditMode} from "../../../../store/selected/selectedSlice.ts";
 import {BsPencilFill} from "react-icons/bs";
-import {FaDiceD20} from "react-icons/fa";
+import {Slide, ToastContainer} from "react-toastify";
 
 const MainBody = () => {
     const dispatch = useDispatch();
@@ -59,9 +59,13 @@ const MainBody = () => {
     return (
         <div
             className={
-                "flex flex-col min-h-screen gap-4 w-full bg-neutral-900 items-center"
+                "flex flex-col min-h-screen mx-4 px-4 min-w-1/4 gap-4 w-full bg-[var(--background-color)] items-center"
             }
         >
+            <ToastContainer position="bottom-left"
+                            newestOnTop={false}
+                            transition={Slide}
+                            stacked/>
             <h1 className={"text-6xl font-bold m-8"}>
                 A dice roller app
             </h1>
@@ -69,26 +73,26 @@ const MainBody = () => {
                 {buttonSets?.find((buttonSet) => buttonSet.id == selectedSetId)?.buttonList?.length === 0 ? "Create a dice roll set by pressing the button" : "Click on a button to roll it"}
             </p>
             {roomName && roomName.length > 0 && <p className={"text-2xl"}>
-                 Connected to: <span className={"font-bold"}>{roomName}</span>
+                Connected to: <span className={"font-bold"}>{roomName}</span>
             </p>}
 
-            <div className={"flex flex-row items-center justify-center w-full mt-8 gap-16 "}>
+            <div className={"flex flex-row flex-wrap items-center justify-center w-full mt-8 gap-8 "}>
                 <button
                     id="createButton"
                     className={
-                        "w-45 h-30 flex items-center flex-row justify-center bg-neutral-700 hover:outline-2 rounded-lg"
+                        "w-20 h-20 flex items-center flex-row justify-center bg-[var(--secondary-background-color)] hover:outline-2 rounded-lg"
                     }
                     onClick={() => setIsOpenCreateDialog(true)}
                 >
-                    <span className={"text-6xl flex flex-row"}>+<FaDiceD20/></span>
+                    <span className={"text-6xl text-[var(--white-text-color)] pb-3 flex flex-row"}>+</span>
                 </button>
                 {moreThanOneButton && <button
                     id="editModeButton"
-                    className={"w-40 h-20 rounded-lg hover:outline-2 text-lg " + (editMode ? " bg-white border-4 border-neutral-700 text-neutral-700" : " bg-neutral-700 text-white")}
+                    className={"w-20 h-20 rounded-lg hover:outline-2 text-2xl " + (editMode ? " bg-[var(--white-text-color)] border-4 border-[var(--secondary-background-color)] text-[var(--secondary-background-color)]" : " bg-[var(--secondary-background-color)] text-[var(--white-text-color)]")}
                     onClick={() => dispatch(toggleEditMode())}>{
-                    editMode ? <span className={"text-lg"}>Done</span> : <div
+                    editMode ? <span className={"text-5xl pb-2 font-bold"}>&#10004;</span> : <div
                         className={"flex justify-center gap-2 items-center"}
-                    ><BsPencilFill/> <span className={"pr-4 text-lg"}>Edit</span></div>
+                    ><BsPencilFill/></div>
                 }</button>}
             </div>
             <ButtonList
@@ -97,7 +101,7 @@ const MainBody = () => {
                 removeButton={removeButton}
                 updateButtons={(newButtonList) => {
                     const indexOfButtonSet = buttonSets.findIndex((setObject: ButtonSet) => setObject.id === selectedSetId)
-                    const filter = (button: ButtonData) => newButtonList.find((newButton) => newButton.name === button.name) === undefined
+                    const filter = (button: ButtonData) => newButtonList.find((newButton) => newButton.id === button.id) === undefined
                     const updatedButtonList = buttonSets[indexOfButtonSet].buttonList.filter(filter)
                     dispatch(sendNewButtonList({
                         setId: selectedSetId,

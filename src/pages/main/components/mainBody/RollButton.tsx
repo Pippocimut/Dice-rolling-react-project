@@ -3,12 +3,14 @@ import {evaluate} from "mathjs";
 import {useContext} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {
-    addRoll,
+    addRoll, type ButtonPressRecord,
     type RollResult
 } from "../../../../store/history-sidebar/historySidebarSlice.ts";
 import type {RootState} from "../../../../store";
 import {SocketContext} from "../../../../context/SocketContext.ts";
 import {SortableItemContext} from "./dnd/SortableItem.tsx";
+import {toast} from "react-toastify";
+import {FaDiceD20} from "react-icons/fa";
 
 type Props = {
     rolls: Roll[];
@@ -121,6 +123,58 @@ const RollButton = ({rolls, name, editButton, color, tag, editMode}: Props) => {
             date: date.toLocaleString(),
             rollResult: results,
         }
+        const showCustomRollToast = (historyData: ButtonPressRecord) => {
+            toast(
+                // Your toast content
+                () => (
+                    <div className="w-full flex flex-col items-start justify-start">
+                        {/* Custom icon */}
+                        <div className="toast-icon">
+                            <FaDiceD20 size={24} className="dice-icon"/>
+                        </div>
+
+                        {/* Toast content */}
+                        <div className="w-full flex flex-col items-start justify-start">
+                            <p className={"ml-auto text-sm w-full text-right"}>{historyData.date}</p>
+                            <p>From: {historyData.username}</p>
+                            <h3 className={"mr-auto font-bold text-xl"}>
+                                {historyData.name}
+                            </h3>
+
+                            {historyData.rollResult &&
+                                historyData.rollResult.map((rollResult, index) => {
+                                    return (
+                                        <div key={index} className={"text-left py-4 px-4 "}>
+                                            <p className={"font-bold text-lg"}>{rollResult.name}</p>
+                                            <div className={"flex flex-col ml-2 my-1"}>
+                                                <div className={"flex flex-row gap-1 flex-wrap text-lg font-bold"}>
+                                                    <p>Total: </p>
+                                                    <p>
+                                                        {rollResult.result} = {rollResult.total}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                        </div>
+                    </div>
+                ),
+                {
+                    position: "bottom-left",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    progressClassName: "progress-bar-toast",
+                    className: 'roll-toast-container',
+                }
+            );
+        };
+
+        showCustomRollToast(roll)
 
         dispatch(addRoll(roll))
         emitRoll({
@@ -132,10 +186,13 @@ const RollButton = ({rolls, name, editButton, color, tag, editMode}: Props) => {
 
     const {attributes, listeners, ref} = useContext(SortableItemContext);
 
+    console.log("Spliced color", `${color.slice(0, -4)}-400`)
 
     return (
         <button {...attributes} {...listeners} ref={ref}
-                className={`w-30 h-30 rounded-lg ${color} hover:outline-2 ${
+                className={`w-30 h-30 p-4 rounded-lg ${color}
+                font-bold
+                hover:outline-4 ${
                     editMode ? "glowing-border" : ""
                 }`}
 

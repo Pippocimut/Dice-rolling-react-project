@@ -1,10 +1,8 @@
-import RollButton from "./RollButton";
 import type {RootState} from "../../../../store";
 import {useSelector} from "react-redux";
 import type {ButtonData, Tag} from "../../../../store/button-sets/buttonSetSlice.ts";
 import {useMemo} from "react";
-
-import {SortableList} from "./dnd/SortableList.tsx";
+import ButtonListSection from "./ButtonListSection.tsx";
 
 type Props = {
     selectedTag?: Tag;
@@ -16,7 +14,6 @@ type Props = {
 };
 
 const ButtonList = ({
-                        selectedTag,
                         removeButton,
                         editButton,
                         updateButtons,
@@ -27,49 +24,40 @@ const ButtonList = ({
     const selectedSetId = useSelector((state: RootState) => state.selected.selectedSetId)
 
     const buttonSet = useMemo(() => {
-        return buttonSets.find((buttonSet) =>{
-            console.log("Button set id:",buttonSet.id)
-            console.log("Selected set id:",selectedSetId)
+        return buttonSets.find((buttonSet) => {
+            console.log("Button set id:", buttonSet.id)
+            console.log("Selected set id:", selectedSetId)
             return buttonSet.id === selectedSetId
-        } );
+        });
     }, [buttonSets, selectedSetId]);
 
-    const items = buttonSet?.buttonList.map((buttonData: ButtonData) => {
-        if (!selectedTag || buttonData.tag === selectedTag.id) {
-            return buttonData
-        }
-    }).filter(item => item !== undefined) ?? []
+    const tags = buttonSet?.tags ?? []
 
-    console.log("Items:",items)
-    console.log("Button sets:",buttonSets)
-    console.log("Button set:",buttonSet)
-    console.log("Selected Set Id:",selectedSetId)
-    console.log("Selected Tag:",selectedTag)
+    const untaggedButtons = buttonSet?.buttonList.filter(button => button.tag === undefined || button.tag === -1 || button.tag === null)
 
     return (
-        <SortableList
-            openCreateDialog={openCreateDialog}
-            items={items}
-            onChange={updateButtons}
-            renderItem={(buttonData) => {
-                return (
-                    <SortableList.Item id={buttonData.id}>
-                        <div className={"flex flex-row"} key={buttonData.id}>
-                            <RollButton
-                                editMode={editMode}
-                                rolls={buttonData.rolls}
-                                name={buttonData.name}
-                                deleteButton={() => removeButton(buttonData.id)}
-                                editButton={() => editButton(buttonData.id)}
-                                color={buttonData.color}
-                                tag={buttonData.tag}
-                                key={buttonData.id}
-                            />
-                        </div>
-                    </SortableList.Item>)
+        <div className={"flex flex-row flex-wrap mx-8 gap-8 justify-center items-center"}>
+            {tags.length > 0 && <>
+                {tags.map((tag) => {
+                    const items = buttonSet?.buttonList.filter(button => button.tag === tag.id)
+
+                    if (items && items.length > 0) {
+                        return <ButtonListSection removeButton={removeButton} updateButtons={updateButtons}
+                                                  editButton={editButton} openCreateDialog={openCreateDialog}
+                                                  editMode={editMode} items={items} tagName={tag.name}/>
+
+                    }
+
+                })}
+
+            </>}
+            {untaggedButtons && untaggedButtons.length > 0 &&
+                <ButtonListSection removeButton={removeButton} updateButtons={updateButtons}
+                                   editButton={editButton} openCreateDialog={openCreateDialog}
+                                   editMode={editMode} items={untaggedButtons} tagName={"Other"}/>
+
             }
-            }
-        />
+        </div>
     );
 };
 

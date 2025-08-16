@@ -38,7 +38,7 @@ const RollsList = ({
             </p>
             <button
               className={
-                "mt-2 w-10 bg-red-500 text-white rounded hover:bg-red-600 p-2"
+                "mt-2 w-10 bg-[var(--danger)] text-white rounded hover:bg-red-600 p-2"
               }
               onClick={() => {
                 handleDeleteRoll(index);

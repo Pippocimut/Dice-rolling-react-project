@@ -1,7 +1,5 @@
-import {useDispatch, useSelector} from "react-redux";
+import { useSelector} from "react-redux";
 import type {RootState} from "../../../../store";
-import {deleteTagOfSet} from "../../../../store/button-sets/buttonSetSlice.ts";
-import {setSelectedTag} from "../../../../store/selected/selectedSlice.ts";
 import {useEffect, useRef, useState} from "react";
 import {Settings} from "./components/Settings.tsx";
 import {Connect} from "./components/Connect.tsx";
@@ -11,10 +9,7 @@ import {SetSelect} from "./components/SetSelect.tsx";
 const TagsSideBar = () => {
     const buttonSets = useSelector((state: RootState) => state.buttonSet.sets)
 
-    const selectedTagId = useSelector((state: RootState) => state.selected.selectedTagId)
     const selectedButtonSetId = useSelector((state: RootState) => state.selected.selectedSetId)
-
-    const dispatch = useDispatch()
 
     const currentSet = buttonSets.find((buttonSet) => buttonSet.id == selectedButtonSetId)
     const tagList = currentSet?.tags || []
@@ -34,9 +29,12 @@ const TagsSideBar = () => {
     return (
         <div
             className={
-                " min-h-screen bg-neutral-700 border-r" +
-                ` transition-all ${expanded ? "w-150" : "w-15"}`
-            }
+                ` fixed top-0 left-0 z-50 min-w-25 transition-all overflow-hidden transform duration-200 bg-[var(--background-color)]  ease-in-out py-4 text-[var(--text-color)]` +
+                ` ${expanded
+                    ? "w-1/4 px-4 max-w-100 h-screen border-r-4 border-[var(--secondary-background-color)] "
+                    : "w-1/12 max-w-48 h-25"
+                }
+`}
         >
             <nav
                 className={
@@ -44,17 +42,17 @@ const TagsSideBar = () => {
                 }>
                 <div
                     className={
-                        "p-4 pb-2 flex justify-end"
+                        "w-full pb-2 flex justify-end"
                     }
                 >
                     <button
                         onClick={() => setExpanded((curr) => !curr)}
-                        className={"focus:outline-none p-0"}
+                        className={"focus:outline-none p-4"}
                     >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
+                            width="48"
+                            height="48"
                             viewBox="0 0 24 24"
                             fill="none"
                             stroke="currentColor"
@@ -62,10 +60,10 @@ const TagsSideBar = () => {
                             strokeLinecap="round"
                             strokeLinejoin="round"
                             className={
+                                "" +
                                 "icon icon-tabler icons-tabler-outline icon-tabler-menu-2"
                             }
                         >
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                             <path d="M4 6l16 0"/>
                             <path d="M4 12l16 0"/>
                             <path d="M4 18l16 0"/>
@@ -87,7 +85,7 @@ const TagsSideBar = () => {
                         <Connect/>
                     </div>
                 </DefaultDialog>
-                <div className={"px-3 w-full " + (expanded ? "block" : "hidden")}>
+               {/* <div className={"px-3 w-full " + (expanded ? "block" : "hidden")}>
                     <ul
                         className={`flex-1 px-3 w-full my-6 block  transition-all h-[100hv-50px] overflow-y-auto`}
                     >
@@ -135,7 +133,7 @@ const TagsSideBar = () => {
                         })}
                     </ul>
 
-                </div>
+                </div>*/}
             </nav>
         </div>
     );

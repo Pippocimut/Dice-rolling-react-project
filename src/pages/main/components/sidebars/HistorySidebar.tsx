@@ -7,6 +7,7 @@ import {
     toggleExtended
 } from "../../../../store/history-sidebar/historySidebarSlice.ts";
 import {clearHistory} from "../../../../store/history-sidebar/historySidebarSlice.ts";
+import {FaDiceD20} from "react-icons/fa";
 
 const HistorySideBar = () => {
 
@@ -31,13 +32,16 @@ const HistorySideBar = () => {
     return (
         <aside
             className={
-                "min-h-screen transition bg-neutral-700" +
-                ` transition-all ${sidebarExtended ? "w-150" : "w-15"}`
-            }
+                `min-h-screen transition-all overflow-hidden transform duration-300 ease-in-out py-4 border-l bg-[var(--secondary-background-color)]` +
+                ` ${sidebarExtended
+                    ? "w-1/4 px-4 max-w-100"
+                    : "w-1/12 max-w-15"
+                }
+`}
         >
             <nav
                 className={
-                    "min-h-screen h-full flex flex-col bg-neutral-700 border-l"
+                    "min-h-screen flex flex-col "
                 }>
                 <div
                     className={
@@ -46,30 +50,26 @@ const HistorySideBar = () => {
                 >
                     <button
                         onClick={() => dispatch(toggleExtended())}
-                        className={"focus:outline-none p-0"}
                     >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="24"
                             height="24"
-                            viewBox="0 0 24 24"
                             fill="none"
                             stroke="currentColor"
                             strokeWidth="2"
                             strokeLinecap="round"
                             strokeLinejoin="round"
-                            className="icon icon-tabler icons-tabler-outline icon-tabler-clock"
                         >
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                             <circle cx="12" cy="12" r="9"/>
                             <polyline points="12 7 12 13 15 15"/>
                         </svg>
 
                     </button>
                 </div>
-                <div className={"flex-1 w-100 h-full " + (sidebarExtended ? "block" : "hidden")}>
+                <div className={"flex-1 w-full h-full " + (sidebarExtended ? "block" : "hidden")}>
                     <div className="flex flex-col h-full w-full">
-                        <button className={"w-40 mx-auto rounded-lg p-4 m-4 border-2 border-white hover:bg-blue-500"}
+                        <button className={"w-full mx-auto rounded-lg p-4 m-4 border-2 border-white hover:bg-blue-500"}
                                 onClick={() => {
                                     dispatch(clearHistory())
                                 }}>
@@ -101,49 +101,40 @@ const HistorySideBar = () => {
                                                 historyData.color + " " + border + " " + hoverBehavior
                                             }
                                         >
+                                            <div className="w-full flex flex-col items-start justify-start">
+                                                {/* Custom icon */}
+                                                <div className="toast-icon">
+                                                    <FaDiceD20 size={24} className="dice-icon"/>
+                                                </div>
 
-                                            <p className={"ml-auto text-sm w-fit"}>{historyData.date}</p>
-                                            <p>From: {historyData.username}</p>
-                                            <h3 className={"mr-auto font-bold text-xl"}>
-                                                {historyData.name}
-                                            </h3>
-                                            <p className={"text-sm"}>
-                                                {historyData.id}
-                                            </p>
+                                                {/* Toast content */}
+                                                <div className="w-full flex flex-col items-start justify-start">
+                                                    <p className={"ml-auto text-sm w-full text-right"}>{historyData.date}</p>
+                                                    <p>From: {historyData.username}</p>
+                                                    <h3 className={"mr-auto font-bold text-xl"}>
+                                                        {historyData.name}
+                                                    </h3>
 
-                                            {historyData.rollResult &&
-                                                historyData.rollResult.map((rollResult, index) => {
-                                                    return (
-                                                        <div key={index} className={"text-left py-4 px-4 "}>
-                                                            <p className={"font-bold text-lg"}>{rollResult.name}</p>
-                                                            <div className={"flex flex-col ml-2 my-1"}>
-                                                                <div
-                                                                    className={"flex flex-row gap-1 flex-wrap text-lg font-bold"}>
-                                                                    <p>Total: </p>
-                                                                    <p>
-                                                                        {rollResult.result} = {rollResult.total}
-                                                                    </p>
+                                                    {historyData.rollResult &&
+                                                        historyData.rollResult.map((rollResult, index) => {
+                                                            return (
+                                                                <div key={index} className={"text-left py-4 px-4 "}>
+                                                                    <p className={"font-bold text-lg"}>{rollResult.name}</p>
+                                                                    <div className={"flex flex-col ml-2 my-1"}>
+                                                                        <div className={"flex flex-row gap-1 flex-wrap text-lg font-bold"}>
+                                                                            <p>Total: </p>
+                                                                            <p>
+                                                                                {rollResult.result} = {rollResult.total}
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
-                                                                <div className={"flex flex-row flex-wrap gap-1 my-1"}>
-                                                                    <p>With
-                                                                        Advantage:
-                                                                    </p>
-                                                                    <p>
-                                                                         {rollResult.resultAdv} = {rollResult.totalAdv}
-                                                                    </p>
-                                                                </div>
-                                                                <div className={"flex flex-row flex-wrap gap-1 my-1"}>
-                                                                    <p>With
-                                                                        Disadvantage:
-                                                                    </p>
-                                                                    <p>
-                                                                        {rollResult.resultDis} = {rollResult.totalDis}
-                                                                    </p>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    );
-                                                })}
+                                                            );
+                                                        })}
+                                                </div>
+                                            </div>
+
+
                                         </button>
                                     );
                                 })}
