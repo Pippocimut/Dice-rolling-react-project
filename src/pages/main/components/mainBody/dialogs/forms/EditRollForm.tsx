@@ -8,12 +8,9 @@ type Props = {
     updateRoll: (roll: Roll, index: number) => void;
 };
 
-const EditRollForm = ({updateRoll,index}: Props) => {
+const EditRollForm = ({updateRoll,index,roll}: Props) => {
 
-    const [dummyRoll, updateDummyDummyRoll] = useState<Roll>({
-        name: "New roll",
-        equation: `${1}d${20}+0`,
-    });
+    const [dummyRoll, updateDummyDummyRoll] = useState<Roll>(roll);
 
     return (<RollForm roll={dummyRoll} updateRoll={updateDummyDummyRoll}>
             <button

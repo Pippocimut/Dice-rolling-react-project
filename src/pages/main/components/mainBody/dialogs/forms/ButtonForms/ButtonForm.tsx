@@ -1,12 +1,11 @@
 import {type PropsWithChildren, useState} from "react";
 import {toast} from "react-toastify";
 import type {Roll} from "../../../../../types.ts";
-import RollForm from "../RollForm.tsx";
 import TagSelection, {colors} from "../TagSelection.tsx";
 import RollsList from "../RollsList.tsx";
-import {type ButtonData, type Tag} from "../../../../../../../store/button-sets/buttonSetSlice.ts";
+import {type ButtonData, type Tag} from "@/store/button-sets/buttonSetSlice.ts";
 import {useSelector} from "react-redux";
-import type {RootState} from "../../../../../../../store";
+import type {RootState} from "@/store";
 import DefaultDialog from "../../DefaultDialog.tsx";
 import CreateRollForm from "../CreateRollForm.tsx";
 
@@ -70,9 +69,12 @@ const ButtonForm = ({
             close();
         };
 
+
         return (
-            <div className={"flex flex-col bg-[var(--background-color)] text-[var(--text-color)] gap-2 p-4 h-fit w-fit justify-center items-center"}>
-                <div className={"flex flex-col bg-[var(--background-color)] text-[var(--text-color)] gap-2 p-4 h-fit w-fit justify-center items-center"}>
+            <div
+                className={"flex flex-col bg-[var(--background-color)] text-[var(--text-color)] gap-2 p-4 h-fit w-fit justify-center items-center"}>
+                <div
+                    className={"flex flex-col bg-[var(--background-color)] text-[var(--text-color)] gap-2 p-4 h-fit w-fit justify-center items-center"}>
                     <div>
                         <h1 className={"text-4xl w-fit font-bold"}>
                             {title}
