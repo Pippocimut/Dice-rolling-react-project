@@ -46,17 +46,12 @@ const MainBody = () => {
     const editMode = useSelector((state: RootState) => state.selected.editMode)
     const selectedTag = buttonSets.find((buttonSet) => buttonSet.id == selectedSetId)?.tags.find((tag) => tag.id == selectedTagId)
 
-    console.log(buttonSets.find((buttonSet) => buttonSet.id == selectedSetId))
-
-
-
     let moreThanOneButton = false;
     const buttonFound = buttonSets.find((buttonSet) => buttonSet.id === selectedSetId)
     if (buttonFound) {
         moreThanOneButton = buttonFound.buttonList.length > 0;
     }
     const {roomName} = useSelector((state: RootState) => state.socket)
-
 
     return (
         <div className={"flex flex-col min-h-full pb-8 px-4 min-w-1/4 gap-4 w-full bg-background items-center"}>
