@@ -1,52 +1,47 @@
-import type { Roll } from "../../../../types.ts";
-import { useState } from "react";
+import type {Roll} from "../../../../types.ts";
+import {type PropsWithChildren} from "react";
 
-const RollForm = ({ createRoll }: { createRoll: (roll: Roll) => void }) => {
-  const labelClassName = "text-left";
-  const dieInputClassname =
-    "p-4 w-50 border-2 border-gray-500 rounded-lg text-right";
+type Props = {
+    roll: Roll,
+    updateRoll: (roll: Roll) => void;
+};
 
-  const [roll, updateRoll] = useState<Roll>({
-    name: "New roll",
-    equation: `${1}d${20}+0`,
-  });
+const RollForm = ({roll, updateRoll, children}: PropsWithChildren<Props>) => {
+    const labelClassName = "text-left";
+    const dieInputClassname = "p-4 w-50 border-2 border-gray-500 rounded-lg text-right";
 
-  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    updateRoll({ ...roll, name: e.target.value });
-  };
+    const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        updateRoll({...roll, name: e.target.value});
+    };
 
-  const handleEquationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    updateRoll({ ...roll, equation: e.target.value });
-  };
+    const handleEquationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        updateRoll({...roll, equation: e.target.value});
+    };
 
-  return (
-    <div className={"flex flex-col gap-2 w-full bg-background justify-center items-center"}>
-      <label className={labelClassName}>Roll name: </label>
-      <input
-        type={"text"}
-        placeholder={"Roll Name"}
-        value={roll.name}
-        className={dieInputClassname}
-        onChange={handleNameChange}
-      />
-      <label className={labelClassName}>Equation: </label>
-      <input
-        type={"text"}
-        placeholder={"Equation"}
-        value={roll.equation}
-        className={dieInputClassname}
-        onChange={handleEquationChange}
-      />
-      <button
-        className={"p-4 m-4 border-2 border-borders rounded-lg"}
-        onClick={() => {
-          createRoll(roll);
-        }}
-      >
-        Add Roll
-      </button>
-    </div>
-  );
+    return (
+        <div className={"flex flex-col gap-2 w-full bg-background text-text justify-center items-center"}>
+            <h2 className={"text-3xl font-bold text-center mb-8"}>
+                Roll creation form
+            </h2>
+            <label className={labelClassName}>Roll name: </label>
+            <input
+                type={"text"}
+                placeholder={"Roll Name"}
+                value={roll.name}
+                className={dieInputClassname}
+                onChange={handleNameChange}
+            />
+            <label className={labelClassName}>Equation: </label>
+            <input
+                type={"text"}
+                placeholder={"Equation"}
+                value={roll.equation}
+                className={dieInputClassname}
+                onChange={handleEquationChange}
+            />
+            {children}
+        </div>
+    );
 };
 
 export default RollForm;

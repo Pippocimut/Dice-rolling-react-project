@@ -1,13 +1,14 @@
 import {type PropsWithChildren, useState} from "react";
 import {toast} from "react-toastify";
-import type {Roll} from "../../../../types.ts";
-import RollForm from "./RollForm.tsx";
-import RollDialog from "../RollDialog.tsx";
-import TagSelection, {colors} from "./TagSelection.tsx";
-import RollsList from "./RollsList.tsx";
-import {type ButtonData, type Tag} from "../../../../../../store/button-sets/buttonSetSlice.ts";
+import type {Roll} from "../../../../../types.ts";
+import RollForm from "../RollForm.tsx";
+import TagSelection, {colors} from "../TagSelection.tsx";
+import RollsList from "../RollsList.tsx";
+import {type ButtonData, type Tag} from "../../../../../../../store/button-sets/buttonSetSlice.ts";
 import {useSelector} from "react-redux";
-import type {RootState} from "../../../../../../store";
+import type {RootState} from "../../../../../../../store";
+import DefaultDialog from "../../DefaultDialog.tsx";
+import CreateRollForm from "../CreateRollForm.tsx";
 
 type Props = {
     title: string;
@@ -116,17 +117,15 @@ const ButtonForm = ({
                         {children}
                     </div>
 
-                    <RollDialog isOpen={isOpenNewRollDialog} onClose={() => setIsOpenNewRollDialog(false)}>
-                        <RollForm
+                    <DefaultDialog isOpen={isOpenNewRollDialog} onClose={() => setIsOpenNewRollDialog(false)}>
+                        <CreateRollForm
                             createRoll={(roll: Roll) => {
                                 setRolls((prev) => [...prev, roll]);
                                 setIsOpenNewRollDialog(false);
                             }}
                         />
-                    </RollDialog>
+                    </DefaultDialog>
                 </div>
-
-
             </div>
         );
     }

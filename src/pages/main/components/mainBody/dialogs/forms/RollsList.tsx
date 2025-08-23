@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 import type { Roll } from "../../../../types";
+import {BsPencilFill} from "react-icons/bs";
 
 const RollsList = ({
   rolls,
@@ -14,6 +15,13 @@ const RollsList = ({
     },
     [setRolls]
   );
+
+  const handleEditRoll = useCallback(
+      (index: number) => {
+        setRolls((prevRolls) => prevRolls.filter((_, i) => i !== index));
+      },
+      [setRolls]
+  )
 
   return (
     <div className={"flex flex-col gap-2 w-full"}>
@@ -36,17 +44,26 @@ const RollsList = ({
                 ? roll.equation.substring(0, 25) + "..."
                 : roll.equation}{" "}
             </p>
-            <button
-              className={
-                "mt-2 w-10 bg-[var(--danger)] text-white rounded hover:bg-red-600 p-2"
-              }
-              onClick={() => {
-                handleDeleteRoll(index);
-              }}
-            >
-              {" "}
-              ✕
-            </button>
+            <div id={"action-buttons"} className={"flex flex-row gap-2"}>
+              <button
+                  onClick={() => {
+                    handleEditRoll(index)
+                  }}
+                  className={"mt-2 w-10 h-10 bg-green-500 text-center items-center flex flex-row justify-center text-white rounded hover:bg-green-600 p-2"}>
+                <BsPencilFill/>
+              </button>
+              <button
+                  className={
+                    "mt-2 w-10 bg-[var(--danger)] text-white rounded hover:bg-red-600 p-2"
+                  }
+                  onClick={() => {
+                    handleDeleteRoll(index);
+                  }}
+              >
+                {" "}
+                ✕
+              </button>
+            </div>
           </div>
         </div>
       ))}

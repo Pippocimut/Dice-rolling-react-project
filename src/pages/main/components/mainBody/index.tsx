@@ -6,12 +6,12 @@ import {
     type ButtonSet,
     sendNewButtonList,
     updateButtonSets
-} from "../../../../store/button-sets/buttonSetSlice.ts";
+} from "@/store/button-sets/buttonSetSlice.ts";
 import {useDispatch, useSelector} from "react-redux";
-import type {RootState} from "../../../../store";
-import EditButtonForm from "./dialogs/forms/EditButtonForm.tsx";
-import CreateButtonForm from "./dialogs/forms/CreateButtonForm.tsx";
-import {toggleEditMode} from "../../../../store/selected/selectedSlice.ts";
+import type {RootState} from "@/store";
+import EditButtonForm from "./dialogs/forms/ButtonForms/EditButtonForm.tsx";
+import CreateButtonForm from "./dialogs/forms/ButtonForms/CreateButtonForm.tsx";
+import {toggleEditMode} from "@/store/selected/selectedSlice.ts";
 import {BsPencilFill} from "react-icons/bs";
 import {Slide, ToastContainer} from "react-toastify";
 
@@ -48,6 +48,8 @@ const MainBody = () => {
 
     console.log(buttonSets.find((buttonSet) => buttonSet.id == selectedSetId))
 
+
+
     let moreThanOneButton = false;
     const buttonFound = buttonSets.find((buttonSet) => buttonSet.id === selectedSetId)
     if (buttonFound) {
@@ -57,16 +59,12 @@ const MainBody = () => {
 
 
     return (
-        <div
-            className={
-                "flex flex-col min-h-screen mx-4 px-4 min-w-1/4 gap-4 w-full bg-background items-center"
-            }
-        >
+        <div className={"flex flex-col min-h-full pb-8 px-4 min-w-1/4 gap-4 w-full bg-background items-center"}>
             <ToastContainer position="bottom-left"
                             newestOnTop={false}
                             transition={Slide}
                             stacked/>
-            <h1 className={"text-6xl font-bold m-8"}>
+            <h1 className={"text-6xl font-bold mx-8 mb-8"}>
                 A dice roller app
             </h1>
             <p className={"text-2xl"}>
@@ -76,20 +74,21 @@ const MainBody = () => {
                 Connected to: <span className={"font-bold"}>{roomName}</span>
             </p>}
 
-            <div className={"flex flex-row-reverse flex-wrap  items-center justify-center w-full m-8 gap-8 " + (moreThanOneButton ? " " : " h-full mb-64" )}>
+            <div
+                className={"flex flex-row-reverse flex-wrap  items-center justify-center w-full m-8 gap-8 " + (moreThanOneButton ? " " : " h-full mb-64")}>
                 <button
                     id="createButton"
                     className={
                         (moreThanOneButton ? "w-20 h-20 text-6xl" : "w-40 h-40 text-8xl") +
-                        " flex items-center flex-row justify-center bg-secondary-background hover:outline-2 rounded-lg"
+                        " flex items-center flex-row justify-center  bg-primary hover:outline-2 rounded-xl"
                     }
                     onClick={() => setIsOpenCreateDialog(true)}
                 >
-                    <span className={" text-white-text pb-3"}>+</span>
+                    <span className={"text-white pb-3"}>+</span>
                 </button>
                 {moreThanOneButton && <button
                     id="editModeButton"
-                    className={"w-20 h-20 rounded-lg hover:outline-2 text-2xl " + (editMode ? " bg-white-text border-4 border-secondary-background text-secondary-background" : " bg-secondary-background text-white-text")}
+                    className={"w-20 h-20 rounded-xl hover:outline-2 text-2xl " + (editMode ? " bg-white border-4 border-primary text-primary" : " bg-primary text-white")}
                     onClick={() => dispatch(toggleEditMode())}>{
                     editMode ? <span className={"text-5xl pb-2 font-bold"}>&#10004;</span> : <div
                         className={"flex justify-center gap-2 items-center"}

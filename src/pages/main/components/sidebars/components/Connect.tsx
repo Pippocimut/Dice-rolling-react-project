@@ -40,7 +40,7 @@ export function Connect() {
     const {connect} = useContext(SocketContext);
 
     return (
-        <div className="w-full mt-auto p-4 border-t-2 border-gray-500  bg-neutral-700">
+        <div className="w-full mt-auto p-4 border-t-2 border-borders bg-background text-text">
             <p className="text-xl">
                 Your Name: <span className={"font-bold"}>{userNameFromStore || "Is missing"}</span>
             </p>

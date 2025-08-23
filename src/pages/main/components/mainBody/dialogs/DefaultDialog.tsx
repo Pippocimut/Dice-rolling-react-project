@@ -46,7 +46,7 @@ const DefaultDialog = ({
                             <DialogPanel
                                 className="flex flex-col justify-center w-full max-w-lg transform overflow-hidden rounded-2xl p-6 text-left align-middle shadow-xl border-2 border-[var(--borders-color)] transition-all bg-[var(--background-color)]">
                                 <div className={"flex flex-row gap-2 w-full justify-end items-end"}>
-                                    <button className={"px-4 w-fit text-3xl"} onClick={() => onClose()}>
+                                    <button className={"px-4 w-fit text-3xl text-text"} onClick={() => onClose()}>
                                         ✕
                                     </button>
                                 </div>

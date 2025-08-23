@@ -1,6 +1,6 @@
-import {addButtonToSet, type Tag} from "../../../../../../store/button-sets/buttonSetSlice.ts";
+import {addButtonToSet, type Tag} from "../../../../../../../store/button-sets/buttonSetSlice.ts";
 import ButtonForm from "./ButtonForm.tsx";
-import {colors} from "./TagSelection.tsx";
+import {colors} from "../TagSelection.tsx";
 import {useDispatch} from "react-redux";
 
 type Props = {
