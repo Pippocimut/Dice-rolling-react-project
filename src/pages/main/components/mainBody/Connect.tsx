@@ -1,7 +1,7 @@
 import {useContext, useEffect, useState} from 'react';
 import {useSelector} from "react-redux";
-import type {RootState} from "../../../../../store";
-import {SocketContext} from "../../../../../context/SocketContext.ts";
+import type {RootState} from "@/store";
+import {SocketContext} from "@/context/SocketContext.ts";
 
 const SOCKET_SERVER_URL = 'https://socket-dice-server-819188550192.europe-west1.run.app';
 
@@ -40,7 +40,7 @@ export function Connect() {
     const {connect} = useContext(SocketContext);
 
     return (
-        <div className="w-full mt-auto p-4 border-t-2 border-borders bg-background text-text">
+        <div className="w-full mt-auto p-4 bg-background text-text">
             <p className="text-xl">
                 Your Name: <span className={"font-bold"}>{userNameFromStore || "Is missing"}</span>
             </p>

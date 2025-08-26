@@ -4,16 +4,18 @@ import {BsPencilFill} from "react-icons/bs";
 import DefaultDialog from "@/pages/main/components/mainBody/dialogs/DefaultDialog.tsx";
 import EditRollForm from "@/pages/main/components/mainBody/dialogs/forms/EditRollForm.tsx";
 
+type Props = {
+    rolls: Roll[];
+    setRolls: (rolls:Roll[]) => void;
+}
+
 const RollsList = ({
                        rolls,
                        setRolls,
-                   }: {
-    rolls: Roll[];
-    setRolls: React.Dispatch<React.SetStateAction<Roll[]>>;
-}) => {
+                   }: Props) => {
     const handleDeleteRoll = useCallback(
         (index: number) => {
-            setRolls((prevRolls) => prevRolls.filter((_, i) => i !== index));
+            setRolls( rolls.filter((_, i) => i !== index));
         },
         [setRolls]
     );

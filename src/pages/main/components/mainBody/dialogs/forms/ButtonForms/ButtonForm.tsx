@@ -38,6 +38,7 @@ const ButtonForm = ({
             color: colors[Math.floor(Math.random() * colors.length)],
             name: ""
         }
+
         const [tag, setTag] = useState<Tag>(buttonTag ?? defaultTag)
 
         const [isOpenNewRollDialog, setIsOpenNewRollDialog] = useState(false);
@@ -61,20 +62,25 @@ const ButtonForm = ({
                 tag: tag.id ? tag.id : undefined,
             };
 
-            console.log(newButton)
-
             submit({button: newButton, tag: tag, setId: selectedSetId})
 
             setRolls([]);
             close();
         };
 
+        const currentSet = buttonSets.find((set) => set.id === selectedSetId);
+
+        const handleTagChange = (id:number) => {
+            if(currentSet){
+                setTag(currentSet.tags.find((tag) => tag.id === id) ?? defaultTag)
+            }
+        }
 
         return (
             <div
-                className={"flex flex-col bg-[var(--background-color)] text-[var(--text-color)] gap-2 p-4 h-fit w-fit justify-center items-center"}>
+                className={"flex flex-col bg-background text-text gap-2 p-4 h-fit w-full justify-center items-center"}>
                 <div
-                    className={"flex flex-col bg-[var(--background-color)] text-[var(--text-color)] gap-2 p-4 h-fit w-fit justify-center items-center"}>
+                    className={"flex flex-col bg-background text-text gap-2 p-4 h-fit w-fit justify-center items-center"}>
                     <div>
                         <h1 className={"text-4xl w-fit font-bold"}>
                             {title}
@@ -94,8 +100,8 @@ const ButtonForm = ({
                     </div>
 
                     <TagSelection
-                        tag={tag} setTag={setTag}
-                        buttonColor={color}
+                        tag={tag.id} setTag={handleTagChange}
+                        buttonColor={color ?? tag.color}
                         setButtonColor={(value: string) => setColor(value)}
                     />
 

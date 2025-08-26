@@ -1,10 +1,10 @@
 import {useCallback, useEffect, useRef, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import type {RootState} from "../../../../../store";
-import {addNewSet, type ButtonData, type Tag} from "../../../../../store/button-sets/buttonSetSlice.ts";
+import type {RootState} from "../../../../store";
+import {addNewSet, type ButtonData, type Tag} from "../../../../store/button-sets/buttonSetSlice.ts";
 import {toast} from "react-toastify";
-import ExportDisplay from "../../mainBody/dialogs/forms/export-select-form";
-import DefaultDialog from "../../mainBody/dialogs/DefaultDialog.tsx";
+import ExportDisplay from "./dialogs/forms/export-select-form";
+import DefaultDialog from "./dialogs/DefaultDialog.tsx";
 
 export function Settings() {
 
@@ -92,9 +92,7 @@ export function Settings() {
         }
     }, []);
 
-
-    return (
-        <div className="w-full flex flex-row mt-auto p-4">
+    return <div className="w-full flex flex-row mt-auto p-4">
             <input
                 ref={fileInputRef}
                 type="file"
@@ -122,5 +120,4 @@ export function Settings() {
                 </button>
             </div>
         </div>
-    );
 }

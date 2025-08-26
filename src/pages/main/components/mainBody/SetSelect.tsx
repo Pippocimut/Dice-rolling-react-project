@@ -4,8 +4,8 @@ import type {RootState} from "@/store";
 import {
     DropdownMenu, DropdownMenuContent, DropdownMenuLabel,
     DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu";
-import {Button} from "@/components/ui/button";
+} from "@/components/ui/dropdown-menu.tsx";
+import {Button} from "@/components/ui/button.tsx";
 
 export function SetSelect() {
     const dispatch = useDispatch()
@@ -16,7 +16,7 @@ export function SetSelect() {
         dispatch(setSelectedSet(parseInt(e)))
     }
 
-    return (<DropdownMenu>
+    return <DropdownMenu>
         <DropdownMenuTrigger asChild>
             <Button variant="outline">Change current set</Button>
         </DropdownMenuTrigger>
@@ -30,5 +30,5 @@ export function SetSelect() {
                 })}
             </DropdownMenuRadioGroup>
         </DropdownMenuContent>
-    </DropdownMenu>)
+    </DropdownMenu>
 }

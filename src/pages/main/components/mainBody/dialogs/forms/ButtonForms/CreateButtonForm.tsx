@@ -16,7 +16,7 @@ const CreateButtonForm = ({
     const defaultButton = {
         id: -1,
         name: "New Button",
-        rolls: [],
+        rolls: selectedTag?.rollsConfig ?? [],
         tag: selectedTag?.id,
         color: selectedTag?.color ?? colors[Math.floor(Math.random() * colors.length)]
     }

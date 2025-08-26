@@ -5,9 +5,9 @@ import {useDispatch, useSelector} from "react-redux";
 import {
     addRoll, type ButtonPressRecord,
     type RollResult
-} from "../../../../store/history-sidebar/historySidebarSlice.ts";
-import type {RootState} from "../../../../store";
-import {SocketContext} from "../../../../context/SocketContext.ts";
+} from "@/store/history-sidebar/historySidebarSlice.ts";
+import type {RootState} from "@/store";
+import {SocketContext} from "@/context/SocketContext.ts";
 import {SortableItemContext} from "./dnd/SortableItem.tsx";
 import {toast} from "react-toastify";
 import {FaDiceD20} from "react-icons/fa";

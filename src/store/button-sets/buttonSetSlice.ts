@@ -5,6 +5,7 @@ export type Tag = {
     id: number;
     color: string;
     name: string;
+    rollsConfig?: Roll[]
 }
 
 export type ButtonData = {
@@ -29,6 +30,18 @@ interface buttonSetState {
     sets: ButtonSet[]
 }
 
+
+export const colors = [
+    "red-roll-button",
+    "orange-roll-button",
+    "yellow-roll-button",
+    "green-roll-button",
+    "blue-roll-button",
+    "purple-roll-button",
+    "pink-roll-button",
+    "gray-roll-button"
+];
+
 const initialState: buttonSetState =
     document.cookie.includes("buttonSetsList") ? JSON.parse(decodeURIComponent(document.cookie.split("buttonSetsList=")[1].split(';')[0])) as buttonSetState
         : {
@@ -43,17 +56,17 @@ const initialState: buttonSetState =
                         {
                             id: 1,
                             name: "attack",
-                            color: "bg-red-500",
+                            color: "red-roll-button",
                         },
                         {
                             id: 2,
                             name: "saving throw",
-                            color: "bg-blue-500",
+                            color: "blue-roll-button",
                         },
                         {
                             id: 3,
                             name: "check",
-                            color: "bg-green-500",
+                            color: "green-roll-button",
                         }
                     ],
                     buttonList: []
@@ -99,16 +112,68 @@ const buttonSetSlice = createSlice({
             document.cookie = "buttonSetsList=" + JSON.stringify(state);
         },
         addTagToSet: (state, action) => {
-            const setName = action.payload.setName;
+            const setId = action.payload.setId;
             const tag: Tag = action.payload.tag;
 
-            const set = state.sets.find(set => set.name === setName);
+            const set = state.sets.find(set => set.id === setId);
+
             if (!set) return;
-
             if (set.tags.find(t => t.name === tag.name)) return;
-
             tag.id = state.nextTagId++;
             set.tags.push(tag);
+
+            document.cookie = "buttonSetsList=" + JSON.stringify(state);
+        },
+        deleteTagFromSet: (state, action: {
+            payload: {
+                setId: number,
+                tagId: number
+            }
+        }) => {
+            const setId = action.payload.setId;
+            const tagId = action.payload.tagId;
+
+            const set = state.sets.find(set => set.id === setId);
+
+            if (!set) return;
+
+            const index = set.tags.findIndex(tag => tag.id === tagId);
+
+            if (index === -1) return;
+
+            set.tags.splice(index, 1);
+            set.buttonList = set.buttonList.map((item: ButtonData) => {
+                if (item.tag === tagId) {
+                    item.tag = -1
+                }
+                return item;
+            })
+
+            document.cookie = "buttonSetsList=" + JSON.stringify(state);
+        },
+        editTagOfSet: (state, action: {
+            payload: {
+                setId: number,
+                tagId: number
+                newTag: Tag
+            }
+        }) => {
+
+            const setId = action.payload.setId;
+            const tagId = action.payload.tagId;
+            const newTag = action.payload.newTag;
+            const set = state.sets.find(set => set.id === setId);
+            if (!set) return;
+
+            const index = set.tags.findIndex(tag => tag.id === tagId);
+            if (index === -1) return;
+
+            set.tags = set.tags.map((item: Tag) => {
+                if (item.id === tagId) {
+                    return newTag
+                }
+                return item;
+            })
 
             document.cookie = "buttonSetsList=" + JSON.stringify(state);
         },
@@ -185,7 +250,7 @@ const buttonSetSlice = createSlice({
         },
         deleteButtonOfSet: (state, action: {
             payload: {
-                setId:number
+                setId: number
                 id: number
             }
         }) => {
@@ -199,7 +264,7 @@ const buttonSetSlice = createSlice({
 
             document.cookie = "buttonSetsList=" + JSON.stringify(state);
         },
-        deleteTagOfSet: (state, action:{
+        deleteTagOfSet: (state, action: {
             payload: {
                 setId: number,
                 tagId: number
@@ -222,7 +287,10 @@ export const {
     addButtonToSet,
     updateButtonOfSet,
     deleteButtonOfSet,
+    deleteTagFromSet,
     deleteTagOfSet,
+    addTagToSet,
+    editTagOfSet,
     addNewSet,
     sendNewButtonList
 } = buttonSetSlice.actions
