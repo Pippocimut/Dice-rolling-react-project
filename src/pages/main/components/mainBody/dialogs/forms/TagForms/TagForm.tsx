@@ -4,10 +4,10 @@ import {type PropsWithChildren, useState} from "react";
 import {useSelector} from "react-redux";
 import type {RootState} from "@/store";
 import type {Tag} from "@/store/button-sets/buttonSetSlice.ts";
-import RollsList from "@/pages/main/components/mainBody/dialogs/forms/RollsList.tsx";
-import CreateRollForm from "@/pages/main/components/mainBody/dialogs/forms/CreateRollForm.tsx";
+import CreateRollDialog from "@/pages/main/components/mainBody/dialogs/forms/RollForms/CreateRollDialog.tsx";
 import type {Roll} from "@/pages/main/types.ts";
-import DefaultDialog from "@/pages/main/components/mainBody/dialogs/DefaultDialog.tsx";
+import DefaultDialog from "@/components/DefaultDialog.tsx";
+import {RollSelection} from "@/pages/main/components/mainBody/dialogs/forms/RollSelection.tsx";
 
 type Props = {
     tag: Tag,
@@ -38,6 +38,7 @@ export function TagForm(props: PropsWithChildren<Props>) {
     const currentSet = sets.find(set => set.id === selectedSetId)!
 
     const tags = currentSet.tags;
+    console.log(props.tag)
 
     return (<div className={"m-4 flex flex-col gap-4 justify-center items-center"}>
         <div className={"m-4 flex flex-row gap-4 justify-center items-center"}>
@@ -55,30 +56,12 @@ export function TagForm(props: PropsWithChildren<Props>) {
                 }}/>
             </div>
         </div>
-        <div className={"flex flex-row gap-2"}>
-            <button className={"px-6 m-4"} onClick={() =>
-                props.setTag({
-                    ...props.tag,
-                    rollsConfig: []
-                })
-            }>
-                Clear rolls
-            </button>
+        <RollSelection rolls={props.tag.rollsConfig ?? []} setRolls={(rolls: Roll[]) => props.setTag({...props.tag, rollsConfig: rolls})}/>
 
-            <button className={"px-6 m-4"} onClick={() => setIsOpenNewRollDialog(true)}>
-                Add roll
-            </button>
-        </div>
-        <RollsList rolls={props.tag.rollsConfig!} setRolls={(rolls: Roll[]) => {
-            props.setTag({
-                ...props.tag,
-                rollsConfig: rolls
-            })
-        }}/>
         {props.children}
 
         <DefaultDialog isOpen={isOpenNewRollDialog} onClose={() => setIsOpenNewRollDialog(false)}>
-            <CreateRollForm
+            <CreateRollDialog
                 createRoll={(roll: Roll) => {
                     props.setTag({
                         ...props.tag,

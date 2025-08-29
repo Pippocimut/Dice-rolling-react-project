@@ -2,17 +2,18 @@ import {type PropsWithChildren, useState} from "react";
 import {toast} from "react-toastify";
 import type {Roll} from "../../../../../types.ts";
 import TagSelection, {colors} from "../TagSelection.tsx";
-import RollsList from "../RollsList.tsx";
 import {type ButtonData, type Tag} from "@/store/button-sets/buttonSetSlice.ts";
 import {useSelector} from "react-redux";
 import type {RootState} from "@/store";
-import DefaultDialog from "../../DefaultDialog.tsx";
-import CreateRollForm from "../CreateRollForm.tsx";
+import {Button} from "@/components/ui/button.tsx";
+import {Input} from "@/components/ui/input.tsx";
+import {Label} from "@/components/ui/label.tsx";
+import {RollSelection} from "@/pages/main/components/mainBody/dialogs/forms/RollSelection.tsx";
 
 type Props = {
     title: string;
     selectedButton: ButtonData;
-    submit: (data: { button: ButtonData, tag: Tag, setId: number }) => void;
+    submit: (data: { button: ButtonData, setId: number }) => void;
     close: () => void;
 }
 
@@ -26,113 +27,73 @@ const ButtonForm = ({
 
         const buttonSets = useSelector((state: RootState) => state.buttonSet.sets)
         const selectedSetId = useSelector((state: RootState) => state.selected.selectedSetId)
-
-        const [name, setName] = useState(selectedButton.name);
-        const [rolls, setRolls] = useState<Roll[]>(selectedButton.rolls);
-        const [color, setColor] = useState<string>(selectedButton.color);
-
         const buttonTag = buttonSets.find((set) => set.id === selectedSetId)!.tags.find((tag) => tag.id === selectedButton?.tag)
 
-        const defaultTag = {
-            id: -1,
-            color: colors[Math.floor(Math.random() * colors.length)],
-            name: ""
-        }
-
-        const [tag, setTag] = useState<Tag>(buttonTag ?? defaultTag)
-
-        const [isOpenNewRollDialog, setIsOpenNewRollDialog] = useState(false);
+        const [tag, setTag] = useState<Tag | undefined>(buttonTag)
+        const [button, setButton] = useState<ButtonData>(selectedButton)
 
         const createNewButton = () => {
-            if (name == "") {
+            if (button.name == "") {
                 toast.error("Button name cannot be empty");
                 return;
             }
 
-            if (rolls.length === 0) {
+            if (button.rolls.length === 0) {
                 toast.error("Button must have at least one roll");
                 return;
             }
 
             const newButton: ButtonData = {
-                ...selectedButton,
-                name: name,
-                rolls: rolls,
-                color: color,
-                tag: tag.id ? tag.id : undefined,
+                ...button,
+                tag: tag ? tag.id : -1,
             };
 
-            submit({button: newButton, tag: tag, setId: selectedSetId})
+            submit({button: newButton, setId: selectedSetId})
 
-            setRolls([]);
             close();
         };
 
         const currentSet = buttonSets.find((set) => set.id === selectedSetId);
 
-        const handleTagChange = (id:number) => {
-            if(currentSet){
-                setTag(currentSet.tags.find((tag) => tag.id === id) ?? defaultTag)
+        const handleTagChange = (id: number) => {
+            if (currentSet) {
+                setButton({...button, tag: id})
+                setTag(currentSet.tags.find((tag) => tag.id === id))
             }
         }
 
         return (
-            <div
-                className={"flex flex-col bg-background text-text gap-2 p-4 h-fit w-full justify-center items-center"}>
-                <div
-                    className={"flex flex-col bg-background text-text gap-2 p-4 h-fit w-fit justify-center items-center"}>
-                    <div>
-                        <h1 className={"text-4xl w-fit font-bold"}>
-                            {title}
-                        </h1>
-                    </div>
+            <div className={"flex flex-col bg-background text-text gap-6 p-4 h-fit w-full justify-center items-center"}>
+                <h1 className={"text-4xl w-full text-center font-bold"}>
+                    {title}
+                </h1>
 
-                    <div className={"flex flex-col gap-2"}>
-                        <input
-                            className={
-                                "p-4 m-4 w-70 border-2 border-gray-500 rounded-lg text-left"
-                            }
-                            type={"text"}
-                            placeholder={"Button's Name"}
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                        />
-                    </div>
-
-                    <TagSelection
-                        tag={tag.id} setTag={handleTagChange}
-                        buttonColor={color ?? tag.color}
-                        setButtonColor={(value: string) => setColor(value)}
+                <div className={"flex flex-col gap-2"}>
+                    <Label htmlFor={"Button Name"}>Button Name</Label>
+                    <Input
+                        type={"text"}
+                        id={"Button Name"}
+                        placeholder={"Button's Name"}
+                        value={button.name}
+                        onChange={(e) => setButton({...button, name: e.target.value})}
                     />
+                </div>
 
-                    <div className={"flex flex-row gap-2"}>
-                        <button className={"px-6 m-4"} onClick={() => setRolls([])}>
-                            Clear rolls
-                        </button>
+                <TagSelection
+                    tag={button.tag ?? -1}
+                    setTag={handleTagChange}
+                    buttonColor={button.color ?? tag?.color ?? colors[0]}
+                    setButtonColor={(value: string) => setButton({...button, color: value})}
+                />
 
-                        <button className={"px-6 m-4"} onClick={() => setIsOpenNewRollDialog(true)}>
-                            Add roll
-                        </button>
-                    </div>
+                <RollSelection rolls={button.rolls} setRolls={(rolls: Roll[]) => setButton({...button, rolls: rolls})}/>
 
-                    <RollsList rolls={rolls} setRolls={setRolls}/>
-
-                    <div className="p-4 flex flex-row gap-2 w-full justify-center items-center">
-                        <button className="mt-4 p-4 bg-blue-500 text-white rounded hover:bg-blue-600"
-                                onClick={createNewButton}>
-                            {title}
-                        </button>
-                        {children}
-                    </div>
-
-                    <DefaultDialog isOpen={isOpenNewRollDialog} onClose={() => setIsOpenNewRollDialog(false)}>
-                        <CreateRollForm
-                            createRoll={(roll: Roll) => {
-                                setRolls((prev) => [...prev, roll]);
-                                setIsOpenNewRollDialog(false);
-                            }}
-                        />
-                    </DefaultDialog>
+                <div className="p-4 flex flex-row gap-2 w-full justify-center items-center">
+                    {children}
+                    <Button className=" bg-blue-500 text-white hover:bg-blue-600 ml-auto"
+                            onClick={createNewButton}>
+                        {title}
+                    </Button>
                 </div>
             </div>
         );

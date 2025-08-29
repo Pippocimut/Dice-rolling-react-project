@@ -4,7 +4,7 @@ import type {RootState} from "../../../../store";
 import {addNewSet, type ButtonData, type Tag} from "../../../../store/button-sets/buttonSetSlice.ts";
 import {toast} from "react-toastify";
 import ExportDisplay from "./dialogs/forms/export-select-form";
-import DefaultDialog from "./dialogs/DefaultDialog.tsx";
+import DefaultDialog from "../../../../components/DefaultDialog.tsx";
 
 export function Settings() {
 

@@ -85,27 +85,16 @@ const buttonSetSlice = createSlice({
             payload: {
                 setId: number,
                 button: ButtonData,
-                tag: Tag
             }
         }) => {
             const setId = action.payload.setId;
             const button = action.payload.button;
-            const tag = action.payload.tag;
 
             const set = state.sets.find(set => set.id === setId);
             if (!set) return;
 
-
             const index = set.buttonList.findIndex(Ibutton => Ibutton.id === button.id)
-
             if (index === -1) return;
-
-            if (tag.id === -1) {
-                tag.id = state.nextTagId++;
-                set.tags.push(tag)
-            }
-
-            button.tag = tag.id;
 
             set.buttonList[index] = button;
 
@@ -180,26 +169,18 @@ const buttonSetSlice = createSlice({
         addButtonToSet: (state, action: {
             payload: {
                 setId: number,
-                button: Omit<ButtonData, "id">,
-                tag: Tag
+                button: Omit<ButtonData, "id">
             }
         }) => {
             const setId = action.payload.setId;
             const button: Omit<ButtonData, "id"> = action.payload.button;
-            const tag: Tag = action.payload.tag;
 
             const set = state.sets.find(set => set.id === setId) ?? state.sets.find(set => set.id === 1);
             if (!set) return;
 
-            if (tag.id === -1 && tag.name.trim() !== "") {
-                tag.id = state.nextTagId++;
-                set.tags.push(tag);
-            }
-
             set.buttonList.push({
                 ...button,
                 id: state.nextButtonId++,
-                tag: tag.id
             });
 
             document.cookie = "buttonSetsList=" + JSON.stringify(state);

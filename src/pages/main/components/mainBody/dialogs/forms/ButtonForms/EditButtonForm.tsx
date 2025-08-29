@@ -1,8 +1,9 @@
 import ButtonForm from "./ButtonForm.tsx";
 import {useCallback} from "react";
-import {deleteButtonOfSet, updateButtonOfSet} from "../../../../../../../store/button-sets/buttonSetSlice.ts";
+import {deleteButtonOfSet, updateButtonOfSet} from "@/store/button-sets/buttonSetSlice.ts";
 import {useDispatch, useSelector} from "react-redux";
-import type {RootState} from "../../../../../../../store";
+import type {RootState} from "@/store";
+import {Button} from "@/components/ui/button.tsx";
 
 type Props = {
     close: () => void;
@@ -37,11 +38,13 @@ const EditButtonForm = ({
             dispatch(updateButtonOfSet(data))
             close();
         }}
+
         selectedButton={selectedButton}  title={"Edit Button"} close={close}>
-        <button id={"delete"} className="mt-4 p-4 bg-danger text-white rounded hover:bg-red-600"
+
+        <Button id={"delete"} className="bg-danger  hover:bg-red-600"
                 onClick={deleteButton}>
             Delete Button
-        </button>
+        </Button>
     </ButtonForm>
 }
 

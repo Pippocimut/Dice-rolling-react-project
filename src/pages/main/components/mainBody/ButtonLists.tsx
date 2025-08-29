@@ -8,7 +8,7 @@ import {
 import {useCallback, useMemo, useState} from "react";
 import ButtonListSection from "./ButtonListSection.tsx";
 import EditButtonForm from "@/pages/main/components/mainBody/dialogs/forms/ButtonForms/EditButtonForm.tsx";
-import DefaultDialog from "@/pages/main/components/mainBody/dialogs/DefaultDialog.tsx";
+import DefaultDialog from "@/components/DefaultDialog.tsx";
 
 const ButtonLists = () => {
 

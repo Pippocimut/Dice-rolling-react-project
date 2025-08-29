@@ -3,7 +3,7 @@ import type {ButtonData, Tag} from "@/store/button-sets/buttonSetSlice.ts";
 
 import {SortableList} from "./dnd/SortableList.tsx";
 import {Button} from "@/components/ui/button.tsx";
-import DefaultDialog from "@/pages/main/components/mainBody/dialogs/DefaultDialog.tsx";
+import DefaultDialog from "@/components/DefaultDialog.tsx";
 import CreateButtonForm from "@/pages/main/components/mainBody/dialogs/forms/ButtonForms/CreateButtonForm.tsx";
 import {useSelector} from "react-redux";
 import type {RootState} from "@/store";

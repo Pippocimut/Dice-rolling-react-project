@@ -1,27 +1,32 @@
 import {colors} from "@/pages/main/components/mainBody/dialogs/forms/TagSelection.tsx";
-import {useState} from "react";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuRadioGroup,
+    DropdownMenuRadioItem,
+    DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu.tsx";
+import {Button} from "@/components/ui/button.tsx";
 
 type Props = {
     buttonColor: string,
     setButtonColor: (value: string) => void,
 }
 
-export function TagColorSelection(props: Props) {
-    const [color, setColor] = useState<string>(props.buttonColor);
+export function TagColorSelection({buttonColor, setButtonColor}: Props) {
+    return <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+            <Button variant="outline" className={"w-20 " + buttonColor}/>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="w-20">
+            <DropdownMenuRadioGroup value={buttonColor} onValueChange={(e) => setButtonColor(e)}>
+                {colors.map((tagColor, index) => {
+                    return <DropdownMenuRadioItem key={index}
+                                                  value={tagColor}
+                                                  className={tagColor + " h-8 rounded-none cursor-pointer"}/>
+                })}
+            </DropdownMenuRadioGroup>
+        </DropdownMenuContent>
+    </DropdownMenu>
 
-    return <select
-        className={"p-4 m-4 w-15 h-15 border-2 rounded-lg " + color}
-        value={color}
-        onChange={(e) => {
-            setColor(e.target.value)
-            props.setButtonColor(e.target.value)
-        }}>
-        {colors.map((color) => (
-            <option
-                value={color}
-                key={color}
-                className={"w-2 h-2 " + color}
-            ></option>
-        ))}
-    </select>
 }

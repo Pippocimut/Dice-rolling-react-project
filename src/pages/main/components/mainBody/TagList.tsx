@@ -3,7 +3,7 @@ import type {RootState} from "@/store";
 import {useDispatch, useSelector} from "react-redux";
 import {deleteTagFromSet, type Tag} from "@/store/button-sets/buttonSetSlice.ts";
 import {BsPencilFill} from "react-icons/bs";
-import DefaultDialog from "@/pages/main/components/mainBody/dialogs/DefaultDialog.tsx";
+import DefaultDialog from "@/components/DefaultDialog.tsx";
 import {useState} from "react";
 import {EditTagForm} from "@/pages/main/components/mainBody/dialogs/forms/TagForms/EditTagForm.tsx";
 

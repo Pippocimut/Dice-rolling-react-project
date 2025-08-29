@@ -1,5 +1,5 @@
 import {Button} from "@/components/ui/button.tsx";
-import DefaultDialog from "@/pages/main/components/mainBody/dialogs/DefaultDialog.tsx";
+import DefaultDialog from "@/components/DefaultDialog.tsx";
 import {useState} from "react";
 import {CreateTagForm} from "@/pages/main/components/mainBody/dialogs/forms/TagForms/CreateTagForm.tsx";
 import {TagList} from "@/pages/main/components/mainBody/TagList.tsx";
