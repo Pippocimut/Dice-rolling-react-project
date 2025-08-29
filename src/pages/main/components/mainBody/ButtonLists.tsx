@@ -3,12 +3,9 @@ import {useDispatch, useSelector} from "react-redux";
 import {
     type ButtonData,
     type ButtonSet, sendNewButtonList,
-    updateButtonSets
 } from "@/store/button-sets/buttonSetSlice.ts";
-import {useCallback, useMemo, useState} from "react";
+import {useCallback, useMemo} from "react";
 import ButtonListSection from "./ButtonListSection.tsx";
-import EditButtonForm from "@/pages/main/components/mainBody/dialogs/forms/ButtonForms/EditButtonForm.tsx";
-import DefaultDialog from "@/components/DefaultDialog.tsx";
 
 const ButtonLists = () => {
 
@@ -18,9 +15,6 @@ const ButtonLists = () => {
     const buttonSets = useSelector((state: RootState) => state.buttonSet.sets)
     const selectedSetId = useSelector((state: RootState) => state.selected.selectedSetId)
 
-    const [isOpenEditDialog, setIsOpenEditDialog] = useState(false);
-    const [selectedButtonId, setSelectedButtonId] = useState<number | null>(null);
-
     const buttonSet = useMemo(() => {
         return buttonSets.find((buttonSet) => {
             console.log("Button set id:", buttonSet.id)
@@ -28,22 +22,6 @@ const ButtonLists = () => {
             return buttonSet.id === selectedSetId
         });
     }, [buttonSets, selectedSetId]);
-
-    const removeButton = useCallback(
-        (index: number,) => {
-            const indexOfButtonSet = buttonSets.findIndex((setObject: ButtonSet) => setObject.id === selectedSetId)
-            const newButtonList = buttonSets[indexOfButtonSet].buttonList.filter((_: object, i: number) => i !== index)
-            dispatch(updateButtonSets(newButtonList));
-            setIsOpenEditDialog(false);
-            setSelectedButtonId(null);
-        },
-        [buttonSets]
-    );
-
-    const editButton = useCallback((index: number) => {
-        setSelectedButtonId(index);
-        setIsOpenEditDialog(true);
-    }, []);
 
     const updateButtons = useCallback((newButtonList: ButtonData[]) => {
             const indexOfButtonSet = buttonSets.findIndex((setObject: ButtonSet) => setObject.id === selectedSetId)
@@ -67,8 +45,7 @@ const ButtonLists = () => {
                     const items = buttonSet?.buttonList.filter(button => button.tag === tag.id)
 
                     if (items) {
-                        return <ButtonListSection removeButton={removeButton} updateButtons={updateButtons}
-                                                  editButton={editButton}
+                        return <ButtonListSection updateButtons={updateButtons}
                                                   editMode={editMode} items={items} tagId={tag.id}/>
 
                     }
@@ -77,27 +54,12 @@ const ButtonLists = () => {
 
             </>}
             {untaggedButtons && untaggedButtons.length > 0 &&
-                <ButtonListSection removeButton={removeButton} updateButtons={updateButtons}
-                                   editButton={editButton}
-                                   editMode={editMode} items={untaggedButtons} tagId={-1}/>
+                <ButtonListSection updateButtons={updateButtons}
+                                   editMode={editMode}
+                                   items={untaggedButtons}
+                                   tagId={-1}/>
 
             }
-            <DefaultDialog
-                isOpen={isOpenEditDialog}
-                onClose={() => {
-                    setIsOpenEditDialog(false);
-                }}
-            >
-                {selectedButtonId !== null && selectedButtonId !== -1 && (
-                    <EditButtonForm
-                        close={() => {
-                            setSelectedButtonId(-1)
-                            setIsOpenEditDialog(false)
-                        }}
-                        selectedButtonId={selectedButtonId}
-                    />
-                )}
-            </DefaultDialog>
         </div>
     );
 };

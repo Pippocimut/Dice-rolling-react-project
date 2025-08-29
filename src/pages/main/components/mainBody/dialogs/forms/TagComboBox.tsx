@@ -23,7 +23,7 @@ const TagComboBox = ({tag, setTag}: Props) => {
 
     return (
         <DropdownMenu>
-            <DropdownMenuTrigger asChild>
+            <DropdownMenuTrigger asChild id={"tag-dropdown-menu-trigger"}>
                 <Button variant="outline" className={"w-35"}>{currentTag ? currentTag.name : "Select tag"}</Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56">

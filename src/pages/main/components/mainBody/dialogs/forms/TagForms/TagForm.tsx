@@ -38,7 +38,6 @@ export function TagForm(props: PropsWithChildren<Props>) {
     const currentSet = sets.find(set => set.id === selectedSetId)!
 
     const tags = currentSet.tags;
-    console.log(props.tag)
 
     return (<div className={"m-4 flex flex-col gap-4 justify-center items-center"}>
         <div className={"m-4 flex flex-row gap-4 justify-center items-center"}>

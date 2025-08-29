@@ -9,17 +9,17 @@ type Props = {
 }
 
 export function RollSelection({rolls, setRolls}: Props) {
-    return <div className={"flex flex-col justify-center items-center p-2"}>
-        <div className={"flex flex-row gap-2 justify-center items-center"}>
+    return <div className={"flex flex-col justify-center w-full items-center"}>
+        <div className={"flex flex-row gap-2 justify-between w-full items-center"}>
+            <CreateRollDialog createRoll={(roll: Roll) => {
+                setRolls([...rolls, roll]);
+            }}/>
+
             {(rolls.length > 0) && (
                 <Button variant={"outline"} onClick={() => setRolls([])}>
                     Clear rolls
                 </Button>
             )}
-            
-            <CreateRollDialog createRoll={(roll: Roll) => {
-                setRolls([...rolls, roll]);
-            }}/>
         </div>
 
         {(rolls.length > 0) && <RollsList rolls={rolls} setRolls={setRolls}/>}
