@@ -89,6 +89,11 @@ const EditButtonDialog = ({
                     </DialogDescription>
                 </DialogHeader>
                 <ButtonForm button={button} setButton={setButton}>
+                    <Button id={"delete"} className="bg-danger  hover:bg-red-600"
+                            onClick={deleteButton}>
+                        Delete Button
+                    </Button>
+
                     {areAllFieldsFilled() && (
                         <DialogClose asChild>
                             <Button className=" bg-green-500 text-white hover:bg-green-600 ml-auto"
@@ -103,10 +108,6 @@ const EditButtonDialog = ({
                             {"Edit"}
                         </Button>
                     )}
-                    <Button id={"delete"} className="bg-danger  hover:bg-red-600"
-                            onClick={deleteButton}>
-                        Delete Button
-                    </Button>
                 </ButtonForm>
             </DialogContent>
         </form>
