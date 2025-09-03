@@ -4,7 +4,6 @@ import RollHistoryPanel from "@/pages/main/components/mainBody/RollHistoryPanel.
 import {useState} from "react";
 
 export function HistoryNav() {
-
     const [isHistoryDialogOpen, setIsHistoryDialogOpen] = useState(false);
 
     return <>

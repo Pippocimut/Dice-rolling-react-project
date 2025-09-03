@@ -25,15 +25,15 @@ const ButtonListSection = ({tagId = -1}: Props) => {
     const sectionName = tagName.charAt(0).toUpperCase() + tagName.slice(1)
 
     return (
-        <div className={"w-full flex flex-col gap-4 my-4"}>
-            <div className={"flex flex-row gap-8 justify-between border-b-4 w-full p-2"}>
+        <div className={"w-fit flex flex-col gap-4 my-4"}>
+            {tagId !== -1 && <div className={"flex flex-row gap-8 justify-between border-b-4 w-full p-2"}>
                 <h1 className={"text-4xl font-bold text-left"}>{sectionName}</h1>
                 <CreateButtonDialog selectedTag={tag}>
                     <Button className={"text-3xl w-10 h-10 " + (tag ? tag.color : "")}>
                         <span className="mb-1">+</span>
                     </Button>
                 </CreateButtonDialog>
-            </div>
+            </div>}
             <ButtonList items={items}/>
         </div>
     );

@@ -6,7 +6,6 @@ import {
     setSelectedResult,
 } from "@/store/history-sidebar/historySidebarSlice.ts";
 import {clearHistory} from "@/store/history-sidebar/historySidebarSlice.ts";
-import {FaDiceD20} from "react-icons/fa";
 import {Button} from "@/components/ui/button.tsx";
 
 const HistoryPanel = () => {
@@ -27,17 +26,14 @@ const HistoryPanel = () => {
 
     const listRef = useRef<HTMLUListElement>(null);
 
-    return (<div className="flex flex-col gap-8 h-[calc(100vh-120px)] w-100">
-            <Button className={"py-8"}
+    return (<div className="flex flex-col gap-4 h-[calc(100vh-120px)] w-100">
+            <Button className={"mt-4 w-fit mx-auto"}
                     onClick={() => {
                         dispatch(clearHistory())
                     }}>
                 Clear History
             </Button>
-            <ul
-                className={` px-3 h-full flex-col gap-2 w-full transition-all overflow-y-auto`}
-                ref={listRef}
-            >
+            <ul className={` px-3 h-full flex-col w-full transition-all overflow-y-auto border-t-1 border-borders`} ref={listRef}>
                 {buttonHistory.length === 0 && <p className={"text-center"}>No history yet</p>}
                 {buttonHistory &&
                     buttonHistory.map((historyData: ButtonPressRecord, index: number) => {
@@ -57,20 +53,16 @@ const HistoryPanel = () => {
                                     dispatch(setSelectedResult(historyData.id))
                                 }}
                                 className={
-                                    "p-4 my-4 w-full rounded-lg h-fit max-w-80 text-left " +
+                                    "p-4 my-2 w-full rounded-lg h-fit max-w-80 text-left " +
                                     historyData.color + " " + border + " " + hoverBehavior
                                 }
                             >
                                 <div className="w-full flex flex-col items-start justify-start">
-                                    {/* Custom icon */}
-                                    <div className="toast-icon">
-                                        <FaDiceD20 size={24} className="dice-icon"/>
-                                    </div>
-
-                                    {/* Toast content */}
                                     <div className="w-full flex flex-col items-start justify-start">
-                                        <p className={"ml-auto text-sm w-full text-right"}>{historyData.date}</p>
-                                        <p>From: {historyData.username}</p>
+                                        <div className={"w-full flex flex-row justify-between"}>
+                                            <p>From: {historyData.username}</p>
+                                            <p>{historyData.date}</p>
+                                        </div>
                                         <h3 className={"mr-auto font-bold text-xl"}>
                                             {historyData.name}
                                         </h3>
@@ -78,15 +70,12 @@ const HistoryPanel = () => {
                                         {historyData.rollResult &&
                                             historyData.rollResult.map((rollResult, index) => {
                                                 return (
-                                                    <div key={index} className={"text-left py-4 px-4 "}>
+                                                    <div key={index} className={"text-left py-2 px-2"}>
                                                         <p className={"font-bold text-lg"}>{rollResult.name}</p>
                                                         <div className={"flex flex-col ml-2 my-1"}>
-                                                            <div
-                                                                className={"flex flex-row gap-1 flex-wrap text-lg font-bold"}>
+                                                            <div className={"flex flex-row gap-1 flex-wrap text-lg font-bold"}>
                                                                 <p>Total: </p>
-                                                                <p>
-                                                                    {rollResult.result} = {rollResult.total}
-                                                                </p>
+                                                                <p>{rollResult.result} = {rollResult.total}</p>
                                                             </div>
                                                         </div>
                                                     </div>
