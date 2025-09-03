@@ -43,6 +43,7 @@ export function CreateButtonDialog({children, selectedTag}: PropsWithChildren<Pr
                 button,
                 setId: selectedSetId
             }))
+            setButton(defaultButton)
         } else {
             toast.error("Button name and rolls cannot be empty")
         }

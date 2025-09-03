@@ -26,12 +26,15 @@ interface Props<T extends BaseItem> {
     onChange(items: T[]): void;
 
     renderItem(item: T): ReactNode;
+
+    orientation?: "col" | "row";
 }
 
 export function SortableList<T extends BaseItem>({
                                                      items,
                                                      onChange,
                                                      renderItem,
+                                                     orientation = "row"
                                                  }: Props<T>) {
     const [active, setActive] = useState<Active | null>(null);
     const activeItem = useMemo(
@@ -74,7 +77,7 @@ export function SortableList<T extends BaseItem>({
             }}
         >
             <SortableContext items={items}>
-                <ul className="flex flex-row flex-wrap gap-2  w-full justify-center items-center h-fit"
+                <ul className={"flex  flex-wrap gap-2 w-full justify-center items-center h-fit " + (orientation === "col" ? "flex-col" : "flex-row")}
                     role="application">
                     {items.map((item) => (
                         <React.Fragment key={item.id}>{renderItem(item)}</React.Fragment>
@@ -83,8 +86,8 @@ export function SortableList<T extends BaseItem>({
                 </ul>
             </SortableContext>
             <SortableOverlay>
-                {activeItem ? <div>{renderItem(activeItem)}
-                    <button value={"Hello"} name={"Baby"}/>
+                {activeItem ? <div>
+                    {renderItem(activeItem)}
                 </div> : null}
             </SortableOverlay>
         </DndContext>

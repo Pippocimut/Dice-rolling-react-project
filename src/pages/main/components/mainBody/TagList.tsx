@@ -2,10 +2,10 @@ import {Button} from "@/components/ui/button";
 import type {RootState} from "@/store";
 import {useDispatch, useSelector} from "react-redux";
 import {deleteTagFromSet, type Tag} from "@/store/button-sets/buttonSetSlice.ts";
-import {BsPencilFill} from "react-icons/bs";
 import DefaultDialog from "@/components/DefaultDialog.tsx";
 import {useState} from "react";
 import {EditTagForm} from "@/pages/main/components/mainBody/dialogs/forms/TagForms/EditTagForm.tsx";
+import {Label} from "@/components/ui/label.tsx";
 
 export function TagList() {
     const selectedSetId = useSelector((state: RootState) => state.selected.selectedSetId)
@@ -24,21 +24,14 @@ export function TagList() {
     const [selectedTag, setSelectedTag] = useState<Tag | null>(null)
 
     return <div className={"m-4 flex flex-col gap-4 justify-center items-center w-full"}>
+        <Label className={"text-left w-full"}>Tag List</Label>
         {tags.map(tag => (
-            <div key={tag.id} className={"w-full flex flex-row justify-between items-center"}>
+            <div key={tag.id} className={"w-full flex flex-row justify-between items-center gap-8 rounded-md border-neutral-200 border-1 shadow-sm p-4"}>
                 <Button onClick={() => {
                     setSelectedTag(tag)
                     setEditDialogOpen(true)
                 }} className={tag.color + " p-4"}>{tag.name}</Button>
                 <div className="flex flex-row gap-2">
-                    <Button
-                        onClick={() => {
-                            setSelectedTag(tag)
-                            setEditDialogOpen(true)
-                        }}
-                        className={" w-10 h-10 bg-green-600 "}>
-                        <BsPencilFill/>
-                    </Button>
                     <Button onClick={
                         () => {
                             deleteTag(tag.id)

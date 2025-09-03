@@ -5,10 +5,6 @@ export type RollResult = {
     name: string;
     result: string;
     total: number;
-    totalAdv: number;
-    resultAdv: string;
-    totalDis: number;
-    resultDis: string;
 };
 
 export type ButtonPressRecord = Omit<ButtonData, "rolls"> & {
