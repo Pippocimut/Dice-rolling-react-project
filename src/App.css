@@ -100,29 +100,6 @@
     }
 }
 
-@media (prefers-color-scheme: light) {
-    :root {
-        --background-color: white;
-        --white-text-color: white;
-        --text-color: black;
-        --primary-color: var(--true-blue);
-        --secondary-background-color: var(--jet);
-        --borders-color: var(--jet);
-    }
-}
-
-/* Dark mode overrides */
-@media (prefers-color-scheme: dark) {
-    :root {
-        --background-color: black;
-        --white-text-color: black;
-        --text-color: white;
-        --primary-color: var(--opposite-true-blue);
-        --secondary-background-color: var(--opposite-jet);
-        --borders-color: var(--opposite-jet);
-    }
-}
-
 .glowing-border {
     border: 4px solid var(--text-color);
     box-shadow: 0 0 8px var(--text-color);
