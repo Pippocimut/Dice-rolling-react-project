@@ -1,4 +1,4 @@
-import {useContext, useState} from "react";
+import {type MouseEventHandler, useCallback, useContext, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {
     addRoll, type ButtonPressRecord,
@@ -11,8 +11,8 @@ import {toast} from "react-toastify";
 import EditButtonDialog from "@/pages/main/components/mainBody/dialogs/forms/ButtonForms/EditButtonDialog.tsx";
 import {Button} from "@/components/ui/button.tsx";
 import type {ButtonData} from "@/store/button-sets/buttonSetSlice.ts";
-import {calculateButtonRoll} from "@/pages/main/components/mainBody/calculateButtonRoll.ts";
 import {CustomRollToast} from "@/pages/main/components/mainBody/CustomRollToast.tsx";
+import {calculateButtonRoll} from "@/pages/main/components/mainBody/utils.ts";
 
 type Props = { buttonData: ButtonData; };
 
@@ -41,23 +41,32 @@ const RollButton = ({buttonData}: Props) => {
         );
     };
 
-    const handleOnClick = () => {
-        const results: RollResult[] = calculateButtonRoll(buttonData.rolls);
+    const onClick = useCallback(() => {
+        if (editMode) {
+            setEditDialogOpen(true);
+        } else {
+            const results: RollResult[] = calculateButtonRoll(buttonData.rolls);
 
-        const roll = {
-            id: 0,
-            username: "You",
-            name: buttonData.name,
-            color: buttonData.color,
-            tag: buttonData.tag,
-            date: new Date().toLocaleString(),
-            rollResult: results,
-        };
+            const roll = {
+                id: 0,
+                username: "You",
+                name: buttonData.name,
+                color: buttonData.color,
+                tag: buttonData.tag,
+                date: new Date().toLocaleString(),
+                rollResult: results,
+            };
 
-        showCustomRollToast(roll);
-        dispatch(addRoll(roll));
-        emitRoll({...roll, username: userName ?? "Anonymous"});
-    };
+            showCustomRollToast(roll);
+            dispatch(addRoll(roll));
+            emitRoll({...roll, username: userName ?? "Anonymous"});
+        }
+    }, [editMode]);
+
+    const onContextMenu: MouseEventHandler<HTMLButtonElement> = useCallback((e) => {
+        e.preventDefault();
+        setEditDialogOpen(true)
+    }, [editMode])
 
     return (<>
         <Button
@@ -65,12 +74,8 @@ const RollButton = ({buttonData}: Props) => {
             {...listeners}
             ref={ref}
             className={`w-30 h-30 rounded-lg ${buttonData.color} font-bold hover:outline-4 ${editMode ? 'glowing-border' : ''}`}
-            onClick={editMode ? () => setEditDialogOpen(true) : handleOnClick}
-            onContextMenu={!editMode ? (e) => {
-                e.preventDefault();
-                setEditDialogOpen(true);
-            } : undefined}
-        >
+            onClick={onClick}
+            onContextMenu={onContextMenu}>
             <span className={"text-xl w-25 text-wrap"}>{buttonData.name}</span>
         </Button>
         <EditButtonDialog

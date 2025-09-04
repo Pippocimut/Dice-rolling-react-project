@@ -19,7 +19,7 @@ const RollHandlingDialogContent = ({roll, updateRoll, children}: PropsWithChildr
     };
 
     return (
-        <DialogContent className={"flex flex-col w-fit gap-4 justify-start items-start"}>
+        <DialogContent className={"flex flex-col w-fit gap-4 justify-start items-start"} onOpenAutoFocus={(e)=> e.preventDefault()}>
             <DialogHeader>
                 <DialogTitle>
                     Roll handling form

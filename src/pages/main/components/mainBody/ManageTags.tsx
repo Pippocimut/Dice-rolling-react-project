@@ -15,7 +15,7 @@ export function ManageTags() {
         <DialogTrigger asChild>
             <Button onClick={() => setIsManageTagOpen(true)}>Manage Tags</Button>
         </DialogTrigger>
-        <DialogContent className={"w-fit"}>
+        <DialogContent className={"w-fit"} onOpenAutoFocus={(e)=> e.preventDefault()}>
             <DialogHeader>
                 <DialogTitle>Manage tags</DialogTitle>
             </DialogHeader>

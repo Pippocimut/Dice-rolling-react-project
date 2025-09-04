@@ -60,7 +60,7 @@ export function ConnectNav() {
             <DialogTrigger>
                 <Button onClick={() => setIsConnectDialogOpen(true)}>Connect</Button>
             </DialogTrigger>
-            <DialogContent className="w-fit mt-auto p-4 bg-background text-text">
+            <DialogContent className="w-fit mt-auto p-4 bg-background text-text" onOpenAutoFocus={(e)=> e.preventDefault()}>
                 <DialogHeader>
                     <DialogTitle>
                         Connect to room

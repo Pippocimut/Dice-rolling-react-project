@@ -5,7 +5,7 @@ import {ManageTags} from "@/pages/main/components/mainBody/ManageTags.tsx";
 import {SetSelect} from "@/pages/main/components/mainBody/SetSelect.tsx";
 import {MainInfo} from "@/pages/main/components/mainBody/MainInfo";
 import {ActionButtons} from "@/pages/main/components/mainBody/ActionButtons";
-import ButtonLists from "@/pages/main/components/mainBody/ButtonLists.tsx";
+import ButtonLists from "@/pages/main/components/mainBody/ButtonList/ButtonLists.tsx";
 import {ImportNav} from "@/pages/main/components/NavHeader/ImportNav.tsx";
 
 export function Main() {

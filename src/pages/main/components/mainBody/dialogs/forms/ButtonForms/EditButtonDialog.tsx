@@ -71,7 +71,7 @@ const EditButtonDialog = ({
         }
     }
 
-    return <Dialog {...((setOpen !== undefined) ? {
+    return <Dialog  {...((setOpen !== undefined) ? {
         open: open,
         onOpenChange: setOpen
     } : {})}>
@@ -79,7 +79,7 @@ const EditButtonDialog = ({
             <DialogTrigger asChild>
                 {children}
             </DialogTrigger>
-            <DialogContent className={"w-fit"}>
+            <DialogContent className={"w-fit"} onOpenAutoFocus={(e)=> e.preventDefault()}>
                 <DialogHeader>
                     <DialogTitle>
                         Edit Button

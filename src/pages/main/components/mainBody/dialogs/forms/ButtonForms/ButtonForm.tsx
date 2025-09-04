@@ -44,6 +44,7 @@ const ButtonForm = ({
                         id={"Button Name"}
                         placeholder={"Button's Name"}
                         value={button.name}
+
                         onChange={(e) => setButton({...button, name: e.target.value})}
                     />
                 </div>

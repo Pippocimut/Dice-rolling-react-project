@@ -26,7 +26,7 @@ const HistoryPanel = () => {
 
     const listRef = useRef<HTMLUListElement>(null);
 
-    return (<div className="flex flex-col gap-4 h-[calc(100vh-120px)] w-100">
+    return (<div className="flex flex-col gap-4 h-[calc(100vh-120px)] w-fit">
             <Button className={"mt-4 w-fit mx-auto"}
                     onClick={() => {
                         dispatch(clearHistory())

@@ -23,7 +23,7 @@ export function CreateButtonDialog({children, selectedTag}: PropsWithChildren<Pr
     const dispatch = useDispatch();
     const defaultButton = {
         id: -1,
-        name: "New Button",
+        name: "",
         rolls: selectedTag?.rollsConfig ?? [],
         tag: selectedTag?.id,
         color: selectedTag?.color ?? colors[Math.floor(Math.random() * colors.length)]
@@ -54,7 +54,7 @@ export function CreateButtonDialog({children, selectedTag}: PropsWithChildren<Pr
             <DialogTrigger asChild>
                 {children}
             </DialogTrigger>
-            <DialogContent className={"w-fit"}>
+            <DialogContent className={"w-fit"} onOpenAutoFocus={(e)=> e.preventDefault()}>
                 <DialogHeader>
                     <DialogTitle>
                         Create Button
