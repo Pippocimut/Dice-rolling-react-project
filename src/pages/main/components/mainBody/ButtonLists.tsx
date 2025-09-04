@@ -21,7 +21,7 @@ const ButtonLists = () => {
 
     return (<div className={"flex flex-col flex-wrap w-fit max-w-2/3 my-2 justify-center items-center"}>
             <ButtonListSection/>
-            <div className={"flex flex-row flex-wrap w-fit gap-16 justify-center items-center"}>
+            <div className={"flex flex-row flex-wrap w-fit gap-x-8 justify-center items-center"}>
                 {tags.map((tag) => {
                     return <ButtonListSection tagId={tag.id}/>
                 })}

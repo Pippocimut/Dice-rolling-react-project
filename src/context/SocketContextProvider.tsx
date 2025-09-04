@@ -12,7 +12,7 @@ export const SocketProvider = ({children}: { children: ReactNode }) => {
     const [socket, setSocket] = useState<Socket | null>(null);
     const dispatch = useDispatch()
 
-    const connect = (roomName: string,userName:string) => {
+    const connect = (roomName: string, userName: string) => {
         // Disconnect existing connection if any
         if (socket) {
             socket.disconnect();
@@ -36,8 +36,10 @@ export const SocketProvider = ({children}: { children: ReactNode }) => {
     const disconnect = () => {
         if (socket) {
             socket.disconnect();
-            setSocket(null);
         }
+        setSocket(null);
+        dispatch(emitRoomName(""))
+        dispatch(emitUserName(""))
     };
 
     const emitRoll = (data: ButtonPressRecord) => {
