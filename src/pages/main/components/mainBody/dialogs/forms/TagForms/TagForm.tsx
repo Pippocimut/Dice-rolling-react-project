@@ -4,10 +4,9 @@ import {type PropsWithChildren, useState} from "react";
 import {useSelector} from "react-redux";
 import type {RootState} from "@/store";
 import type {Tag} from "@/store/button-sets/buttonSetSlice.ts";
-import CreateRollDialog from "@/pages/main/components/mainBody/dialogs/forms/RollForms/CreateRollDialog.tsx";
 import type {Roll} from "@/pages/main/types.ts";
-import DefaultDialog from "@/components/DefaultDialog.tsx";
 import {RollSelection} from "@/pages/main/components/mainBody/dialogs/forms/RollSelection.tsx";
+import {DialogFooter} from "@/components/ui/dialog.tsx";
 
 type Props = {
     tag: Tag,
@@ -16,8 +15,6 @@ type Props = {
 
 export function TagForm(props: PropsWithChildren<Props>) {
     const [nameError, setNameError] = useState("");
-
-    const [isOpenNewRollDialog,setIsOpenNewRollDialog] = useState<boolean>(false);
 
     const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const equivalentTag = tags.find(tag => tag.name.toLowerCase() === e.target.value.toLowerCase())
@@ -39,7 +36,7 @@ export function TagForm(props: PropsWithChildren<Props>) {
 
     const tags = currentSet.tags;
 
-    return (<div className={"m-4 flex flex-col gap-4 justify-center items-center"}>
+    return (<>
         <div className={"m-4 flex flex-row gap-4 justify-center items-center"}>
             <div id={"Name Selection"}>
                 <label className={"text-danger"}>{nameError}</label>
@@ -57,18 +54,8 @@ export function TagForm(props: PropsWithChildren<Props>) {
         </div>
         <RollSelection rolls={props.tag.rollsConfig ?? []} setRolls={(rolls: Roll[]) => props.setTag({...props.tag, rollsConfig: rolls})}/>
 
-        {props.children}
-
-        <DefaultDialog isOpen={isOpenNewRollDialog} onClose={() => setIsOpenNewRollDialog(false)}>
-            <CreateRollDialog
-                createRoll={(roll: Roll) => {
-                    props.setTag({
-                        ...props.tag,
-                        rollsConfig: [...props.tag.rollsConfig ?? [], roll]
-                    })
-                    setIsOpenNewRollDialog(false);
-                }}
-            />
-        </DefaultDialog>
-    </div>)
+        <DialogFooter>
+            {props.children}
+        </DialogFooter>
+    </>)
 }
