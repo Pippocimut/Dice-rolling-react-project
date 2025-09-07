@@ -7,10 +7,9 @@ import {
     DialogTrigger
 } from "@/components/ui/dialog.tsx";
 import {type PropsWithChildren, useCallback, useState} from "react";
-import {addButtonToSet, type ButtonData, type Tag} from "@/store/button-sets/buttonSetSlice.ts";
+import {addButtonToSet, type ButtonData, colors, type Tag} from "@/store/button-sets/buttonSetSlice.ts";
 import ButtonForm from "@/pages/main/components/mainBody/dialogs/forms/ButtonForms/ButtonForm.tsx";
 import {useDispatch, useSelector} from "react-redux";
-import {colors} from "@/pages/main/components/mainBody/dialogs/forms/TagSelection.tsx";
 import {Button} from "@/components/ui/button.tsx";
 import type {RootState} from "@/store";
 import {toast} from "react-toastify";

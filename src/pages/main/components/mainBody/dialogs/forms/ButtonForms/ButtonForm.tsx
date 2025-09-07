@@ -1,7 +1,7 @@
 import {type PropsWithChildren, useState} from "react";
 import type {Roll} from "../../../../../types.ts";
-import TagSelection, {colors} from "../TagSelection.tsx";
-import {type ButtonData, type Tag} from "@/store/button-sets/buttonSetSlice.ts";
+import TagSelection from "../TagSelection.tsx";
+import {type ButtonData, colors, type Tag} from "@/store/button-sets/buttonSetSlice.ts";
 import {useSelector} from "react-redux";
 import type {RootState} from "@/store";
 import {Input} from "@/components/ui/input.tsx";

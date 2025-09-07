@@ -1,4 +1,4 @@
-import type {Roll} from "../../pages/main/types.ts";
+import type {Roll} from "@/pages/main/types.ts";
 import {createSlice} from "@reduxjs/toolkit";
 
 export type Tag = {
@@ -39,7 +39,6 @@ interface buttonSetState {
     sets: Record<number, ButtonSet>;
 }
 
-
 export const colors = [
     "red-roll-button",
     "orange-roll-button",
@@ -69,16 +68,19 @@ const initialState: buttonSetState =
                             id: 1,
                             name: "attack",
                             color: "red-roll-button",
+                            rollsConfig: []
                         },
                         2: {
                             id: 2,
                             name: "saving throw",
                             color: "blue-roll-button",
+                            rollsConfig: []
                         },
                         3: {
                             id: 3,
                             name: "check",
                             color: "green-roll-button",
+                            rollsConfig: []
                         }
                     },
                     buttonList: {}

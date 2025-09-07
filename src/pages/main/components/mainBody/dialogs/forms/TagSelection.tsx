@@ -1,17 +1,6 @@
 import TagComboBox from "./TagComboBox";
 import {TagColorSelection} from "@/pages/main/components/mainBody/dialogs/forms/TagColorSelection.tsx";
 
-export const colors = [
-    "red-roll-button",
-    "orange-roll-button",
-    "yellow-roll-button",
-    "green-roll-button",
-    "blue-roll-button",
-    "purple-roll-button",
-    "pink-roll-button",
-    "gray-roll-button"
-];
-
 type Props = {
     tag: number;
     setTag: (value: number) => void,

@@ -1,4 +1,3 @@
-import {colors} from "@/pages/main/components/mainBody/dialogs/forms/TagSelection.tsx";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -7,6 +6,7 @@ import {
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu.tsx";
 import {Button} from "@/components/ui/button.tsx";
+import {colors} from "@/store/button-sets/buttonSetSlice.ts";
 
 type Props = {
     buttonColor: string,
