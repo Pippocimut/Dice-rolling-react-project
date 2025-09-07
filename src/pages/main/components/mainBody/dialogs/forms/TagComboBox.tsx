@@ -15,7 +15,7 @@ type Props = {
 }
 
 const TagComboBox = ({tag, setTag}: Props) => {
-    const buttonSet = useSelector((state: RootState) => state.buttonSet.sets[state.selected.selectedSetId])
+    const buttonSet = useSelector((state: RootState) => state.buttonSet.sets[state.buttonSet.selectedSetId])
     const tags = buttonSet.tags ?? []
 
     const currentTag = tags[tag]

@@ -23,7 +23,7 @@ export function CreateTagDialog(){
         rollsConfig: []
     });
 
-    const currentSet = useSelector((state: RootState) => state.buttonSet.sets[state.selected.selectedSetId])
+    const currentSet = useSelector((state: RootState) => state.buttonSet.sets[state.buttonSet.selectedSetId])
 
     const tags = currentSet.tags;
 

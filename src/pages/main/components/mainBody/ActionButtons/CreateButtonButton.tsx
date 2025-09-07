@@ -4,7 +4,7 @@ import {CreateButtonDialog} from "@/pages/main/components/mainBody/dialogs/forms
 import {Button} from "@/components/ui/button.tsx";
 
 export function CreateButtonButton() {
-    const currentSet = useSelector((state: RootState) => state.buttonSet.sets[state.selected.selectedSetId])
+    const currentSet = useSelector((state: RootState) => state.buttonSet.sets[state.buttonSet.selectedSetId])
     const areThereButtons = !((Object.values(currentSet.buttonList ?? {}).length ?? 0) === 0)
 
     return <CreateButtonDialog>

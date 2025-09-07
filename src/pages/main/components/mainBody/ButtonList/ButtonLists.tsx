@@ -6,7 +6,7 @@ import UntaggedButtonListSection from "@/pages/main/components/mainBody/ButtonLi
 import type {RootState} from "@/store";
 
 export default function ButtonLists() {
-    const buttonSet = useSelector((state: RootState) => state.buttonSet.sets[ state.selected.selectedSetId])!;
+    const buttonSet = useSelector((state: RootState) => state.buttonSet.sets[ state.buttonSet.selectedSetId])!;
 
     const sortedTags = useMemo(() => {
         if (!buttonSet) return [];

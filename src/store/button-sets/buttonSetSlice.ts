@@ -35,6 +35,7 @@ interface buttonSetState {
     nextButtonId: number;
     nextTagId: number;
     currentVersion: string;
+    selectedSetId: number;
     sets: Record<number, ButtonSet>;
 }
 
@@ -57,6 +58,7 @@ const initialState: buttonSetState =
             nextTagId: 4,
             nextButtonId: 1,
             currentVersion: "1.1",
+            selectedSetId: 1,
             sets: {
                 1: {
                     id: 1,
@@ -88,8 +90,8 @@ const buttonSetSlice = createSlice({
     name: "buttonSet",
     initialState,
     reducers: {
-        updateButtonSets: (state, action) => {
-            state.sets = action.payload;
+        setSelectedSet: (state, action) => {
+            state.selectedSetId = action.payload;
             document.cookie = "buttonSetsList=" + JSON.stringify(state);
         },
         updateButtonOfSet: (state, action: {
@@ -271,36 +273,20 @@ const buttonSetSlice = createSlice({
             delete state.sets[setId].buttonList[id]
 
             document.cookie = "buttonSetsList=" + JSON.stringify(state);
-        },
-        deleteTagOfSet: (state, action: {
-            payload: {
-                setId: number,
-                tagId: number
-            }
-        }) => {
-            const setId = action.payload.setId;
-            const tagId = action.payload.tagId;
-
-            const set = state.sets[setId];
-            if (!set) return;
-
-            delete set.tags[tagId]
-            document.cookie = "buttonSetsList=" + JSON.stringify(state);
         }
     }
 })
 
 export const {
-    updateButtonSets,
     addButtonToSet,
     updateButtonOfSet,
     deleteButtonOfSet,
     deleteTagFromSet,
-    deleteTagOfSet,
     addTagToSet,
     editTagOfSet,
     addNewSet,
-    sendNewButtonList
+    sendNewButtonList,
+    setSelectedSet
 } = buttonSetSlice.actions
 
 export default buttonSetSlice.reducer

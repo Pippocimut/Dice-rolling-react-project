@@ -6,7 +6,7 @@ import {Label} from "@/components/ui/label.tsx";
 import {EditTagDialog} from "@/pages/main/components/mainBody/EditTagDialog.tsx";
 
 export function TagList() {
-    const currentSet = useSelector((state: RootState) => state.buttonSet.sets[state.selected.selectedSetId])
+    const currentSet = useSelector((state: RootState) => state.buttonSet.sets[state.buttonSet.selectedSetId])
     const tags = Object.values(currentSet.tags).filter(tag => tag.name !== "")
 
     const dispatch = useDispatch()

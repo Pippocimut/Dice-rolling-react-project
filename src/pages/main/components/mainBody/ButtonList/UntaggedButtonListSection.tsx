@@ -4,7 +4,7 @@ import {useMemo} from "react";
 import type {RootState} from "@/store";
 
 const UntaggedButtonListSection = () => {
-    const buttonSet = useSelector((state: RootState) => state.buttonSet.sets[ state.selected.selectedSetId])!
+    const buttonSet = useSelector((state: RootState) => state.buttonSet.sets[ state.buttonSet.selectedSetId])!
 
     const items = useMemo(() => {
         if (!buttonSet) return [];

@@ -31,7 +31,7 @@ export function CreateButtonDialog({children, selectedTag}: PropsWithChildren<Pr
 
     const [button, setButton] = useState<ButtonData>(defaultButton)
 
-    const selectedSetId = useSelector((state: RootState) => state.selected.selectedSetId)
+    const selectedSetId = useSelector((state: RootState) => state.buttonSet.selectedSetId)
 
     const areAllFieldsFilled = () => {
         return !(button.name == "" || button.rolls.length === 0);

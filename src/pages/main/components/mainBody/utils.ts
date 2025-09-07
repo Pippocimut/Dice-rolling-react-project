@@ -22,7 +22,7 @@ export function getSortedTags(buttonSet: ButtonSet) {
     );
 }
 
-export const getSelectedSet = (state: RootState) => state.buttonSet.sets[ state.selected.selectedSetId]
+export const getSelectedSet = (state: RootState) => state.buttonSet.sets[ state.buttonSet.selectedSetId]
 
 
 export function calculateButtonRoll(rolls: Roll[]) {

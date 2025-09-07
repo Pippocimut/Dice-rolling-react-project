@@ -11,8 +11,8 @@ type Props = {
 
 export function ButtonSortableList({items}: Props) {
     const dispatch = useDispatch();
-    const selectedSetId = useSelector((state: RootState) => state.selected.selectedSetId)
-    const buttonSet = useSelector((state: RootState) => state.buttonSet.sets[ state.selected.selectedSetId])!
+    const selectedSetId = useSelector((state: RootState) => state.buttonSet.selectedSetId)
+    const buttonSet = useSelector((state: RootState) => state.buttonSet.sets[ state.buttonSet.selectedSetId])!
 
     const updateButtons = useCallback((newButtonList: ButtonData[]) => {
         const filter = (button: ButtonData) => newButtonList.find((newButton) => newButton.id === button.id) === undefined

@@ -32,8 +32,8 @@ const EditButtonDialog = ({
                               setOpen
                           }: PropsWithChildren<Props>) => {
 
-    const selectedSetId = useSelector((state: RootState) => state.selected.selectedSetId)
-    const buttonSet = useSelector((state: RootState) => state.buttonSet.sets[state.selected.selectedSetId])
+    const selectedSetId = useSelector((state: RootState) => state.buttonSet.selectedSetId)
+    const buttonSet = useSelector((state: RootState) => state.buttonSet.sets[state.buttonSet.selectedSetId])
 
     const selectedButton = buttonSet?.buttonList[selectedButtonId]
 
