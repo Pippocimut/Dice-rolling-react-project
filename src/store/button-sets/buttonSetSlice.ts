@@ -221,6 +221,7 @@ const buttonSetSlice = createSlice({
                             id: state.nextButtonId++
                         }
                     })
+
                 } else if (set.version === "1.1") {
                     Object.entries(set.tags).forEach(([tagKey, value]: [string, Tag]) => {
                         set.buttonList = Object.values(set.buttonList).map((value: ButtonData) => {
@@ -251,6 +252,8 @@ const buttonSetSlice = createSlice({
                     buttonList: tempButtonList,
                     name: set.name,
                 }
+
+                console.log(state.sets[state.nextSetId])
             }
 
             state.nextSetId++;

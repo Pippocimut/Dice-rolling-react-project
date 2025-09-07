@@ -8,7 +8,7 @@ export type exportMenuState = {
 }
 
 const initialState: exportMenuState = {
-    selectedSetId: 1,
+    selectedSetId: document.cookie.includes("selectedSetId") ? JSON.parse(decodeURIComponent(document.cookie.split("selectedSetId=")[1].split(';')[0])).selectedSetId as number : 1,
     editMode: false,
 }
 
@@ -16,14 +16,9 @@ const selectedSlice = createSlice({
     name: "selected",
     initialState,
     reducers: {
-        setSelectedTag: (state, action) => {
-            state.selectedTagId = action.payload;
-        },
-        setSelectedButton: (state, action) => {
-            state.selectedButtonId = action.payload;
-        },
         setSelectedSet: (state, action) => {
             state.selectedSetId = action.payload;
+            document.cookie = "selectedSetId=" + JSON.stringify({selectedSetId: action.payload});
         },
         toggleEditMode: (state) => {
             state.editMode = !state.editMode;
@@ -32,8 +27,6 @@ const selectedSlice = createSlice({
 })
 
 export const {
-    setSelectedTag,
-    setSelectedButton,
     setSelectedSet,
     toggleEditMode,
 } = selectedSlice.actions
