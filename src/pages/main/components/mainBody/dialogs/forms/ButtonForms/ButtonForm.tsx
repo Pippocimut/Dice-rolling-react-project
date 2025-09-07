@@ -25,8 +25,9 @@ const ButtonForm = ({
 
         const handleTagChange = (id: number) => {
             if (currentSet) {
-                setButton({...button, tag: id})
+                setButton({...button, tag: id, rolls: [...button.rolls, ...currentSet.tags[id].rollsConfig ?? []]})
                 setTag(currentSet.tags[id])
+
             }
         }
 
