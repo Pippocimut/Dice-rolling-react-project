@@ -49,6 +49,7 @@ export function TagForm(props: PropsWithChildren<Props>) {
                 }}/>
             </div>
         </div>
+
         <RollSelection rolls={props.tag.rollsConfig ?? []} setRolls={(rolls: Roll[]) => props.setTag({...props.tag, rollsConfig: rolls})}/>
 
         <DialogFooter>

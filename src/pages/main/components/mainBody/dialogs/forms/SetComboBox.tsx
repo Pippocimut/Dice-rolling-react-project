@@ -14,7 +14,6 @@ type Props = {
 
 const TagComboBox = ({set, setSet}: Props) => {
     const buttonSets = useSelector((state: RootState) => state.buttonSet.sets)
-
     const setsList = Object.values(buttonSets).map((buttonSet) => buttonSet.name)
 
     const handleSetChange = (value: string | null) => {

@@ -2,17 +2,21 @@ import {toggleEditMode} from "@/store/selected/selectedSlice.ts";
 import {BsPencilFill} from "react-icons/bs";
 import {useDispatch, useSelector} from "react-redux";
 import type {RootState} from "@/store";
+import {Button} from "@/components/ui/button.tsx";
 
 export function ToggleEditModeButton() {
     const dispatch = useDispatch();
     const editMode = useSelector((state: RootState) => state.selected.editMode)
 
-    return <button
+    const buttonVariant = editMode ? "outline" : "default"
+
+    return <Button
         id="editModeButton"
-        className={"w-20 h-20 rounded-xl hover:outline-2 text-2xl " + (editMode ? " bg-white border-4 border-primary text-primary" : " bg-primary text-white")}
+        variant={buttonVariant}
+        className={"w-20 h-20 text-5xl transition-all font-bold gap-0"}
         onClick={() => dispatch(toggleEditMode())}>{
-        editMode ? <span className={"text-5xl pb-2 font-bold"}>&#10004;</span> : <div
-            className={"flex justify-center gap-2 items-center"}
-        ><BsPencilFill/></div>
-    }</button>
+        editMode ?
+            <span className={"pb-2"}>&#10004;</span> :
+            <BsPencilFill className="size-6"/>
+    }</Button>
 }
