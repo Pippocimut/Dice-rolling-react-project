@@ -23,8 +23,8 @@ const buttonSetSlice = createSlice({
                 state.sets = state.sets.filter((checkedSet) => checkedSet !== newSet.id)
             } else {
                 state.sets.push(newSet.id);
-                state.tags[newSet.id] = [...state.tags[newSet.id] ?? [], ...newSet.tags.map(tag => tag.id)];
-                state.buttons[newSet.id] = [...state.buttons[newSet.id] ?? [], ...newSet.buttonList.map(button => button.id)];
+                state.tags[newSet.id] = [...state.tags[newSet.id] ?? [], ...Object.values(newSet.tags).map(tag => tag.id)];
+                state.buttons[newSet.id] = [...state.buttons[newSet.id] ?? [], ...Object.values(newSet.buttonList).map(button => button.id)];
             }
         },
         onCheckedTagsChange: (state, action: {
@@ -61,20 +61,20 @@ const buttonSetSlice = createSlice({
             }
         },
         selectAllSets: (state, action: {
-            payload: { buttonSets: ButtonSet[] }
+            payload: { buttonSets: Record<number,ButtonSet> }
         }) => {
-            const {buttonSets} = action.payload
+            const buttonSets = Object.values(action.payload.buttonSets)
 
             state.sets = buttonSets.map(set => set.id)
             state.tags = {
                 ...buttonSets.reduce((acc, set) => {
-                    acc[set.id] = set.tags.map(tag => tag.id)
+                    acc[set.id] = Object.values(set.tags).map(tag => tag.id)
                     return acc
                 }, {} as Record<number, number[]>)
             }
             state.buttons = {
                 ...buttonSets.reduce((acc, set) => {
-                    acc[set.id] = set.buttonList.map(button => button.id)
+                    acc[set.id] = Object.values(set.buttonList).map(button => button.id)
                     return acc
                 }, {} as Record<number, number[]>)
             }

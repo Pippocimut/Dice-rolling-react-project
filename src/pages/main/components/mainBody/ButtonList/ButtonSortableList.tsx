@@ -4,7 +4,6 @@ import {type ButtonData, sendNewButtonList} from "@/store/button-sets/buttonSetS
 import {useDispatch, useSelector} from "react-redux";
 import type {RootState} from "@/store";
 import {useCallback} from "react";
-import {getSelectedSet} from "@/pages/main/components/mainBody/utils.ts";
 
 type Props = {
     items: ButtonData[]
@@ -13,11 +12,11 @@ type Props = {
 export function ButtonSortableList({items}: Props) {
     const dispatch = useDispatch();
     const selectedSetId = useSelector((state: RootState) => state.selected.selectedSetId)
-    const buttonSet = useSelector(getSelectedSet)!
+    const buttonSet = useSelector((state: RootState) => state.buttonSet.sets[ state.selected.selectedSetId])!
 
     const updateButtons = useCallback((newButtonList: ButtonData[]) => {
         const filter = (button: ButtonData) => newButtonList.find((newButton) => newButton.id === button.id) === undefined
-        const updatedButtonList = buttonSet.buttonList.filter(filter)
+        const updatedButtonList = Object.values(buttonSet.buttonList).filter(filter)
 
         dispatch(sendNewButtonList({
             setId: selectedSetId,

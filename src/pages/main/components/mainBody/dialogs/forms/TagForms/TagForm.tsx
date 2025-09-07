@@ -17,7 +17,7 @@ export function TagForm(props: PropsWithChildren<Props>) {
     const [nameError, setNameError] = useState("");
 
     const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const equivalentTag = tags.find(tag => tag.name.toLowerCase() === e.target.value.toLowerCase())
+        const equivalentTag = Object.values(tags).find(tag => tag.name.toLowerCase() === e.target.value.toLowerCase())
         if (equivalentTag) {
             if (!(props.tag.id && equivalentTag.id === props.tag.id))
                 setNameError("You cannot name this tag the same as another tag")
@@ -30,10 +30,7 @@ export function TagForm(props: PropsWithChildren<Props>) {
         })
     }
 
-    const sets = useSelector((state: RootState) => state.buttonSet.sets)
-    const selectedSetId = useSelector((state: RootState) => state.selected.selectedSetId)
-    const currentSet = sets.find(set => set.id === selectedSetId)!
-
+    const currentSet = useSelector((state: RootState) => state.buttonSet.sets[state.selected.selectedSetId])
     const tags = currentSet.tags;
 
     return (<>

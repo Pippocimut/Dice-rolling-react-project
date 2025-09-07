@@ -19,19 +19,14 @@ const ButtonForm = ({
                         setButton,
                         children
                     }: PropsWithChildren<Props>) => {
-
-        const buttonSets = useSelector((state: RootState) => state.buttonSet.sets)
-        const selectedSetId = useSelector((state: RootState) => state.selected.selectedSetId)
-        const buttonTag = buttonSets.find((set) => set.id === selectedSetId)!.tags.find((tag) => tag.id === button?.tag)
-
+        const currentSet = useSelector((state: RootState) => state.buttonSet.sets[state.selected.selectedSetId])
+        const buttonTag = currentSet.tags[button?.tag ?? -1]
         const [tag, setTag] = useState<Tag | undefined>(buttonTag)
-
-        const currentSet = buttonSets.find((set) => set.id === selectedSetId);
 
         const handleTagChange = (id: number) => {
             if (currentSet) {
                 setButton({...button, tag: id})
-                setTag(currentSet.tags.find((tag) => tag.id === id))
+                setTag(currentSet.tags[id])
             }
         }
 

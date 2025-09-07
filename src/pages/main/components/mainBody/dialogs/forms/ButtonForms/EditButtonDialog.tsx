@@ -33,13 +33,9 @@ const EditButtonDialog = ({
                           }: PropsWithChildren<Props>) => {
 
     const selectedSetId = useSelector((state: RootState) => state.selected.selectedSetId)
-    const buttonSet = useSelector((state: RootState) => state.buttonSet.sets.find(
-        (set) => set.id === selectedSetId
-    ))
+    const buttonSet = useSelector((state: RootState) => state.buttonSet.sets[state.selected.selectedSetId])
 
-    const selectedButton = buttonSet?.buttonList.find(
-        (button) => button.id === selectedButtonId
-    )
+    const selectedButton = buttonSet?.buttonList[selectedButtonId]
 
     if (!selectedButton) throw new Error("Button not found")
 
@@ -79,7 +75,7 @@ const EditButtonDialog = ({
             <DialogTrigger asChild>
                 {children}
             </DialogTrigger>
-            <DialogContent className={"w-fit"} onOpenAutoFocus={(e)=> e.preventDefault()}>
+            <DialogContent className={"w-fit"} onOpenAutoFocus={(e) => e.preventDefault()}>
                 <DialogHeader>
                     <DialogTitle>
                         Edit Button

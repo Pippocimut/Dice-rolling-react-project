@@ -45,7 +45,7 @@ export default function Index({close, exportData}: Props) {
         close()
     }
 
-    const noButtonsToDisplay = buttonSets.filter((buttonSet) => buttonSet.buttonList.length > 0).length === 0;
+    const noButtonsToDisplay = Object.values(buttonSets).filter((buttonSet) => Object.values(buttonSet.buttonList).length > 0).length === 0;
 
     return <div className={"flex flex-col w-full h-full"}>
         <h1 className={"text-4xl font-bold mx-auto text-center my-2"}>

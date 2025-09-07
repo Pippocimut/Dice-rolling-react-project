@@ -6,15 +6,13 @@ import {Label} from "@/components/ui/label.tsx";
 import {EditTagDialog} from "@/pages/main/components/mainBody/EditTagDialog.tsx";
 
 export function TagList() {
-    const selectedSetId = useSelector((state: RootState) => state.selected.selectedSetId)
-    const sets = useSelector((state: RootState) => state.buttonSet.sets)
-    const currentSet = sets.find(set => set.id === selectedSetId)!
-    const tags = currentSet.tags.filter(tag => tag.name !== "")
+    const currentSet = useSelector((state: RootState) => state.buttonSet.sets[state.selected.selectedSetId])
+    const tags = Object.values(currentSet.tags).filter(tag => tag.name !== "")
 
     const dispatch = useDispatch()
 
     const deleteTag = (id: number) => {
-        dispatch(deleteTagFromSet({setId: selectedSetId, tagId: id}))
+        dispatch(deleteTagFromSet({setId: currentSet.id, tagId: id}))
     }
 
     return <div className={"m-4 flex flex-col gap-4 justify-center items-center w-full"}>

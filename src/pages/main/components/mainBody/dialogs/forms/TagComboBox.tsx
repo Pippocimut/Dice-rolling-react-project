@@ -19,7 +19,7 @@ const TagComboBox = ({tag, setTag}: Props) => {
     const selectedSetId = useSelector((state: RootState) => state.selected.selectedSetId)
     const tags = buttonSets.find((buttonSet) => buttonSet.id === selectedSetId)?.tags ?? []
 
-    const currentTag = tags.find(Itag => Itag.id === tag);
+    const currentTag = tags[tag]
 
     return (
         <DropdownMenu>
@@ -30,7 +30,7 @@ const TagComboBox = ({tag, setTag}: Props) => {
                 <DropdownMenuLabel>Current tag</DropdownMenuLabel>
                 <DropdownMenuSeparator/>
                 <DropdownMenuRadioGroup value={tag + ""} onValueChange={(e) => setTag(parseInt(e))}>
-                    {tags.map((currentTag, index) => {
+                    {Object.values(tags).map((currentTag, index) => {
                         if (currentTag.id === -1 || currentTag.name === "") return
                         return <DropdownMenuRadioItem key={index}
                                                       value={currentTag.id + ""}>{currentTag.name}</DropdownMenuRadioItem>

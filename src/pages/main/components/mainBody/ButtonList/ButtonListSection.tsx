@@ -4,10 +4,10 @@ import {CreateButtonDialog} from "@/pages/main/components/mainBody/dialogs/forms
 import {ButtonSortableList} from "./ButtonSortableList.tsx";
 import {useMemo} from "react";
 import type {Tag} from "@/store/button-sets/buttonSetSlice.ts";
-import {getSelectedSet} from "@/pages/main/components/mainBody/utils.ts";
+import type {RootState} from "@/store";
 
 type Props = {
-    tagId?: number;
+    tagId: number;
 };
 
 function SmallCreateButtonDialog({tag}: { tag: Tag }) {
@@ -19,27 +19,24 @@ function SmallCreateButtonDialog({tag}: { tag: Tag }) {
 }
 
 const ButtonListSection = ({tagId = -1}: Props) => {
-    const buttonSet = useSelector(getSelectedSet)!
+    const buttonSet = useSelector((state: RootState) => state.buttonSet.sets[ state.selected.selectedSetId])!
 
     const items = useMemo(() => {
-        if (!buttonSet) return [];
-        return (tagId === -1) ?
-            buttonSet.buttonList.filter(button => !button.tag || button.tag === -1) :
-            buttonSet.buttonList.filter(button => button.tag === tagId)
+        return Object.values(buttonSet.buttonList).filter(button => button.tag === tagId)
     }, [buttonSet, tagId]);
 
+    if (tagId === -1) return null
     if (items.length === 0) return null;
 
-    const tag = buttonSet.tags.find(tag => tag.id === tagId)
-    const tagName = tag?.name ?? "Other";
-    const formattedTagName = tagName.charAt(0).toUpperCase() + tagName.slice(1)
+    const tag = buttonSet.tags[tagId]
+    const formattedTagName = tag.name.charAt(0).toUpperCase() + tag.name.slice(1)
 
     return (
         <div className={"w-fit flex flex-col gap-4 my-4"}>
-            {!!tag && <div className={"flex flex-row gap-8 justify-between border-b-4 w-full p-2"}>
+            <div className={"flex flex-row gap-8 justify-between border-b-4 w-full p-2"}>
                 <h1 className={"text-4xl font-bold text-left"}>{formattedTagName}</h1>
                 <SmallCreateButtonDialog tag={tag}/>
-            </div>}
+            </div>
             <ButtonSortableList items={items}/>
         </div>
     );

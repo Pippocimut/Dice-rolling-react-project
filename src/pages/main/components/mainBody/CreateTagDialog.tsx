@@ -23,23 +23,21 @@ export function CreateTagDialog(){
         rollsConfig: []
     });
 
-    const sets = useSelector((state: RootState) => state.buttonSet.sets)
-    const selectedSetId = useSelector((state: RootState) => state.selected.selectedSetId)
-    const currentSet = sets.find(set => set.id === selectedSetId)!
+    const currentSet = useSelector((state: RootState) => state.buttonSet.sets[state.selected.selectedSetId])
 
     const tags = currentSet.tags;
 
     const dispatch = useDispatch();
 
     const createTag = () => {
-        const matchingTag = tags.find(Itag => Itag.name.toLowerCase() === tag.name.toLowerCase())
+        const matchingTag = Object.values(tags).find(Itag => Itag.name.toLowerCase() === tag.name.toLowerCase())
 
         if (tag.name === "" || matchingTag) {
             return
         }
 
         dispatch(addTagToSet({
-            setId: selectedSetId,
+            setId: currentSet.id,
             tag: tag
         }))
 

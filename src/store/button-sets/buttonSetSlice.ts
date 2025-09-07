@@ -18,16 +18,24 @@ export type ButtonData = {
 
 export type ButtonSet = {
     id: number;
+    version: "1.0";
     name: string;
     tags: Tag[];
     buttonList: ButtonData[];
+} | {
+    id: number;
+    version: "1.1";
+    name: string;
+    tags: Record<number, Tag>;
+    buttonList: Record<number, ButtonData>;
 }
 
 interface buttonSetState {
     nextSetId: number;
     nextButtonId: number;
     nextTagId: number;
-    sets: ButtonSet[]
+    currentVersion: string;
+    sets: Record<number, ButtonSet>;
 }
 
 
@@ -48,29 +56,32 @@ const initialState: buttonSetState =
             nextSetId: 2,
             nextTagId: 4,
             nextButtonId: 1,
-            sets:
-                [{
+            currentVersion: "1.1",
+            sets: {
+                1: {
                     id: 1,
+                    version: "1.1",
                     name: "Default",
-                    tags: [
-                        {
+                    tags: {
+                        1: {
                             id: 1,
                             name: "attack",
                             color: "red-roll-button",
                         },
-                        {
+                        2: {
                             id: 2,
                             name: "saving throw",
                             color: "blue-roll-button",
                         },
-                        {
+                        3: {
                             id: 3,
                             name: "check",
                             color: "green-roll-button",
                         }
-                    ],
-                    buttonList: []
-                }]
+                    },
+                    buttonList: {}
+                }
+            }
         }
 
 const buttonSetSlice = createSlice({
@@ -90,13 +101,10 @@ const buttonSetSlice = createSlice({
             const setId = action.payload.setId;
             const button = action.payload.button;
 
-            const set = state.sets.find(set => set.id === setId);
+            const set = state.sets[setId];
             if (!set) return;
 
-            const index = set.buttonList.findIndex(Ibutton => Ibutton.id === button.id)
-            if (index === -1) return;
-
-            set.buttonList[index] = button;
+            set.buttonList[button.id] = button;
 
             document.cookie = "buttonSetsList=" + JSON.stringify(state);
         },
@@ -104,12 +112,13 @@ const buttonSetSlice = createSlice({
             const setId = action.payload.setId;
             const tag: Tag = action.payload.tag;
 
-            const set = state.sets.find(set => set.id === setId);
+            const set = state.sets[setId];
 
             if (!set) return;
-            if (set.tags.find(t => t.name === tag.name)) return;
-            tag.id = state.nextTagId++;
-            set.tags.push(tag);
+            if (Object.values(set.tags).find(t => t.name === tag.name)) return;
+
+
+            set.tags[state.nextTagId++] = tag;
 
             document.cookie = "buttonSetsList=" + JSON.stringify(state);
         },
@@ -122,21 +131,14 @@ const buttonSetSlice = createSlice({
             const setId = action.payload.setId;
             const tagId = action.payload.tagId;
 
-            const set = state.sets.find(set => set.id === setId);
+            const set = state.sets[setId];
 
             if (!set) return;
 
-            const index = set.tags.findIndex(tag => tag.id === tagId);
+            delete set.tags[tagId]
 
-            if (index === -1) return;
-
-            set.tags.splice(index, 1);
-            set.buttonList = set.buttonList.map((item: ButtonData) => {
-                if (item.tag === tagId) {
-                    item.tag = -1
-                }
-                return item;
-            })
+            const idToDelete = Object.values(set.buttonList).filter(button => button.tag === tagId).map(button => button.id);
+            idToDelete.forEach(id => delete set.buttonList[id]);
 
             document.cookie = "buttonSetsList=" + JSON.stringify(state);
         },
@@ -151,18 +153,10 @@ const buttonSetSlice = createSlice({
             const setId = action.payload.setId;
             const tagId = action.payload.tagId;
             const newTag = action.payload.newTag;
-            const set = state.sets.find(set => set.id === setId);
+            const set = state.sets[setId];
             if (!set) return;
 
-            const index = set.tags.findIndex(tag => tag.id === tagId);
-            if (index === -1) return;
-
-            set.tags = set.tags.map((item: Tag) => {
-                if (item.id === tagId) {
-                    return newTag
-                }
-                return item;
-            })
+            set.tags[tagId] = newTag
 
             document.cookie = "buttonSetsList=" + JSON.stringify(state);
         },
@@ -175,13 +169,13 @@ const buttonSetSlice = createSlice({
             const setId = action.payload.setId;
             const button: Omit<ButtonData, "id"> = action.payload.button;
 
-            const set = state.sets.find(set => set.id === setId) ?? state.sets.find(set => set.id === 1);
+            const set = state.sets[setId] ?? state.sets[1];
             if (!set) return;
 
-            set.buttonList.push({
+            set.buttonList[state.nextButtonId] = {
                 ...button,
                 id: state.nextButtonId++,
-            });
+            };
 
             document.cookie = "buttonSetsList=" + JSON.stringify(state);
         },
@@ -195,38 +189,71 @@ const buttonSetSlice = createSlice({
                 setId,
                 buttons
             } = action.payload;
-
-            const setIndex = state.sets.findIndex(set => set.id === setId);
-            if (setIndex === -1) return;
-            state.sets[setIndex].buttonList = buttons;
+            state.sets[setId].buttonList = buttons;
 
             document.cookie = "buttonSetsList=" + JSON.stringify(state);
         },
         addNewSet: (state, action: { payload: ButtonSet }) => {
             const set = action.payload;
-            set.id = state.nextSetId;
+
+            if (state.currentVersion === "1.1") {
+                const tempTags: Record<number, Tag> = {}
+                const tempButtonList: Record<number, ButtonData> = {}
+
+                if (set.version === "1.0") {
+                    set.tags.forEach((value: Tag) => {
+                        set.buttonList = Object.values(set.buttonList).map((value: ButtonData) => {
+                            if (value.tag === value.id) {
+                                value.tag = state.nextTagId;
+                            }
+                            return value;
+                        })
+
+                        tempTags[state.nextTagId] = {
+                            ...value,
+                            id: state.nextTagId++
+                        }
+                    })
+
+                    set.buttonList.forEach((value: ButtonData) => {
+                        tempButtonList[state.nextButtonId] = {
+                            ...value,
+                            id: state.nextButtonId++
+                        }
+                    })
+                } else if (set.version === "1.1") {
+                    Object.entries(set.tags).forEach(([tagKey, value]: [string, Tag]) => {
+                        set.buttonList = Object.values(set.buttonList).map((value: ButtonData) => {
+                            if (value.tag === Number(tagKey)) {
+                                value.tag = state.nextTagId;
+                            }
+                            return value;
+                        })
+
+                        tempTags[state.nextTagId] = {
+                            ...value,
+                            id: state.nextTagId++
+                        }
+                    })
+
+                    Object.values(set.buttonList).forEach((value: ButtonData) => {
+                        tempButtonList[state.nextButtonId] = {
+                            ...value,
+                            id: state.nextButtonId++
+                        }
+                    })
+                }
+
+                state.sets[state.nextSetId] = {
+                    version: "1.1",
+                    id: state.nextSetId,
+                    tags: tempTags,
+                    buttonList: tempButtonList,
+                    name: set.name,
+                }
+            }
+
             state.nextSetId++;
-            state.nextButtonId = 0;
-            state.nextTagId = 0;
-
-            set.tags = set.tags.map((tag: Tag) => {
-                state.nextTagId++;
-                return {
-                    ...tag,
-                    id: state.nextTagId
-                }
-            })
-
-            set.buttonList = set.buttonList.map((button: ButtonData) => {
-                state.nextButtonId++;
-                return {
-                    ...button,
-                    id: state.nextButtonId
-                }
-            })
-
-            state.sets.push(set);
-            console.log(set);
             document.cookie = "buttonSetsList=" + JSON.stringify(state);
         },
         deleteButtonOfSet: (state, action: {
@@ -238,10 +265,7 @@ const buttonSetSlice = createSlice({
             const setId = action.payload.setId;
             const id = action.payload.id;
 
-            const findIndex = state.sets.findIndex(set => set.id === setId);
-            if (findIndex === -1) return;
-
-            state.sets[findIndex].buttonList = state.sets[findIndex].buttonList.filter(button => button.id !== id);
+            delete state.sets[setId].buttonList[id]
 
             document.cookie = "buttonSetsList=" + JSON.stringify(state);
         },
@@ -254,10 +278,10 @@ const buttonSetSlice = createSlice({
             const setId = action.payload.setId;
             const tagId = action.payload.tagId;
 
-            const set = state.sets.find(set => set.id === setId);
+            const set = state.sets[setId];
             if (!set) return;
 
-            set.tags = set.tags.filter(t => t.id !== tagId);
+            delete set.tags[tagId]
             document.cookie = "buttonSetsList=" + JSON.stringify(state);
         }
     }

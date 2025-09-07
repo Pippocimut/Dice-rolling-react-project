@@ -16,24 +16,20 @@ export function EditTagForm(props: Props) {
         rollsConfig: props.tag.rollsConfig ?? []
     });
 
-    const sets = useSelector((state: RootState) => state.buttonSet.sets)
-    const selectedSetId = useSelector((state: RootState) => state.selected.selectedSetId)
-    const currentSet = sets.find(set => set.id === selectedSetId)!
+    const currentSet = useSelector((state: RootState) => state.buttonSet.sets[state.selected.selectedSetId])
 
     const tags = currentSet.tags;
 
     const dispatch = useDispatch();
 
     const editTag = () => {
-
-        const matchingTag = tags.find(Itag => Itag.name.toLowerCase() === tag.name.toLowerCase())
-
+        const matchingTag = Object.values(tags).find(Itag => Itag.name.toLowerCase() === tag.name.toLowerCase())
         if (tag.name === "" || (matchingTag && matchingTag.id !== tag.id)) {
             return
         }
 
         dispatch(editTagOfSet({
-            setId: selectedSetId,
+            setId: currentSet.id,
             tagId: props.tag.id,
             newTag: tag
         }))

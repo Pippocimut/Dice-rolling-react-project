@@ -15,17 +15,17 @@ export function TagList({buttonSetId}: Props) {
         onCheckedTagsChange
     } = useCheckboxSelection()
 
-    const buttonSet = useSelector((state: RootState) => state.buttonSet.sets.find((buttonSet) => buttonSet.id === buttonSetId))
+    const buttonSet = useSelector((state: RootState) => state.buttonSet.sets[buttonSetId])
     if (!buttonSet) {
         throw new Error("Button set not found")
     }
 
-    return buttonSet.tags.map((tag) => {
+    return Object.values(buttonSet.tags).map((tag) => {
         const currentSetTags = checkedData.tags[buttonSetId] ?? []
         const isChecked = currentSetTags.includes(tag.id)
         const onChangedTag = onCheckedTagsChange(buttonSetId)
 
-        const buttonList = buttonSet.buttonList.filter((button: ButtonData) => button.tag === tag.id)
+        const buttonList = Object.values(buttonSet.buttonList).filter((button: ButtonData) => button.tag === tag.id)
 
         return <div key={tag.id} className={"pl-2 my-2"}>
             <input type="checkbox" className={"mr-2"} checked={isChecked}

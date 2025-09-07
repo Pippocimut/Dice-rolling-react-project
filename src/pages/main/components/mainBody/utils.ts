@@ -5,7 +5,8 @@ import {evaluate} from "mathjs";
 import type {RollResult} from "@/store/history-sidebar/historySidebarSlice.ts";
 
 export function getSortedTags(buttonSet: ButtonSet) {
-    const tagCounts = buttonSet.buttonList.reduce((counts, button) => {
+    const tagCounts = Object.values(buttonSet.buttonList).reduce((counts, button) => {
+        if(!button) return counts;
         if (
             button.tag !== undefined &&
             button.tag !== null &&
@@ -16,15 +17,13 @@ export function getSortedTags(buttonSet: ButtonSet) {
         return counts;
     }, {} as Record<number, number>);
 
-    return [...(buttonSet.tags || [])].sort(
+    return [...(Object.values(buttonSet.tags) || [])].sort(
         (a, b) => (tagCounts[b.id] || 0) - (tagCounts[a.id] || 0)
     );
 }
 
-export const getSelectedSet = (state: RootState) =>
-    state.buttonSet.sets.find(
-        (buttonSet) => buttonSet.id === state.selected.selectedSetId
-    );
+export const getSelectedSet = (state: RootState) => state.buttonSet.sets[ state.selected.selectedSetId]
+
 
 export function calculateButtonRoll(rolls: Roll[]) {
     return rolls.reduce((acc, roll) => {

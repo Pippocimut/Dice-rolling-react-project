@@ -1,13 +1,13 @@
-import type {ButtonData, ButtonSet, Tag} from "../../../../../../../store/button-sets/buttonSetSlice.ts";
+import type {ButtonData, ButtonSet, Tag} from "@/store/button-sets/buttonSetSlice.ts";
 import {useDispatch, useSelector} from "react-redux";
-import type {RootState} from "../../../../../../../store";
+import type {RootState} from "@/store";
 import {
     clearAll,
     onCheckedSetChange,
     onCheckedTagsChange,
     onCheckedButtonsChange,
     selectAllSets,
-} from "../../../../../../../store/export-menu/exportMenuSlice.ts";
+} from "@/store/export-menu/exportMenuSlice.ts";
 
 function useCheckboxSelection() {
     const buttonSets = useSelector((state: RootState) => state.buttonSet.sets)
@@ -21,7 +21,7 @@ function useCheckboxSelection() {
         onCheckedTagsChange: (setID: number) => (newTag: Tag) => dispatch(onCheckedTagsChange({
             setID,
             newTag,
-            relatedButtons: buttonSets.find(buttonSet => buttonSet.id === setID)?.buttonList.filter(button => button.tag === newTag.id).map(button => button.id) ?? []
+            relatedButtons: Object.values(buttonSets[setID]?.buttonList ?? {}).filter(button => button.tag === newTag.id).map(button => button.id) ?? []
         })),
         onCheckedButtonsChange: (setID: number) => (newButton: ButtonData) => dispatch(
             onCheckedButtonsChange({

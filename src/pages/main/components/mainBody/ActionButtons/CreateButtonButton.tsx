@@ -4,20 +4,18 @@ import {CreateButtonDialog} from "@/pages/main/components/mainBody/dialogs/forms
 import {Button} from "@/components/ui/button.tsx";
 
 export function CreateButtonButton() {
-    const buttonSets = useSelector((state: RootState) => state.buttonSet.sets)
-    const selectedSetId = useSelector((state: RootState) => state.selected.selectedSetId)
-
-    const areThereButtons = !((buttonSets?.find((buttonSet) => buttonSet.id == selectedSetId)?.buttonList?.length ?? 0) === 0)
+    const currentSet = useSelector((state: RootState) => state.buttonSet.sets[state.selected.selectedSetId])
+    const areThereButtons = !((Object.values(currentSet.buttonList ?? {}).length ?? 0) === 0)
 
     return <CreateButtonDialog>
-            <Button
-                id="createButton"
-                className={
-                    (areThereButtons ? "w-20 h-20 text-6xl" : "w-40 h-40 text-8xl") +
-                    " flex items-center flex-row justify-center  bg-primary hover:outline-2 rounded-xl"
-                }
-            >
-                <span className={"text-white pb-3"}>+</span>
-            </Button>
-        </CreateButtonDialog>
+        <Button
+            id="createButton"
+            className={
+                (areThereButtons ? "w-20 h-20 text-6xl" : "w-40 h-40 text-8xl") +
+                " flex items-center flex-row justify-center  bg-primary hover:outline-2 rounded-xl"
+            }
+        >
+            <span className={"text-white pb-3"}>+</span>
+        </Button>
+    </CreateButtonDialog>
 }

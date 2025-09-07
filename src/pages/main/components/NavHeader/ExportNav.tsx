@@ -9,6 +9,7 @@ import {toast} from "react-toastify";
 
 export function ExportNav() {
     const buttonSets = useSelector((state: RootState) => state.buttonSet.sets)
+    const currentExportVersion = useSelector((state: RootState) => state.buttonSet.currentVersion)
     const exportLinkRef = useRef<HTMLAnchorElement | null>(null);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -33,17 +34,26 @@ export function ExportNav() {
 
         if (!exportLinkRef.current) return;
 
-        const buttonListExport = buttonSets.reduce((acc: ButtonData[], set) => {
-            acc.push(...set.buttonList.filter((button: ButtonData) => buttons.includes(button.id)))
+        const buttonListExport = Object.values(buttonSets).reduce((acc: Record<number, ButtonData>, set) => {
+            buttons.forEach((buttonId) => {
+                if (set.buttonList[buttonId]) {
+                    acc[buttonId] = set.buttonList[buttonId]
+                }
+            })
             return acc
-        }, [])
+        }, {})
 
-        const tagsExport = buttonSets.reduce((acc: Tag[], set) => {
-            acc.push(...set.tags.filter((tag: Tag) => tags.includes(tag.id)))
+        const tagsExport = Object.values(buttonSets).reduce((acc: Record<number, Tag>, set) => {
+            tags.forEach((tagId) => {
+                if (set.tags[tagId]) {
+                    acc[tagId] = set.tags[tagId]
+                }
+            })
             return acc
-        }, [])
+        }, {})
 
         const exportSet = {
+            version: currentExportVersion,
             name: setName,
             buttonList: buttonListExport,
             tags: tagsExport
@@ -66,7 +76,7 @@ export function ExportNav() {
             <ExportDisplay close={() => setIsDialogOpen(false)} exportData={exportAll}/>
         </DefaultDialog>
         <Button onClick={() => {
-            if (buttonSets.length === 0)
+            if (Object.values(buttonSets).length === 0)
                 toast.error("You must have at least one button to export")
             else
                 setIsDialogOpen(true)

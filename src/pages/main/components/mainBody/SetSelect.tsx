@@ -24,7 +24,7 @@ export function SetSelect() {
             <DropdownMenuLabel>Current set</DropdownMenuLabel>
             <DropdownMenuSeparator/>
             <DropdownMenuRadioGroup value={selectedButtonSetId + ""} onValueChange={handleSetChange}>
-                {buttonSets.map((buttonSet, index) => {
+                {Object.values(buttonSets).map((buttonSet, index) => {
                     return <DropdownMenuRadioItem key={index}
                                                   value={buttonSet.id + ""}>{buttonSet.name}</DropdownMenuRadioItem>
                 })}

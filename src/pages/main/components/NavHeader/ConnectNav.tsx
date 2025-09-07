@@ -57,7 +57,7 @@ export function ConnectNav() {
 
     return (
         <Dialog open={isConnectDialogOpen} onOpenChange={setIsConnectDialogOpen}>
-            <DialogTrigger>
+            <DialogTrigger asChild>
                 <Button onClick={() => setIsConnectDialogOpen(true)}>Connect</Button>
             </DialogTrigger>
             <DialogContent className="w-fit mt-auto p-4 bg-background text-text" onOpenAutoFocus={(e)=> e.preventDefault()}>
