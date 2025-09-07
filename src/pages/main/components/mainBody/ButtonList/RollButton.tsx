@@ -6,12 +6,12 @@ import {
 } from "@/store/history-sidebar/historySidebarSlice.ts";
 import type {RootState} from "@/store";
 import {SocketContext} from "@/context/SocketContext.ts";
-import {SortableItemContext} from "./dnd/SortableItem.tsx";
+import {SortableItemContext} from "@/components/dnd/SortableItem.tsx";
 import {toast} from "react-toastify";
 import EditButtonDialog from "@/pages/main/components/mainBody/dialogs/forms/ButtonForms/EditButtonDialog.tsx";
 import {Button} from "@/components/ui/button.tsx";
 import type {ButtonData} from "@/store/button-sets/buttonSetSlice.ts";
-import {CustomRollToast} from "@/pages/main/components/mainBody/CustomRollToast.tsx";
+import {CustomRollToast} from "@/pages/main/components/mainBody/ButtonList/CustomRollToast.tsx";
 import {calculateButtonRoll} from "@/pages/main/components/mainBody/utils.ts";
 
 type Props = { buttonData: ButtonData; };

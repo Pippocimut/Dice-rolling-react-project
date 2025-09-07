@@ -1,5 +1,4 @@
 import type {ButtonSet} from "@/store/button-sets/buttonSetSlice.ts";
-import type {RootState} from "@/store";
 import type {Roll} from "@/pages/main/types.ts";
 import {evaluate} from "mathjs";
 import type {RollResult} from "@/store/history-sidebar/historySidebarSlice.ts";
@@ -21,9 +20,6 @@ export function getSortedTags(buttonSet: ButtonSet) {
         (a, b) => (tagCounts[b.id] || 0) - (tagCounts[a.id] || 0)
     );
 }
-
-export const getSelectedSet = (state: RootState) => state.buttonSet.sets[ state.buttonSet.selectedSetId]
-
 
 export function calculateButtonRoll(rolls: Roll[]) {
     return rolls.reduce((acc, roll) => {

@@ -1,6 +1,6 @@
 import {Button} from "@/components/ui/button.tsx";
 import DefaultDialog from "@/components/DefaultDialog.tsx";
-import RollHistoryPanel from "@/pages/main/components/mainBody/RollHistoryPanel.tsx";
+import RollHistoryPanel from "@/pages/main/components/NavHeader/RollHistoryPanel.tsx";
 import {useState} from "react";
 
 export function HistoryNav() {

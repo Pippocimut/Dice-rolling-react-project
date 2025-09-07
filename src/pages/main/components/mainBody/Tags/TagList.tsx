@@ -1,9 +1,9 @@
-import {Button} from "@/components/ui/button";
+import {Button} from "@/components/ui/button.tsx";
 import type {RootState} from "@/store";
 import {useDispatch, useSelector} from "react-redux";
 import {deleteTagFromSet} from "@/store/button-sets/buttonSetSlice.ts";
 import {Label} from "@/components/ui/label.tsx";
-import {EditTagDialog} from "@/pages/main/components/mainBody/EditTagDialog.tsx";
+import {EditTagDialog} from "@/pages/main/components/mainBody/Tags/EditTagDialog.tsx";
 
 export function TagList() {
     const currentSet = useSelector((state: RootState) => state.buttonSet.sets[state.buttonSet.selectedSetId])

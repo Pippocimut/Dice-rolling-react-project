@@ -1,6 +1,6 @@
 import {Button} from "@/components/ui/button.tsx";
 import {useState} from "react";
-import {TagList} from "@/pages/main/components/mainBody/TagList.tsx";
+import {TagList} from "@/pages/main/components/mainBody/Tags/TagList.tsx";
 import {Label} from "@/components/ui/label.tsx";
 import {
     Dialog,
@@ -8,8 +8,8 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger
-} from "@/components/ui/dialog";
-import { CreateTagDialog } from "./CreateTagDialog";
+} from "@/components/ui/dialog.tsx";
+import { CreateTagDialog } from "./CreateTagDialog.tsx";
 
 
 export function ManageTags() {

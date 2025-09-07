@@ -1,5 +1,5 @@
-import {SortableList} from "@/pages/main/components/mainBody/dnd/SortableList.tsx";
-import RollButton from "@/pages/main/components/mainBody/RollButton.tsx";
+import {SortableList} from "@/components/dnd/SortableList.tsx";
+import RollButton from "@/pages/main/components/mainBody/ButtonList/RollButton.tsx";
 import {type ButtonData, sendNewButtonList} from "@/store/button-sets/buttonSetSlice.ts";
 import {useDispatch, useSelector} from "react-redux";
 import type {RootState} from "@/store";
