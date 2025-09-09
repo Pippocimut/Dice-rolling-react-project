@@ -44,8 +44,8 @@ export function SortableList<T extends BaseItem>({
     const sensors = useSensors(
         useSensor(MouseSensor, {
             activationConstraint: {
-                delay: 250,      // 250 milliseconds delay
-                tolerance: 10,    // 5 pixels of movement tolerance
+                delay: 100,
+                tolerance: 5,
                 distance: 3
             }
         }),

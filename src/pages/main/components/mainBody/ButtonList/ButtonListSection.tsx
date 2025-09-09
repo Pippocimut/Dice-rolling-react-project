@@ -37,7 +37,7 @@ const ButtonListSection = ({tagId = -1}: Props) => {
                 <h1 className={"text-4xl font-bold text-left"}>{formattedTagName}</h1>
                 <SmallCreateButtonDialog tag={tag}/>
             </div>
-            <ButtonSortableList items={items}/>
+            <ButtonSortableList items={items.sort((a, b) => a.position - b.position)}/>
         </div>
     );
 };

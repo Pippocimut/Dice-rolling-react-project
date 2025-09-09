@@ -15,7 +15,7 @@ const UntaggedButtonListSection = () => {
 
     return (
         <div className={"w-fit flex flex-col gap-4 my-4"}>
-            <ButtonSortableList items={items}/>
+            <ButtonSortableList items={items.sort((a, b) => a.position - b.position)}/>
         </div>
     );
 };

@@ -18,11 +18,22 @@ export function ButtonSortableList({items}: Props) {
         const filter = (button: ButtonData) => newButtonList.find((newButton) => newButton.id === button.id) === undefined
         const updatedButtonList = Object.values(buttonSet.buttonList).filter(filter)
 
+        const sortedNewButtonList = newButtonList.map((newButton: ButtonData, index:number) => {
+            return {
+                ...newButton,
+                position: index
+            }
+        })
+
+        console.log(sortedNewButtonList)
+        console.log(updatedButtonList)
+
         dispatch(sendNewButtonList({
             setId: selectedSetId,
-            buttons: [...updatedButtonList, ...newButtonList]
+            buttons: [...updatedButtonList, ...sortedNewButtonList]
         }));
     }, [buttonSet, dispatch, selectedSetId])
+
 
     return <SortableList
         items={items}
