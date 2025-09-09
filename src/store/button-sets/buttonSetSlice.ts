@@ -14,6 +14,7 @@ export type ButtonData = {
     rolls: Roll[];
     color: string;
     tag?: number;
+    position: number;
 };
 
 export type ButtonSet = {
