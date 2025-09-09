@@ -7,7 +7,7 @@ export type RollResult = {
     total: number;
 };
 
-export type ButtonPressRecord = Omit<ButtonData, "rolls"> & {
+export type ButtonPressRecord = Omit<ButtonData, "rolls" | "position"> & {
     username: string;
     date: string;
     rollResult: RollResult[];

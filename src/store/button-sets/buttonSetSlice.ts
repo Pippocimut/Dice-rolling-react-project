@@ -179,8 +179,11 @@ const buttonSetSlice = createSlice({
 
             set.buttonList[state.nextButtonId] = {
                 ...button,
-                id: state.nextButtonId++,
+                id: state.nextButtonId,
+                position: state.nextButtonId
             };
+
+            state.nextButtonId++;
 
             document.cookie = "buttonSetsList=" + JSON.stringify(state);
         },

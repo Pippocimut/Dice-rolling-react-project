@@ -47,7 +47,7 @@ const RollButton = ({buttonData}: Props) => {
         } else {
             const results: RollResult[] = calculateButtonRoll(buttonData.rolls);
 
-            const roll = {
+            const roll= {
                 id: 0,
                 username: "You",
                 name: buttonData.name,

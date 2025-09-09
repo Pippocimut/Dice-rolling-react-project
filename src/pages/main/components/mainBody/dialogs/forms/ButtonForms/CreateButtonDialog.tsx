@@ -25,7 +25,8 @@ export function CreateButtonDialog({children, selectedTag}: PropsWithChildren<Pr
         name: "",
         rolls: selectedTag?.rollsConfig ?? [],
         tag: selectedTag?.id,
-        color: selectedTag?.color ?? colors[Math.floor(Math.random() * colors.length)]
+        color: selectedTag?.color ?? colors[Math.floor(Math.random() * colors.length)],
+        position: -1
     }
 
     const [button, setButton] = useState<ButtonData>(defaultButton)
