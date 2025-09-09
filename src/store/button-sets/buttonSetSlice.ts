@@ -193,7 +193,10 @@ const buttonSetSlice = createSlice({
                 setId,
                 buttons
             } = action.payload;
-            state.sets[setId].buttonList = buttons;
+            state.sets[setId].buttonList = buttons.reduce((acc, button) => {
+                acc[button.id] = button;
+                return acc;
+            }, {} as Record<number, ButtonData>)
 
             document.cookie = "buttonSetsList=" + JSON.stringify(state);
         },
