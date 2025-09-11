@@ -64,7 +64,7 @@ export function SortableList<T extends BaseItem>({
                 setActive(active);
             }}
             onDragEnd={({active, over}) => {
-                if (over && active.id !== over?.id) {
+                if (over && active.id !== over.id) {
                     const activeIndex = items.findIndex(({id}) => id === active.id);
                     const overIndex = items.findIndex(({id}) => id === over.id);
 
@@ -77,7 +77,7 @@ export function SortableList<T extends BaseItem>({
             }}
         >
             <SortableContext items={items}>
-                <ul className={"flex  flex-wrap gap-2 w-full justify-center items-center h-fit " + (orientation === "col" ? "flex-col" : "flex-row")}
+                <ul className={"grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 w-full max-h-110 overflow-y-auto border-gray-300 border-3 border-solid py-4 px-8 rounded-xl"}
                     role="application">
                     {items.map((item) => (
                         <React.Fragment key={item.id}>{renderItem(item)}</React.Fragment>
@@ -86,7 +86,7 @@ export function SortableList<T extends BaseItem>({
                 </ul>
             </SortableContext>
             <SortableOverlay>
-                {activeItem ? <div>
+                {activeItem ? <div className={"shadow-2xl"}>
                     {renderItem(activeItem)}
                 </div> : null}
             </SortableOverlay>

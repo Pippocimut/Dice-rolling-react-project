@@ -128,6 +128,12 @@ button {
     cursor: pointer;
 }
 
+.roll-toast-container {
+    max-width: 250px;
+    font-size: 0.875rem;
+    padding: 0.5rem;
+}
+
 .red-roll-button {
     @apply bg-red-600;
     @apply text-white;

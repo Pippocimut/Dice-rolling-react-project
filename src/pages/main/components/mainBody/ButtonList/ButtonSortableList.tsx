@@ -25,9 +25,6 @@ export function ButtonSortableList({items}: Props) {
             }
         })
 
-        console.log(sortedNewButtonList)
-        console.log(updatedButtonList)
-
         dispatch(sendNewButtonList({
             setId: selectedSetId,
             buttons: [...updatedButtonList, ...sortedNewButtonList]
