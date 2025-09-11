@@ -123,7 +123,12 @@ const buttonSetSlice = createSlice({
             if (Object.values(set.tags).find(t => t.name === tag.name)) return;
 
 
-            set.tags[state.nextTagId++] = tag;
+            set.tags[state.nextTagId] = {
+                ...tag,
+                id: state.nextTagId,
+            };
+
+            state.nextTagId++
 
             document.cookie = "buttonSetsList=" + JSON.stringify(state);
         },

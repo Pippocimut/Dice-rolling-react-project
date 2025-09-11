@@ -76,7 +76,7 @@ export function SortableList<T extends BaseItem>({
             }}
         >
             <SortableContext items={items}>
-                <ul className={"flex flex-col flex-wrap gap-2 w-full max-h-125 overflow-x-auto shadow-lg border-gray-300 border-1 border-solid py-8 p-2 rounded-xl"}
+                <ul className={"flex flex-col flex-wrap mx-auto justify-start items-start gap-2 w-fit max-h-125 overflow-x-auto shadow-lg border-gray-300 border-1 border-solid py-8 p-2 rounded-xl"}
                     role="application">
                     {items.map((item) => (
                         <React.Fragment key={item.id}>{renderItem(item)}</React.Fragment>

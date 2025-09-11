@@ -8,6 +8,7 @@ import {
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu.tsx";
 import {Button} from "@/components/ui/button.tsx";
+import {useMemo} from "react";
 
 type Props = {
     tag: number;
@@ -16,7 +17,9 @@ type Props = {
 
 const TagComboBox = ({tag, setTag}: Props) => {
     const buttonSet = useSelector((state: RootState) => state.buttonSet.sets[state.buttonSet.selectedSetId])
-    const tags = buttonSet.tags ?? []
+    const tags = useMemo(() => {
+        return buttonSet!.tags
+    }, [buttonSet])
 
     const currentTag = tags[tag]
 
