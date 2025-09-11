@@ -217,16 +217,16 @@ const buttonSetSlice = createSlice({
                 const tempButtonList: Record<number, ButtonData> = {}
 
                 if (set.version === "1.0") {
-                    set.tags.forEach((value: Tag) => {
+                    set.tags.forEach((tag: Tag) => {
                         set.buttonList = Object.values(set.buttonList).map((value: ButtonData) => {
-                            if (value.tag === value.id) {
+                            if (value.tag === tag.id) {
                                 value.tag = state.nextTagId;
                             }
                             return value;
                         })
 
                         tempTags[state.nextTagId] = {
-                            ...value,
+                            ...tag,
                             id: state.nextTagId++
                         }
                     })
