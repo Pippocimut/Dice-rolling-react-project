@@ -34,7 +34,6 @@ export function SortableList<T extends BaseItem>({
                                                      items,
                                                      onChange,
                                                      renderItem,
-                                                     orientation = "row"
                                                  }: Props<T>) {
     const [active, setActive] = useState<Active | null>(null);
     const activeItem = useMemo(
@@ -77,7 +76,7 @@ export function SortableList<T extends BaseItem>({
             }}
         >
             <SortableContext items={items}>
-                <ul className={"grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 w-full max-h-110 overflow-y-auto border-gray-300 border-3 border-solid py-4 px-8 rounded-xl"}
+                <ul className={"flex flex-col flex-wrap gap-2 w-full max-h-125 overflow-x-auto shadow-lg border-gray-300 border-1 border-solid py-8 p-2 rounded-xl"}
                     role="application">
                     {items.map((item) => (
                         <React.Fragment key={item.id}>{renderItem(item)}</React.Fragment>
