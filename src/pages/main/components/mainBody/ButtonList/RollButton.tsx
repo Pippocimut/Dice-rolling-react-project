@@ -14,16 +14,19 @@ import type {ButtonData} from "@/store/button-sets/buttonSetSlice.ts";
 import {CustomRollToast} from "@/pages/main/components/mainBody/ButtonList/CustomRollToast.tsx";
 import {calculateButtonRoll} from "@/pages/main/components/mainBody/utils.ts";
 
-type Props = { buttonData: ButtonData; };
+type Props = { buttonId: number };
 
-const RollButton = ({buttonData}: Props) => {
+const RollButton = ({buttonId}: Props) => {
     const dispatch = useDispatch();
     const userName = useSelector((state: RootState) => state.socket.userName);
     const editMode = useSelector((state: RootState) => state.selected.editMode)
+    const buttonData: ButtonData = useSelector((state: RootState) => state.buttonSet.sets[state.buttonSet.selectedSetId].buttonList[buttonId])
 
     const {attributes, listeners, ref} = useContext(SortableItemContext);
     const {emitRoll} = useContext(SocketContext);
     const [editDialogOpen, setEditDialogOpen] = useState(false);
+
+    console.log(buttonData)
 
     const showCustomRollToast = (historyData: ButtonPressRecord) => {
         toast(<CustomRollToast historyData={historyData}/>,
@@ -47,7 +50,7 @@ const RollButton = ({buttonData}: Props) => {
         } else {
             const results: RollResult[] = calculateButtonRoll(buttonData.rolls);
 
-            const roll= {
+            const roll = {
                 id: 0,
                 username: "You",
                 name: buttonData.name,
@@ -61,12 +64,15 @@ const RollButton = ({buttonData}: Props) => {
             dispatch(addRoll(roll));
             emitRoll({...roll, username: userName ?? "Anonymous"});
         }
-    }, [editMode]);
+    }, [editMode, buttonData, dispatch, emitRoll, userName]);
 
     const onContextMenu: MouseEventHandler<HTMLButtonElement> = useCallback((e) => {
         e.preventDefault();
         setEditDialogOpen(true)
     }, [editMode])
+
+    const longestButtonWord = buttonData.name.split(" ").reduce((a, b) => a.length > b.length ? a : b);
+    const buttonNameLengthClass = longestButtonWord.length >= 12 ? "text-base" : "text-xl";
 
     return (<>
         <Button
@@ -76,7 +82,7 @@ const RollButton = ({buttonData}: Props) => {
             className={`w-30 h-30 rounded-lg ${buttonData.color} font-bold hover:outline-4 ${editMode ? 'glowing-border' : ''}`}
             onClick={onClick}
             onContextMenu={onContextMenu}>
-            <span className={"text-xl w-25 text-wrap"}>{buttonData.name}</span>
+            <span className={" w-25 text-wrap wrap-break-word " + buttonNameLengthClass}>{buttonData.name}</span>
         </Button>
         <EditButtonDialog
             selectedButtonId={buttonData.id}

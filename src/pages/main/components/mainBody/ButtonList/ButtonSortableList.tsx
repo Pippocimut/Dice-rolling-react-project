@@ -38,7 +38,7 @@ export function ButtonSortableList({items}: Props) {
 
         renderItem={(buttonData: ButtonData) => {
             return <SortableList.Item id={buttonData.id}>
-                <RollButton buttonData={buttonData} key={buttonData.id}/>
+                <RollButton buttonId={buttonData.id} key={buttonData.id}/>
             </SortableList.Item>
         }}
     />
