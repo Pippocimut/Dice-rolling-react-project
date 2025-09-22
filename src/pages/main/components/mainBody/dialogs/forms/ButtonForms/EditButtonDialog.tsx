@@ -43,7 +43,7 @@ const EditButtonDialog = ({
 
     const deleteButton = useCallback(() => {
         dispatch(deleteButtonOfSet({setId: selectedSetId, id: selectedButton.id}))
-        setOpen(false)
+        if (setOpen) setOpen(false)
     }, [buttonSet]);
 
     const [button, setButton] = useState<ButtonData>(selectedButton)
