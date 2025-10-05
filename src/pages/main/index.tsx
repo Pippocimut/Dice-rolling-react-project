@@ -7,7 +7,6 @@ import {RollCupPage} from "@/pages/main/RollCupPage.tsx";
 import {Route, Routes, useNavigate} from "react-router-dom";
 import {HistoryPage} from "@/pages/main/HistoryPage.tsx";
 import {Button} from "@/components/ui/button.tsx";
-import {AudioToggle} from "@/pages/main/components/NavHeader/AudioToggle.tsx";
 
 export function Main() {
 
