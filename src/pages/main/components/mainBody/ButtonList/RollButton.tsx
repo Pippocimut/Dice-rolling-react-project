@@ -37,7 +37,7 @@ const RollButton = ({buttonId}: Props) => {
     const showCustomRollToast = (historyData: ButtonPressRecord) => {
         toast(<CustomRollToast historyData={historyData}/>,
             {
-                position: "bottom-center",
+                position: "bottom-left",
                 autoClose: 5000,
                 hideProgressBar: false,
                 closeOnClick: true,
