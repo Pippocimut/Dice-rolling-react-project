@@ -1,7 +1,6 @@
 import {Button} from "@/components/ui/button.tsx";
 import {useState} from "react";
 import {TagList} from "@/pages/main/components/mainBody/Tags/TagList.tsx";
-import {Label} from "@/components/ui/label.tsx";
 import {
     Dialog,
     DialogContent,
@@ -9,8 +8,6 @@ import {
     DialogTitle,
     DialogTrigger
 } from "@/components/ui/dialog.tsx";
-import { CreateTagDialog } from "./CreateTagDialog.tsx";
-
 
 export function ManageTags() {
     const [isManageTagOpen, setIsManageTagOpen] = useState(false);
@@ -24,10 +21,6 @@ export function ManageTags() {
                 <DialogTitle>Manage tags</DialogTitle>
             </DialogHeader>
             <div className={"m-4 flex flex-col gap-4 justify-center items-center"}>
-                <div className={"flex flex-col gap-2 w-full justify-end items-end"}>
-                    <Label htmlFor={"create-tag-button"} className={"text-center w-full"}>Create Tag</Label>
-                   <CreateTagDialog/>
-                </div>
                 <TagList/>
             </div>
         </DialogContent>

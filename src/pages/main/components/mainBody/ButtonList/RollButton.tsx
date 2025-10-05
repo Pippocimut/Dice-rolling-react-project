@@ -13,6 +13,7 @@ import {Button} from "@/components/ui/button.tsx";
 import type {ButtonData} from "@/store/button-sets/buttonSetSlice.ts";
 import {CustomRollToast} from "@/pages/main/components/mainBody/ButtonList/CustomRollToast.tsx";
 import {calculateButtonRoll} from "@/pages/main/components/mainBody/utils.ts";
+import {FaDice} from "react-icons/fa";
 
 type Props = { buttonId: number };
 
@@ -21,17 +22,22 @@ const RollButton = ({buttonId}: Props) => {
     const userName = useSelector((state: RootState) => state.socket.userName);
     const editMode = useSelector((state: RootState) => state.selected.editMode)
     const buttonData: ButtonData = useSelector((state: RootState) => state.buttonSet.sets[state.buttonSet.selectedSetId].buttonList[buttonId])
+    const audioOn: boolean = useSelector((state: RootState) => state.settings.audioOn)
 
     const {attributes, listeners, ref} = useContext(SortableItemContext);
     const {emitRoll} = useContext(SocketContext);
     const [editDialogOpen, setEditDialogOpen] = useState(false);
 
-    console.log(buttonData)
+    const audio = new Audio("/sounds/roll-sound.mp3");
+
+    const [rollingAnimationOn, setRollingAnimationOn] = useState(false);
+    let rollingTimout = setTimeout(function () {
+    })
 
     const showCustomRollToast = (historyData: ButtonPressRecord) => {
         toast(<CustomRollToast historyData={historyData}/>,
             {
-                position: "bottom-left",
+                position: "bottom-center",
                 autoClose: 5000,
                 hideProgressBar: false,
                 closeOnClick: true,
@@ -48,6 +54,15 @@ const RollButton = ({buttonId}: Props) => {
         if (editMode) {
             setEditDialogOpen(true);
         } else {
+
+            setRollingAnimationOn(true);
+            clearTimeout(rollingTimout);
+            if (audioOn)
+                audio.play();
+
+            rollingTimout = setTimeout(function () {
+                setRollingAnimationOn(false);
+            }.bind(this), 1000)
             const results: RollResult[] = calculateButtonRoll(buttonData.rolls);
 
             const roll = {
@@ -64,7 +79,7 @@ const RollButton = ({buttonId}: Props) => {
             dispatch(addRoll(roll));
             emitRoll({...roll, username: userName ?? "Anonymous"});
         }
-    }, [editMode, buttonData, dispatch, emitRoll, userName]);
+    }, [editMode, buttonData, dispatch, emitRoll, userName,audioOn]);
 
     const onContextMenu: MouseEventHandler<HTMLButtonElement> = useCallback((e) => {
         e.preventDefault();
@@ -74,6 +89,9 @@ const RollButton = ({buttonId}: Props) => {
     const longestButtonWord = buttonData.name.split(" ").reduce((a, b) => a.length > b.length ? a : b);
     const buttonNameLengthClass = longestButtonWord.length >= 12 ? "text-base" : "text-xl";
 
+    const buttonContent = rollingAnimationOn ? <FaDice className={"size-12"}/> :
+        <span className={" w-25 text-wrap wrap-break-word " + buttonNameLengthClass}>{buttonData.name}</span>
+
     return (<>
         <Button
             {...attributes}
@@ -82,7 +100,7 @@ const RollButton = ({buttonId}: Props) => {
             className={`w-30 h-30 rounded-lg ${buttonData.color} font-bold hover:outline-4 ${editMode ? 'glowing-border' : ''}`}
             onClick={onClick}
             onContextMenu={onContextMenu}>
-            <span className={" w-25 text-wrap wrap-break-word " + buttonNameLengthClass}>{buttonData.name}</span>
+            <div className={"transition-all duration-300"}>{buttonContent}</div>
         </Button>
         <EditButtonDialog
             selectedButtonId={buttonData.id}

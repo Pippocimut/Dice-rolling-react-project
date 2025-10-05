@@ -1,4 +1,3 @@
-import {BsPencilFill} from "react-icons/bs";
 import {Dialog, DialogClose, DialogTrigger} from "@/components/ui/dialog.tsx";
 import {Button} from "@/components/ui/button.tsx";
 import type {Roll} from "@/pages/main/types.ts";
@@ -18,7 +17,9 @@ export function EditRollDialog(props: Props) {
             <form>
                 <DialogTrigger asChild>
                     <Button variant={"outline"}>
-                        <BsPencilFill/>
+                        <p>
+                            <span className={"font-bold"}>{props.roll.name}</span>
+                        </p>
                     </Button>
                 </DialogTrigger>
                 <RollHandlingDialogContent roll={dummyRoll} updateRoll={updateDummyDummyRoll}>

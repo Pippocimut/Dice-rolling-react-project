@@ -44,8 +44,9 @@ export function EditTagDialog(props: {tag:Tag}){
 
     return <Dialog open={isEditTagOpen} onOpenChange={setIsEditTagOpen}>
         <DialogTrigger asChild>
-            <Button id={"create-tag-button"} className={"w-fit "+tag.color} variant={"outline"}
+            <Button id={"create-tag-button"} className={"w-fit"} variant={"outline"}
                     onClick={() => setIsEditTagOpen(true)}>
+                <div className={"w-5 h-5 rounded-full border-1 border-gray-300 shadow-md mr-4 "+tag.color}/>
                 <span>{tag.name}</span>
             </Button>
         </DialogTrigger>

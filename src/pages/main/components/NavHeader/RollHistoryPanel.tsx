@@ -26,14 +26,15 @@ const HistoryPanel = () => {
 
     const listRef = useRef<HTMLUListElement>(null);
 
-    return (<div className="flex flex-col gap-4 h-[calc(100vh-120px)] w-fit">
-            <Button className={"mt-4 w-fit mx-auto"}
+    return (<div className="flex flex-col gap-4 h-[calc(100vh-120px)] w-fit max-w-[500px] mx-auto">
+            <Button className={"my-4 w-fit mx-auto"}
                     onClick={() => {
                         dispatch(clearHistory())
                     }}>
                 Clear History
             </Button>
-            <ul className={` px-3 h-full flex-col w-full transition-all overflow-y-auto border-t-1 border-borders`} ref={listRef}>
+            <ul className={` px-3 h-full flex-col w-full transition-all overflow-y-auto`}
+                ref={listRef}>
                 {buttonHistory.length === 0 && <p className={"text-center"}>No history yet</p>}
                 {buttonHistory &&
                     buttonHistory.map((historyData: ButtonPressRecord, index: number) => {
@@ -53,7 +54,7 @@ const HistoryPanel = () => {
                                     dispatch(setSelectedResult(historyData.id))
                                 }}
                                 className={
-                                    "p-4 my-2 w-full rounded-lg h-fit max-w-80 text-left " +
+                                    "p-4 my-2 w-full rounded-lg h-fit max-w-100 text-left " +
                                     historyData.color + " " + border + " " + hoverBehavior
                                 }
                             >
@@ -70,14 +71,10 @@ const HistoryPanel = () => {
                                         {historyData.rollResult &&
                                             historyData.rollResult.map((rollResult, index) => {
                                                 return (
-                                                    <div key={index} className={"text-left py-2 px-2"}>
-                                                        <p className={"font-bold text-lg"}>{rollResult.name}</p>
-                                                        <div className={"flex flex-col ml-2 my-1"}>
-                                                            <div className={"flex flex-row gap-1 flex-wrap text-lg font-bold"}>
-                                                                <p>Total: </p>
-                                                                <p>{rollResult.result} = {rollResult.total}</p>
-                                                            </div>
-                                                        </div>
+                                                    <div key={index}
+                                                         className={"text-left font-bold text-lg flex flex-row flex-wrap gap-4 py-2 px-2"}>
+                                                        <p>{rollResult.name}:</p>
+                                                        <p>{rollResult.result} = {rollResult.total}</p>
                                                     </div>
                                                 );
                                             })}

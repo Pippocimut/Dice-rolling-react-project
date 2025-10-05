@@ -22,13 +22,10 @@ export function RollCard({index, roll, handleDeleteRoll, handleUpdateRoll}: Prop
             }>
             <div className={"flex flex-row gap-4 justify-start items-center "}>
                 <EditRollDialog roll={roll} updateRoll={handleUpdateRoll}/>
-                <p>
-                    {" "}
-                    <span className={"font-bold"}>{roll.name}</span>:{" "}
-                    {roll.equation.length > 20
-                        ? roll.equation.substring(0, 20) + "..."
-                        : roll.equation}{" "}
-                </p>
+                {roll.equation.length > 20
+                    ? roll.equation.substring(0, 20) + "..."
+                    : roll.equation}{" "}
+
             </div>
             <Button className={"text-danger w-1 h-2 ml-auto"} variant={"empty"}
                     onClick={() => {
