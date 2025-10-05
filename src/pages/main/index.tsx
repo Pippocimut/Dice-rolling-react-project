@@ -27,7 +27,6 @@ export function Main() {
                 <ConnectNav/>
                 <ManageTags/>
                 <SetSelect/>
-                <AudioToggle/>
             </div>
             <Routes>
                 <Route path={"/"} element={<RollCupPage/>}/>
