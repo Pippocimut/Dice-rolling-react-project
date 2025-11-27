@@ -1,9 +1,10 @@
 import {useDispatch, useSelector} from "react-redux";
 import type {RootState} from "@/store";
-import {CreateButtonDialog} from "@/pages/main/components/mainBody/dialogs/forms/ButtonForms/CreateButtonDialog.tsx";
 import {Button} from "@/components/ui/button.tsx";
 import {toggleEditMode} from "@/store/selected/selectedSlice.ts";
 import {BsPencilFill} from "react-icons/bs";
+import {useNavigate} from "react-router-dom";
+import {resetButton} from "@/store/button-change-handle/buttonManageSlice.ts";
 
 function MainActionButtons({areThereButtons =false}: { areThereButtons?: boolean}) {
     const bigButtonClass = "w-40 h-40 text-8xl"
@@ -11,13 +12,21 @@ function MainActionButtons({areThereButtons =false}: { areThereButtons?: boolean
 
     const buttonClass = areThereButtons ? smallButtonClass : bigButtonClass
 
-    return <CreateButtonDialog>
-        <Button
+    const navigate = useNavigate()
+    const dispatch = useDispatch();
+
+    const onClick = () => {
+        dispatch(resetButton())
+        navigate("/button/create")
+    }
+
+    return <Button
             id="createButton"
+            onClick={onClick}
             className={buttonClass}>
             <span className={"text-white pb-3"}>+</span>
         </Button>
-    </CreateButtonDialog>
+
 }
 
 function ToggleEditModeButton({areThereButtons =false}: { areThereButtons?: boolean}) {

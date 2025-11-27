@@ -24,7 +24,6 @@ export const SocketProvider = ({children}: { children: ReactNode }) => {
         });
 
         newSocket.on("roll", (data: ButtonPressRecord) => {
-            console.log("Received roll:")
             dispatch(addRollFromSocket(data))
         })
 

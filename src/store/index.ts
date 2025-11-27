@@ -5,6 +5,7 @@ import historySidebarReducer from "./history-sidebar/historySidebarSlice.ts";
 import selectedReducer from "./selected/selectedSlice.ts";
 import socketReducer from "./socket/socketSlice.ts";
 import settingsReducer from "./settings/settingsSlice.ts";
+import buttonManageReducer from "./button-change-handle/buttonManageSlice.ts"
 
 export const store = configureStore({
     reducer: {
@@ -13,7 +14,8 @@ export const store = configureStore({
         historySidebar: historySidebarReducer,
         selected: selectedReducer,
         socket: socketReducer,
-        settings: settingsReducer
+        settings: settingsReducer,
+        buttonManage: buttonManageReducer
     },
 })
 

@@ -10,6 +10,7 @@ export function CustomRollToast({historyData}: Props) {
     const onlyOneRoll = rollResultPresent && historyData.rollResult.length === 1;
     const moreThanOneRoll = rollResultPresent && historyData.rollResult.length > 1;
 
+
     return (<div className="w-fit flex font-bold text-lg flex-col items-start justify-start p-2 font-boldreact-router-dom">
         <h3 className={"text-xl"}>
             {historyData.name}
@@ -22,14 +23,15 @@ export function CustomRollToast({historyData}: Props) {
             </div>
         </div>}
         {moreThanOneRoll && historyData.rollResult.map((rollResult, index) => {
+            const resultNotEmpty = rollResult.result !== ""
             return (
                 <div key={index} className={"text-left py-2 pl-2"}>
                     <p className={"font-bold text-lg"}>{rollResult.name}</p>
-                    <div className={"flex flex-col ml-2 my-1"}>
+                    {resultNotEmpty && <div className={"flex flex-col ml-2 my-1"}>
                         <p>
                             {rollResult.result} = {rollResult.total}
                         </p>
-                    </div>
+                    </div>}
                 </div>
             );
         })}

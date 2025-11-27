@@ -6,11 +6,7 @@ import {TagList} from "./TagList.tsx";
 import {ButtonList} from "./ButtonList.tsx";
 
 export function SetList() {
-    const buttonSets = useSelector((state: RootState) => state.buttonSet.sets)
-    const {
-        checkedData,
-        onCheckedSetChange
-    } = useCheckboxSelection()
+
 
     return <ul className={"text-lg h-[50vh] overflow-y-auto border-2 border-gray-400 rounded-lg p-2 m-2"}>
         {Object.values(buttonSets).map((buttonSet) => {

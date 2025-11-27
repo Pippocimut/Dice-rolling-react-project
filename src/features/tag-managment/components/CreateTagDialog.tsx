@@ -7,20 +7,22 @@ import {
     DialogTrigger
 } from "@/components/ui/dialog.tsx";
 import {Button} from "@/components/ui/button.tsx";
-import {useState} from "react";
-import {TagForm} from "@/pages/main/components/mainBody/dialogs/forms/TagForms/TagForm.tsx";
-import {addTagToSet, type Tag} from "@/store/button-sets/buttonSetSlice.ts";
+import {useEffect, useState} from "react";
+import {TagForm} from "@/features/tag-managment/components/TagForm.tsx";
+import {addTagToSet, colors, type Tag} from "@/store/button-sets/buttonSetSlice.ts";
 import {useDispatch, useSelector} from "react-redux";
 import type {RootState} from "@/store";
+import {setButton} from "@/store/button-change-handle/buttonManageSlice.ts";
+import {GeneralTriggersV12} from "@/store/button-sets/ButtonSetV1.2.ts";
 
 export function CreateTagDialog(){
     const [isCreateTagOpen, setIsCreateTagOpen] = useState(false);
-
+    const button = useSelector((state:RootState)=> state.buttonManage.button)
     const [tag, setTag] = useState<Tag>({
         name: "",
         color: "red-roll-button",
         id: -1,
-        rollsConfig: []
+        buttonConfig:{}
     });
 
     const currentSet = useSelector((state: RootState) => state.buttonSet.sets[state.buttonSet.selectedSetId])
@@ -28,6 +30,28 @@ export function CreateTagDialog(){
     const tags = currentSet.tags;
 
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(setButton({
+            id: -1,
+            name: "New State",
+            rolls: [],
+            tag: -1,
+            nextTriggerId: 1,
+            triggers: {
+                [GeneralTriggersV12.OnRoll]: {
+                    id: GeneralTriggersV12.OnRoll,
+                    name: "On roll"
+                },
+                [GeneralTriggersV12.None]: {
+                    id:GeneralTriggersV12.None,
+                    name: "None"
+                }
+            },
+            color: colors[Math.floor(Math.random() * colors.length)],
+            position: -1
+        }))
+    }, [isCreateTagOpen]);
 
     const createTag = () => {
         const matchingTag = Object.values(tags).find(Itag => Itag.name.toLowerCase() === tag.name.toLowerCase())
@@ -38,7 +62,14 @@ export function CreateTagDialog(){
 
         dispatch(addTagToSet({
             setId: currentSet.id,
-            tag: tag
+            tag: {
+                ...tag,
+                buttonConfig: {
+                    triggers:button.triggers,
+                    nextTriggerId:button.nextTriggerId,
+                    rolls:button.rolls,
+                }
+            }
         }))
 
         setIsCreateTagOpen(false);

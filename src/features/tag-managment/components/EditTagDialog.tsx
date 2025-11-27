@@ -7,24 +7,30 @@ import {
     DialogTrigger
 } from "@/components/ui/dialog.tsx";
 import {Button} from "@/components/ui/button.tsx";
-import {useState} from "react";
-import {TagForm} from "@/pages/main/components/mainBody/dialogs/forms/TagForms/TagForm.tsx";
+import {useEffect, useState} from "react";
+import {TagForm} from "@/features/tag-managment/components/TagForm.tsx";
 import {editTagOfSet, type Tag} from "@/store/button-sets/buttonSetSlice.ts";
 import {useDispatch, useSelector} from "react-redux";
 import type {RootState} from "@/store";
+import {setButton} from "@/store/button-change-handle/buttonManageSlice.ts";
 
 export function EditTagDialog(props: {tag:Tag}){
     const [isEditTagOpen, setIsEditTagOpen] = useState(false);
+    const button = useSelector((state:RootState)=> state.buttonManage.button)
 
     const [tag, setTag] = useState<Tag>({
         ...props.tag,
-        rollsConfig: props.tag.rollsConfig ?? []
     });
+
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        console.log(props.tag.buttonConfig)
+        dispatch(setButton(props.tag.buttonConfig))
+    }, [isEditTagOpen]);
 
     const currentSet = useSelector((state: RootState) => state.buttonSet.sets[state.buttonSet.selectedSetId])
     const tags = currentSet.tags;
-
-    const dispatch = useDispatch();
 
     const editTag = () => {
 
@@ -37,7 +43,14 @@ export function EditTagDialog(props: {tag:Tag}){
         dispatch(editTagOfSet({
             setId: currentSet.id,
             tagId: props.tag.id,
-            newTag: tag
+            newTag: {
+                ...tag,
+                buttonConfig: {
+                    triggers:button.triggers,
+                    nextTriggerId:button.nextTriggerId,
+                    rolls:button.rolls,
+                }
+            }
         }))
         setIsEditTagOpen(false)
     }

@@ -8,12 +8,14 @@ import type {RootState} from "@/store";
 import {SocketContext} from "@/context/SocketContext.ts";
 import {SortableItemContext} from "@/components/dnd/SortableItem.tsx";
 import {toast} from "react-toastify";
-import EditButtonDialog from "@/pages/main/components/mainBody/dialogs/forms/ButtonForms/EditButtonDialog.tsx";
 import {Button} from "@/components/ui/button.tsx";
 import type {ButtonData} from "@/store/button-sets/buttonSetSlice.ts";
 import {CustomRollToast} from "@/pages/main/components/mainBody/ButtonList/CustomRollToast.tsx";
 import {calculateButtonRoll} from "@/pages/main/components/mainBody/utils.ts";
 import {FaDice} from "react-icons/fa";
+import {setButton} from "@/store/button-change-handle/buttonManageSlice.ts";
+import {useNavigate} from "react-router-dom";
+import {GeneralTriggersV12} from "@/store/button-sets/ButtonSetV1.2.ts";
 
 type Props = { buttonId: number };
 
@@ -26,9 +28,10 @@ const RollButton = ({buttonId}: Props) => {
 
     const {attributes, listeners, ref} = useContext(SortableItemContext);
     const {emitRoll} = useContext(SocketContext);
-    const [editDialogOpen, setEditDialogOpen] = useState(false);
 
     const audio = new Audio("/sounds/roll-sound.mp3");
+
+    const navigate = useNavigate()
 
     const [rollingAnimationOn, setRollingAnimationOn] = useState(false);
     let rollingTimout = setTimeout(function () {
@@ -52,7 +55,8 @@ const RollButton = ({buttonId}: Props) => {
 
     const onClick = useCallback(() => {
         if (editMode) {
-            setEditDialogOpen(true);
+            dispatch(setButton(buttonData))
+            navigate("/button/edit" )
         } else {
 
             setRollingAnimationOn(true);
@@ -63,9 +67,20 @@ const RollButton = ({buttonId}: Props) => {
             rollingTimout = setTimeout(function () {
                 setRollingAnimationOn(false);
             }.bind(this), 1000)
-            const results: RollResult[] = calculateButtonRoll(buttonData.rolls);
 
-            const roll = {
+            let triggerQueue = [GeneralTriggersV12.OnRoll]
+            const results: RollResult[] = []
+            while (triggerQueue.length > 0) {
+                const {
+                    results: newResults,
+                    triggerQueue: newTriggerQueue
+                } = calculateButtonRoll(buttonData.rolls, triggerQueue)
+                triggerQueue = newTriggerQueue
+                results.push(...newResults);
+            }
+
+
+            const roll:ButtonPressRecord = {
                 id: 0,
                 username: "You",
                 name: buttonData.name,
@@ -79,12 +94,13 @@ const RollButton = ({buttonId}: Props) => {
             dispatch(addRoll(roll));
             emitRoll({...roll, username: userName ?? "Anonymous"});
         }
-    }, [editMode, buttonData, dispatch, emitRoll, userName,audioOn]);
+    }, [editMode, buttonData, dispatch, emitRoll, userName, audioOn]);
 
     const onContextMenu: MouseEventHandler<HTMLButtonElement> = useCallback((e) => {
         e.preventDefault();
-        setEditDialogOpen(true)
-    }, [editMode])
+        dispatch(setButton(buttonData))
+        navigate("/button/edit" )
+    }, [editMode,buttonData])
 
     const longestButtonWord = buttonData.name.split(" ").reduce((a, b) => a.length > b.length ? a : b);
     const buttonNameLengthClass = longestButtonWord.length >= 12 ? "text-base" : "text-xl";
@@ -102,11 +118,6 @@ const RollButton = ({buttonId}: Props) => {
             onContextMenu={onContextMenu}>
             <div className={"transition-all duration-300"}>{buttonContent}</div>
         </Button>
-        <EditButtonDialog
-            selectedButtonId={buttonData.id}
-            setOpen={setEditDialogOpen}
-            open={editDialogOpen}
-        />
     </>)
 };
 

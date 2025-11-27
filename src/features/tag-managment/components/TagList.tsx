@@ -2,8 +2,8 @@ import {Button} from "@/components/ui/button.tsx";
 import type {RootState} from "@/store";
 import {useDispatch, useSelector} from "react-redux";
 import {deleteTagFromSet} from "@/store/button-sets/buttonSetSlice.ts";
-import {EditTagDialog} from "@/pages/main/components/mainBody/Tags/EditTagDialog.tsx";
-import {CreateTagDialog} from "@/pages/main/components/mainBody/Tags/CreateTagDialog.tsx";
+import {EditTagDialog} from "@/features/tag-managment/components/EditTagDialog.tsx";
+import {CreateTagDialog} from "@/features/tag-managment/components/CreateTagDialog.tsx";
 
 export function TagList() {
     const currentSet = useSelector((state: RootState) => state.buttonSet.sets[state.buttonSet.selectedSetId])
@@ -15,7 +15,7 @@ export function TagList() {
         dispatch(deleteTagFromSet({setId: currentSet.id, tagId: id}))
     }
 
-    return <div className={"m-4 flex flex-col gap-4 justify-center items-center w-full min-w-40"}>
+    return <div className={"p-4 flex flex-col gap-4 justify-center items-center w-full min-w-40"}>
         {tags.map(tag => (
             <div key={tag.id}
                  className={"w-full flex flex-row justify-between items-center gap-8 rounded-md border-neutral-200 border-1 shadow-sm p-4"}>

@@ -4,7 +4,6 @@ import {type PropsWithChildren, useState} from "react";
 import {useSelector} from "react-redux";
 import type {RootState} from "@/store";
 import type {Tag} from "@/store/button-sets/buttonSetSlice.ts";
-import type {Roll} from "@/pages/main/types.ts";
 import {RollSelection} from "@/pages/main/components/mainBody/dialogs/forms/RollSelection.tsx";
 import {DialogFooter} from "@/components/ui/dialog.tsx";
 
@@ -50,7 +49,7 @@ export function TagForm(props: PropsWithChildren<Props>) {
             </div>
         </div>
 
-        <RollSelection rolls={props.tag.rollsConfig ?? []} setRolls={(rolls: Roll[]) => props.setTag({...props.tag, rollsConfig: rolls})}/>
+        <RollSelection />
 
         <DialogFooter>
             {props.children}

@@ -1,21 +1,27 @@
 import {Button} from "@/components/ui/button.tsx";
-import {useSelector} from "react-redux";
-import {CreateButtonDialog} from "@/pages/main/components/mainBody/dialogs/forms/ButtonForms/CreateButtonDialog.tsx";
+import {useDispatch, useSelector} from "react-redux";
 import {ButtonSortableList} from "./ButtonSortableList.tsx";
 import {useMemo} from "react";
 import type {Tag} from "@/store/button-sets/buttonSetSlice.ts";
 import type {RootState} from "@/store";
+import {useNavigate} from "react-router-dom";
+import {resetButton} from "@/store/button-change-handle/buttonManageSlice.ts";
 
 type Props = {
     tagId: number;
 };
 
 function SmallCreateButtonDialog({tag}: { tag: Tag }) {
-    return <CreateButtonDialog selectedTag={tag}>
-        <Button className={"text-3xl w-10 h-10 " + (tag ? tag.color : "")}>
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const onClick = () => {
+        dispatch(resetButton({tag}))
+        navigate("/button/create")
+    }
+
+    return <Button className={"text-3xl w-10 h-10 " + (tag ? tag.color : "")} onClick={onClick}>
             <span className="mb-1">+</span>
         </Button>
-    </CreateButtonDialog>
 }
 
 const ButtonListSection = ({tagId = -1}: Props) => {

@@ -7,7 +7,7 @@ export type RollResult = {
     total: number;
 };
 
-export type ButtonPressRecord = Omit<ButtonData, "rolls" | "position"> & {
+export type ButtonPressRecord = Omit<ButtonData, "rolls"| "nextRollId" | "position" | "nextTriggerId" | "triggers"> & {
     username: string;
     date: string;
     rollResult: RollResult[];
@@ -24,23 +24,18 @@ const initialState: exportMenuState = {
     extended: true,
     selectedResult: null,
     scrollDown: true,
-    rollHistory: document.cookie.includes("buttonPressHistory") ? JSON.parse(decodeURIComponent(document.cookie.split("buttonPressHistory=")[1].split(';')[0])) : []
+    rollHistory: localStorage.getItem("buttonPressHistory") ? JSON.parse(localStorage.getItem("buttonPressHistory") ?? "") : []
 }
 
 const historySidebarSlice = createSlice({
     name: "historySidebar",
     initialState,
     reducers: {
-        toggleExtended: (state) => {
-            state.extended = !state.extended;
-        },
-        extend: (state) => {
-            state.extended = true;
-        },
         clearHistory: (state) => {
             state.rollHistory = [];
             state.extended = false;
-            document.cookie = "buttonPressHistory=" + JSON.stringify(state.rollHistory);
+            const stringState = JSON.stringify(state.rollHistory)
+            localStorage.setItem("buttonPressHistory", stringState);
         },
         addRoll: (state, action: { payload: ButtonPressRecord }) => {
             const newId = state.rollHistory.length + 1
@@ -51,7 +46,8 @@ const historySidebarSlice = createSlice({
             state.extended = true;
             state.scrollDown = true;
             state.selectedResult = null;
-            document.cookie = "buttonPressHistory=" + JSON.stringify(state.rollHistory);
+            const stringState = JSON.stringify(state.rollHistory)
+            localStorage.setItem("buttonPressHistory", stringState);
         },
         addRollFromSocket: (state, action: { payload: ButtonPressRecord }) => {
             const newId = state.rollHistory.length + 1
@@ -60,17 +56,19 @@ const historySidebarSlice = createSlice({
                 id: newId,
             });
             state.extended = true;
-            document.cookie = "buttonPressHistory=" + JSON.stringify(state.rollHistory);
+            const stringState = JSON.stringify(state.rollHistory)
+            localStorage.setItem("buttonPressHistory", stringState);
         },
         setSelectedResult: (state, action: { payload: number | null }) => {
             state.scrollDown = false;
             state.selectedResult = action.payload;
+            const stringState = JSON.stringify(state.rollHistory)
+            localStorage.setItem("buttonPressHistory", stringState);
         }
     }
 })
 
 export const {
-    toggleExtended,
     clearHistory,
     addRoll,
     addRollFromSocket,
