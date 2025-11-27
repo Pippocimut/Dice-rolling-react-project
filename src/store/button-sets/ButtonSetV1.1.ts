@@ -32,6 +32,7 @@ export type ButtonSetV11 = BaseButtonSetV11 & {
     buttonList: Record<number, ButtonDataV11>;
 }
 
+/*
 type ButtonSetStateV11 =  {
     nextSetId: number;
     nextButtonId: number;
@@ -50,4 +51,4 @@ export const colorsV11 = [
     "purple-roll-button",
     "pink-roll-button",
     "gray-roll-button"
-];
+];*/
