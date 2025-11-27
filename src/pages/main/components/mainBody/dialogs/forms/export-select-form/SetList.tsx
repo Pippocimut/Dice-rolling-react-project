@@ -1,12 +1,19 @@
 import type {ButtonData} from "@/store/button-sets/buttonSetSlice.ts";
-import {useSelector} from "react-redux";
-import type {RootState} from "@/store";
-import useCheckboxSelection from "./useCheckboxSelection.tsx";
 import {TagList} from "./TagList.tsx";
 import {ButtonList} from "./ButtonList.tsx";
+import type {RootState} from "@/store";
+import {useSelector} from "react-redux";
+import useCheckboxSelection
+    from "@/pages/main/components/mainBody/dialogs/forms/export-select-form/useCheckboxSelection.tsx";
 
 export function SetList() {
 
+    const buttonSets = useSelector((state:RootState) => state.buttonSet.sets)
+
+    const {
+        checkedData,
+        onCheckedSetChange
+    } = useCheckboxSelection()
 
     return <ul className={"text-lg h-[50vh] overflow-y-auto border-2 border-gray-400 rounded-lg p-2 m-2"}>
         {Object.values(buttonSets).map((buttonSet) => {
