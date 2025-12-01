@@ -62,7 +62,7 @@ const convertV11ToLatest = (data: ButtonSetV11) => {
                     name: value.name,
                     color: value.color,
                     buttonConfig: {
-                        rolls: convertRolls(value.rollsConfig)
+                        rolls: convertRolls(value.rollsConfig ?? [])
                     }
                 }
                 return acc

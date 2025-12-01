@@ -16,7 +16,6 @@ export type ButtonDataV11 = {
     color: string;
     tag?: number;
     position: number;
-
     rolls: RollV11[];
 };
 
