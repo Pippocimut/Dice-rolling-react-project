@@ -44,18 +44,19 @@ export const EquationTriggerSelection = ({
         handleTriggerChange: handleTriggerChangeSideEffects
     } = useSideEffects()
 
+    console.log(currentSideEffectId)
 
     if (currentSideEffect === undefined) return null
     return <>
         <DropdownMenu>
             <DropdownMenuTrigger asChild id={"tag-dropdown-menu-trigger"} aria-label="Select trigger">
                 <Button variant="outline"
-                        className={"w-fit"}>{currentTrigger.name ?? "None"}</Button>
+                        className={"w-fit"}>{currentTrigger?.name ?? "None"}</Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56">
                 <DropdownMenuLabel>Trigger</DropdownMenuLabel>
                 <DropdownMenuSeparator/>
-                <DropdownMenuRadioGroup value={currentTrigger.name || "None"} onValueChange={handleTriggerChange}>
+                <DropdownMenuRadioGroup value={currentTrigger?.name || "None"} onValueChange={handleTriggerChange}>
                     <DropdownMenuRadioItem value={GeneralTriggersV12.None + ""} key={GeneralTriggersV12.None}>None</DropdownMenuRadioItem>
                     <TriggerList triggers={Object.values(button.rolls)}/>
                 </DropdownMenuRadioGroup>

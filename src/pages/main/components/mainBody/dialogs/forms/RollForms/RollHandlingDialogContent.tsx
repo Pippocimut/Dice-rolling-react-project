@@ -22,10 +22,14 @@ import {useEquations} from "@/pages/main/components/mainBody/dialogs/forms/RollF
 
 const RollHandlingDialogContent = ({children}: PropsWithChildren) => {
     const roll = useSelector((state: RootState) => state.buttonManage.roll)
+    const button = useSelector((state: RootState) => state.buttonManage.button)
 
     const {handleNameChange} = useRolls();
 
     const {addEquation} = useEquations()
+
+    console.log(roll)
+    console.log(button)
 
     return <DialogContent className={"flex flex-col gap-4 justify-start items-start"}
                           onOpenAutoFocus={(e) => e.preventDefault()}>

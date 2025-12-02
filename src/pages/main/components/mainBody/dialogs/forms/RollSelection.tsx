@@ -22,7 +22,14 @@ export function RollSelection() {
                             ...roll,
                             id: button.nextRollId
                         }
-                    }, nextRollId: button.nextRollId + 1
+                    }, nextRollId: button.nextRollId + 1,
+                    triggers: {
+                        ...button.triggers,
+                        [button.nextTriggerId]: {
+                            ...roll,
+                            id: button.nextTriggerId
+                        }
+                    }, nextTriggerId: button.nextTriggerId + 1
                 }))
             }}/>
 
