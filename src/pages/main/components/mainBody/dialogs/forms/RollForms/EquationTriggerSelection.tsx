@@ -44,8 +44,6 @@ export const EquationTriggerSelection = ({
         handleTriggerChange: handleTriggerChangeSideEffects
     } = useSideEffects()
 
-    console.log(currentSideEffectId)
-
     if (currentSideEffect === undefined) return null
     return <>
         <DropdownMenu>

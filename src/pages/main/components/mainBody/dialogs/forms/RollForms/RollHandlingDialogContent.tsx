@@ -22,17 +22,12 @@ import {useEquations} from "@/pages/main/components/mainBody/dialogs/forms/RollF
 
 const RollHandlingDialogContent = ({children}: PropsWithChildren) => {
     const roll = useSelector((state: RootState) => state.buttonManage.roll)
-    const button = useSelector((state: RootState) => state.buttonManage.button)
 
     const {handleNameChange} = useRolls();
 
     const {addEquation} = useEquations()
 
-    console.log(roll)
-    console.log(button)
-
-    return <DialogContent className={"flex flex-col gap-4 justify-start items-start"}
-                          onOpenAutoFocus={(e) => e.preventDefault()}>
+    return <DialogContent className={"flex flex-col gap-4 justify-start items-start"}>
         <DialogHeader>
             <DialogTitle>
                 Roll handling form
@@ -48,7 +43,7 @@ const RollHandlingDialogContent = ({children}: PropsWithChildren) => {
         </div>
         <div>
             <Label htmlFor={"rollName"}>Roll name: </Label>
-            <Input placeholder={"Roll Name"} value={roll.name} id={"rollName"} onChange={handleNameChange}/>
+            <Input placeholder={"Roll Name"} value={roll.name} id={"rollName"} onChange={handleNameChange} />
         </div>
         <div
             className={"flex flex-col bg-background text-text gap-10 h-fit  w-full justify-start items-start"}>
@@ -63,4 +58,3 @@ const RollHandlingDialogContent = ({children}: PropsWithChildren) => {
 };
 
 export default RollHandlingDialogContent;
-

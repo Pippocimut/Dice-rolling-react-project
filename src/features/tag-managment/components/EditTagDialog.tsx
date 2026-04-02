@@ -25,7 +25,7 @@ export function EditTagDialog(props: {tag:Tag}){
     const dispatch = useDispatch();
 
     useEffect(() => {
-        console.log(props.tag.buttonConfig)
+        console.log(props.tag)
         dispatch(setButton(props.tag.buttonConfig))
     }, [isEditTagOpen]);
 

@@ -18,12 +18,12 @@ export const EquationList = ({roll}: { roll: Roll }) => {
     return <div className={"flex flex-col gap-2 justify-start items-center max-h-100 overflow-auto"}>
         {Object.values(roll.equations).map((currentEquation, index) => {
             if (currentEquation.id === -1) return
-            return <>
-                {index!=0 && <p className={"text-4xl pb-2 font-black"}>
+            return <div id={"equation-container-" + currentEquation.id} key={currentEquation.id + ""} className={"mx-3"}>
+                {index!=0 && <p className={"text-4xl pb-2 font-black mx-auto w-fit"}>
                     +
                 </p>}
                 <div className={"flex flex-col items-start border-1 rounded-md py-3"}>
-                    <div className={"flex flex-row gap-4 p-3 items-center"}>
+                    <div className={"flex flex-row gap-4 p-3 items-center w-fit"}>
                         <Input id={currentEquation.id + ""} placeholder={"Equation"} value={currentEquation.formula}
                                onChange={handleEquationChange(currentEquation.id)}/>
 
@@ -36,7 +36,7 @@ export const EquationList = ({roll}: { roll: Roll }) => {
                     <SideEffectList equation={currentEquation}/>
                 </div>
 
-            </>
+            </div>
         })}
     </div>
 }

@@ -47,7 +47,7 @@ export const EquationFields = ({
 
     }
 
-    return <div className={"flex flex-col gap-4 items-start justify-start p-2 m-2 rounded-md border-1"}
+    return <div className={"flex flex-col gap-4 items-center justify-center p-2 m-2 border-t-1 border-b-1 w-full"}
                 key={sideEffect.id}>
         <div className={"flex flex-row  gap-4 items-center"}>
             When

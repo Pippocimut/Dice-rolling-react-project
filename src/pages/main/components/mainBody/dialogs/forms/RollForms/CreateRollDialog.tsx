@@ -42,7 +42,7 @@ const CreateRollDialog = ({createRoll}: Props) => {
                     <Button variant={"outline"} onClick={() => setOpenDialog(true)}>Add Roll</Button>
                 </DialogTrigger>
                 <RollHandlingDialogContent>
-                    <DialogClose>
+                    <DialogClose asChild>
                         <Button
                             className={"bg-blue-500 hover:bg-blue-600 rounded-lg"}
                             onClick={() => {

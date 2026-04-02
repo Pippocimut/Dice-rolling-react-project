@@ -39,15 +39,15 @@ export const Header = () => {
                 </NavigationMenuItem>
                 <NavigationMenuItem>
                     <NavigationMenuLink asChild>
-                        <Button onClick={() => navigate("/export")} className={"p-4"}>
-                            Export
+                        <Button onClick={() => navigate("/connect")} className={"p-4"}>
+                            Connect
                         </Button>
                     </NavigationMenuLink>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
                     <NavigationMenuLink asChild>
-                        <Button onClick={() => navigate("/connect")} className={"p-4"}>
-                            Connect
+                        <Button onClick={() => navigate("/export")} className={"p-4"}>
+                            Export Set
                         </Button>
                     </NavigationMenuLink>
                 </NavigationMenuItem>

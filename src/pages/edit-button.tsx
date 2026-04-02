@@ -1,4 +1,4 @@
-import ButtonForm from "../main/components/ButtonForm.tsx";
+import ButtonForm from "./main/components/ButtonForm.tsx";
 import {useCallback} from "react";
 import {deleteButtonOfSet, upsertButtonOfSet} from "@/store/button-sets/buttonSetSlice.ts";
 import {useDispatch, useSelector} from "react-redux";

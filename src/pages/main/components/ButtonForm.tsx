@@ -1,6 +1,6 @@
 import {type PropsWithChildren, useMemo, useState} from "react";
 import TagSelection from "./mainBody/dialogs/forms/TagSelection.tsx";
-import {colors, type Tag} from "@/store/button-sets/buttonSetSlice.ts";
+import {colors, type Roll, type Tag, type Trigger} from "@/store/button-sets/buttonSetSlice.ts";
 import {useDispatch, useSelector} from "react-redux";
 import type {RootState} from "@/store";
 import {Input} from "@/components/ui/input.tsx";
@@ -20,9 +20,33 @@ const ButtonForm = ({children}: PropsWithChildren) => {
 
         const handleTagChange = (id: number) => {
             if (currentSet) {
+                let highest_roll_id = Math.max(...Object.values(button.rolls).map(roll => roll.id)) + 1
+                const rolls = {
+                    ...button.rolls,
+                    ...Object.values(currentSet.tags[id].buttonConfig.rolls ?? {}).reduce((acc, roll) => {
+                            acc[highest_roll_id] = {...roll, id: highest_roll_id++};
+                            return acc
+                        },
+                        {} as Record<number, Roll>)
+                }
+
+                let highest_trigger_id = Math.max(...Object.values(button.triggers).map(roll => roll.id)) + 1
+                const triggers = {
+                    ...button.triggers,
+                    ...Object.values(currentSet.tags[id].buttonConfig.triggers ?? {}).reduce((acc, trigger) => {
+                            acc[highest_trigger_id] = {...trigger, id: highest_trigger_id++};
+                            return acc
+                        },
+                        {} as Record<number, Trigger>)
+                }
+
                 dispatch(setButton({
-                    ...button, ...currentSet.tags[id].buttonConfig,
-                    color: currentSet.tags[id].color,
+                    ...button,
+                    ...currentSet.tags[id].buttonConfig,
+                    rolls: rolls,
+                    triggers: triggers,
+                    nextTriggerId: highest_trigger_id + 1,
+                    nextRollId: highest_roll_id + 1,
                     tag: id
                 }))
                 setTag(currentSet.tags[id])
@@ -37,11 +61,11 @@ const ButtonForm = ({children}: PropsWithChildren) => {
         const navigate = useNavigate()
 
         const duplicateButton = () => {
-            dispatch(setButton({...button, name: button.name + " copy", id:-1}))
+            dispatch(setButton({...button, name: button.name + " copy", id: -1}))
             navigate("/button/create")
         }
 
-    const cancelOnClick = () => navigate("/")
+        const cancelOnClick = () => navigate("/")
 
         return (
             <div

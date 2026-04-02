@@ -20,7 +20,6 @@ export function TagList() {
             <div key={tag.id}
                  className={"w-full flex flex-row justify-between items-center gap-8 rounded-md border-neutral-200 border-1 shadow-sm p-4"}>
                 <div className={"flex flex-row gap-2 items-center"}>
-
                     <EditTagDialog tag={tag}/>
                 </div>
                 <div className="flex flex-row gap-2">

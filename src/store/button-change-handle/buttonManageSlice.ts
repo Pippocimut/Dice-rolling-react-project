@@ -87,6 +87,7 @@ const buttonManageSlice = createSlice({
                     ...initialState.button,
                     ...tag.buttonConfig,
                     tag: tag.id,
+                    color: tag.color
                 }
             } else {
                 state.button = initialState.button;

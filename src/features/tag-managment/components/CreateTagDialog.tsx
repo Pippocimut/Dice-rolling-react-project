@@ -67,6 +67,7 @@ export function CreateTagDialog(){
                 buttonConfig: {
                     triggers:button.triggers,
                     nextTriggerId:button.nextTriggerId,
+                    nextRollId:button.nextRollId,
                     rolls:button.rolls,
                 }
             }

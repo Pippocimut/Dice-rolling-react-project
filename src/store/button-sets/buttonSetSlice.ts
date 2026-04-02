@@ -175,6 +175,9 @@ const buttonSetSlice = createSlice({
             state.sets[state.nextSetId] = convertedSet
             state.nextSetId++;
             state.selectedSetId = convertedSet.id;
+            const highest_tag_id = Math.max(...Object.keys(convertedSet.tags).map(key => parseInt(key)))
+            state.nextTagId = Math.max(highest_tag_id + 1, state.nextTagId);
+
             const stringState = JSON.stringify(state)
             localStorage.setItem("buttonSetsList", stringState);
         },

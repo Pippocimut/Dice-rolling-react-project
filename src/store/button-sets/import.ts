@@ -51,23 +51,30 @@ export class ImportManager {
 }
 
 const convertV11ToLatest = (data: ButtonSetV11) => {
+
+    const tags = Object.entries(data.tags as Record<number, TagV11>).reduce((acc, [key, value]) => {
+
+        const rolls: RollMapV12 = convertRolls(value.rollsConfig ?? [])
+
+        acc[parseInt(key)] = {
+            id: value.id,
+            name: value.name,
+            color: value.color,
+            buttonConfig: {
+                nextTriggerId: value.rollsConfig?.length ?? 0,
+                nextRollId: value.rollsConfig?.length ?? 0,
+                rolls: rolls,
+                triggers: {...defaultTriggers, ...rolls},
+            }
+        }
+        return acc
+    }, {} as Record<number, TagV12>)
+
     return {
         id: data.id,
         version: latestVersion as "1.2",
         name: data.name,
-        tags: {
-            ...Object.entries(data.tags as Record<number, TagV11>).reduce((acc, [key, value]) => {
-                acc[parseInt(key)] = {
-                    id: value.id,
-                    name: value.name,
-                    color: value.color,
-                    buttonConfig: {
-                        rolls: convertRolls(value.rollsConfig ?? [])
-                    }
-                }
-                return acc
-            }, {} as Record<number, TagV12>)
-        },
+        tags: tags,
         buttonList: {
             ...Object.values(data.buttonList as Record<number, ButtonDataV11>).reduce((acc, curr) => {
 
@@ -95,7 +102,7 @@ const convertRolls = (rolls: RollV11[]) => {
             ...roll,
             equations: {
                 [1]: {
-                    id:1,
+                    id: 1,
                     formula: roll.equation,
                     nextSideEffectId: 1,
                     sideEffects: {}
