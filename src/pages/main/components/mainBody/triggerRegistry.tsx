@@ -6,12 +6,12 @@
  * updating via the exhaustive `TriggerRegistry` mapped type.
  *
  * Each entry defines:
- *   label          — display name used in dropdowns / UI
- *   defaultData    — factory that builds a ready-to-use trigger from base fields;
- *                    receives the previous trigger so switching types can preserve data
+ *   label           — display name used in dropdowns / UI
+ *   defaultData     — factory that builds a ready-to-use trigger from base fields;
+ *                     receives the previous trigger so switching types can preserve data
  *   EditorComponent — React component rendered inside the dialog for this type
- *   execute        — pure(-ish) function that runs the trigger and returns its result;
- *                    calls queueTrigger for any side-effect IDs that should chain
+ *   execute         — returns a Redux thunk so any handler has full access to
+ *                     dispatch and getState; queueTrigger is passed for chaining
  */
 
 import React from "react";
@@ -20,7 +20,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Label } from "@/components/ui/label.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { Button } from "@/components/ui/button.tsx";
-import type { RootState } from "@/store";
+import type { AppThunk, RootState } from "@/store";
 import { setRoll } from "@/store/buttonManageSlice.ts";
 import type {
     Equation,
@@ -29,7 +29,11 @@ import type {
     TextTrigger,
     Trigger,
 } from "@/store/button-sets/buttonSetSlice.ts";
-import type { RollTriggerResult, TextTriggerResult, TriggerResult } from "@/store/historySidebarSlice.ts";
+import type {
+    RollTriggerResult,
+    TextTriggerResult,
+    TriggerResult,
+} from "@/store/historySidebarSlice.ts";
 import {
     GeneralTriggersV12,
     SideEffectConditionsV12,
@@ -46,7 +50,13 @@ export type TriggerHandler<T extends Trigger> = {
     label: string;
     defaultData: (base: BaseData, previous?: Trigger) => T;
     EditorComponent: React.FC;
-    execute: (trigger: T, queueTrigger: (id: number) => void) => TriggerResult;
+    /**
+     * Returns a thunk so the handler has access to dispatch and getState.
+     * Current handlers (roll, text) don't need the store yet, but any future
+     * handler (consume resource, play sound, apply modifier…) can use them
+     * without any changes to the call sites.
+     */
+    execute: (trigger: T, queueTrigger: (id: number) => void) => AppThunk<TriggerResult>;
 };
 
 /**
@@ -189,7 +199,7 @@ export const TRIGGER_REGISTRY: TriggerRegistry = {
 
         EditorComponent: RollTriggerEditor,
 
-        execute: (trigger, queueTrigger): RollTriggerResult => {
+        execute: (trigger, queueTrigger) => (_dispatch, _getState): RollTriggerResult => {
             const { total, result } = executeEquations(trigger.equations, queueTrigger);
             return { type: "roll", name: trigger.name, total, result };
         },
@@ -206,7 +216,7 @@ export const TRIGGER_REGISTRY: TriggerRegistry = {
 
         EditorComponent: TextTriggerEditor,
 
-        execute: (trigger): TextTriggerResult => ({
+        execute: (trigger) => (_dispatch, _getState): TextTriggerResult => ({
             type: "text",
             name: trigger.name,
             text: trigger.text ?? "",
@@ -217,14 +227,14 @@ export const TRIGGER_REGISTRY: TriggerRegistry = {
 // ── Dispatch helper ───────────────────────────────────────────────────────────
 
 /**
- * Type-safe entry point for executing any trigger.
+ * Type-safe entry point for turning any trigger into a dispatchable thunk.
  * The single cast here is intentional: the mapped TriggerRegistry type guarantees
  * that TRIGGER_REGISTRY[trigger.type] accepts exactly that trigger's shape.
  */
 export function executeTrigger(
     trigger: Trigger,
     queueTrigger: (id: number) => void
-): TriggerResult {
+): AppThunk<TriggerResult> {
     return (TRIGGER_REGISTRY[trigger.type] as TriggerHandler<Trigger>).execute(
         trigger,
         queueTrigger

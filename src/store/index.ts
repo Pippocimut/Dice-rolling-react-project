@@ -21,3 +21,9 @@ export const store = configureStore({
 
 export type RootState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch
+export type AppThunk<ReturnType = void> = import("@reduxjs/toolkit").ThunkAction<
+    ReturnType,
+    RootState,
+    unknown,
+    import("@reduxjs/toolkit").Action
+>
