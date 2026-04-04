@@ -1,7 +1,7 @@
 import { EquationConditionSelection } from "@/components/TriggerRegistry/rollTrigger/EquationConditionSelection";
 import { EquationValueSelection } from "@/components/TriggerRegistry/rollTrigger/EquationValueSelection";
 import type { Equation, RollTrigger, SideEffect, Trigger, TriggerPath } from "@/store/button-sets/buttonSetSlice.ts";
-import { makePath } from "@/store/button-sets/buttonSetSlice.ts";
+import { makePath, selectCurrentButton } from "@/store/button-sets/buttonSetSlice.ts";
 import { Button } from "@/components/ui/button.tsx";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "@/store";
@@ -78,7 +78,7 @@ const EquationTriggerSelection = ({ equation, sideEffectId }: EquationTriggerSel
         [equation, sideEffectId]
     );
 
-    const button = useSelector((state: RootState) => state.buttonManage.button)
+    const button = useSelector(selectCurrentButton)!
     const selectedSetId = useSelector((state: RootState) => state.buttonSet.selectedSetId)
     const currentTrigger = useSelector((state: RootState) => {
         const path = currentSideEffect?.target;

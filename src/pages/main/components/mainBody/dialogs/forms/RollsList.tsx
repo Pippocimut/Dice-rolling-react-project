@@ -1,22 +1,31 @@
 import { useCallback } from "react";
 import { TriggerCard } from "@/pages/main/components/mainBody/dialogs/forms/RollCard.tsx";
-import type {
-    Equation,
-    EquationRecord,
-    SideEffect, SideEffectsMap,
-    Trigger,
-    TriggersMap,
+import {
+    selectCurrentButton,
+    upsertButtonOfSet,
+    type Equation,
+    type EquationRecord,
+    type SideEffect, type SideEffectsMap,
+    type Trigger,
+    type TriggersMap,
 } from "@/store/button-sets/buttonSetSlice.ts";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "@/store";
-import { setButtonTriggers } from "@/store/buttonManageSlice.ts";
 
 const TriggerList = () => {
-    const triggers = useSelector((state: RootState) => state.buttonManage.button.triggers);
+    const button = useSelector(selectCurrentButton)!
+    const triggers = button.triggers
+    const selectedSetId = useSelector((state: RootState) => state.buttonSet.selectedSetId)
 
     const dispatch = useDispatch();
 
-    const updateTriggers = (triggers: TriggersMap) => dispatch(setButtonTriggers(triggers))
+    const updateTriggers = (triggers: TriggersMap) => dispatch(upsertButtonOfSet({
+        button: {
+            ...button,
+            triggers: triggers
+        },
+        setId: selectedSetId
+    }))
 
     const handleDeleteTrigger = useCallback(
         (rollId: number) => {

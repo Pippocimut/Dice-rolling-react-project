@@ -1,9 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
     type ButtonData,
+    type ButtonPath,
     colors,
-    type RollTrigger, type Tag,
-    type Trigger
+    type Trigger,
+    type TriggerPath
 } from "@/store/button-sets/buttonSetSlice.ts";
 import { SideEffectConditionsV12 } from "./button-sets/ButtonSetV1.2";
 
@@ -11,9 +12,9 @@ import { SideEffectConditionsV12 } from "./button-sets/ButtonSetV1.2";
 type buttonManagementState = {
     button: ButtonData,
     trigger: Trigger,
+    buttonPath?: ButtonPath,
+    triggerPath?: TriggerPath
 }
-
-
 
 const initialState: buttonManagementState =
 {
@@ -21,10 +22,11 @@ const initialState: buttonManagementState =
         id: -1,
         name: "New Button",
         nextRollId: 1,
+        isNotComplete: true,
         tag: -1,
         nextTriggerId: 1,
         triggers: {},
-        color: colors[Math.floor(Math.random() * colors.length)],
+        color: "",
         position: -1
     },
     trigger: {
@@ -76,23 +78,12 @@ const buttonManageSlice = createSlice({
         setRoll: (state, action) => {
             state.trigger = action.payload;
         },
-        resetButton: (state, action: {
-            payload: {
-                tag: Tag | undefined
-            } | undefined
-        }) => {
-            const tag = action.payload?.tag;
-            if (tag !== undefined) {
-                state.button = {
-                    ...initialState.button,
-                    ...tag.buttonConfig,
-                    tag: tag.id,
-                    color: tag.color
-                }
-            } else {
-                state.button = initialState.button;
-            }
-        }
+        setButtonPath: (state, action) => {
+            state.buttonPath = action.payload;
+        },
+        setTriggerPath: (state, action) => {
+            state.triggerPath = action.payload;
+        },
     }
 })
 
@@ -100,7 +91,8 @@ export const {
     setButton,
     setButtonTriggers,
     setRoll,
-    resetButton,
+    setButtonPath,
+    setTriggerPath,
 } = buttonManageSlice.actions
 
 export default buttonManageSlice.reducer

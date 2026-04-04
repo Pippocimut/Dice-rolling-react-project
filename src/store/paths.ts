@@ -7,8 +7,8 @@
 //   4. Add a factory to makePath
 //   5. Add a resolver branch in resolveEntity.ts
 
-export type SetSegment     = { kind: "set";     id: number }
-export type ButtonSegment  = { kind: "button";  id: number }
+export type SetSegment = { kind: "set"; id: number }
+export type ButtonSegment = { kind: "button"; id: number }
 export type TriggerSegment = { kind: "trigger"; id: number }
 
 export type PathSegment = SetSegment | ButtonSegment | TriggerSegment
@@ -17,9 +17,9 @@ export type PathSegment = SetSegment | ButtonSegment | TriggerSegment
 // Typed tuples enforce hierarchy at compile time.
 // TypeScript will refuse a ButtonPath where a TriggerPath is expected.
 
-export type SetPath     = readonly [SetSegment]
-export type ButtonPath  = readonly [SetSegment, ButtonSegment]
-export type TriggerPath = readonly [SetSegment, ButtonSegment, TriggerSegment]
+export type SetPath = [SetSegment]
+export type ButtonPath = [SetSegment, ButtonSegment]
+export type TriggerPath = [SetSegment, ButtonSegment, TriggerSegment]
 
 export type EntityPath = SetPath | ButtonPath | TriggerPath
 
@@ -31,13 +31,13 @@ export const makePath = {
     ],
 
     button: (setId: number, buttonId: number): ButtonPath => [
-        { kind: "set",    id: setId },
+        { kind: "set", id: setId },
         { kind: "button", id: buttonId },
     ],
 
     trigger: (setId: number, buttonId: number, triggerId: number): TriggerPath => [
-        { kind: "set",     id: setId },
-        { kind: "button",  id: buttonId },
+        { kind: "set", id: setId },
+        { kind: "button", id: buttonId },
         { kind: "trigger", id: triggerId },
     ],
 }

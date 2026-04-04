@@ -5,6 +5,9 @@ import {
 } from "@/store/button-sets/ButtonSetV1.2.ts";
 import { ImportManager } from "@/store/button-sets/import.ts";
 import type { BaseButtonSetV13, ButtonDataV13, ButtonSetStateV13, ButtonSetV13, ButtonTriggerV13, EquationRecordV13, EquationV13, RollMapV13, RollTriggerV13, SideEffectsMapV13, SideEffectV13, TagV13, TextTriggerV13, TriggersMapV13, TriggerV13 } from "./ButtonSetV1.3";
+import { makePath } from "@/store/paths";
+import { resolveEntity } from "@/store/resolveEntity";
+import type { RootState } from "@/store";
 
 export type RollTrigger = RollTriggerV13
 export type TextTrigger = TextTriggerV13
@@ -24,6 +27,25 @@ export type BaseButtonSet = BaseButtonSetV13
 export type ButtonSet = ButtonSetV13
 type buttonSetState = ButtonSetStateV13
 export const colors = colorsV12
+
+export const selectCurrentButtonPath = (state: RootState) => state.buttonSet.buttonPath
+export const selectCurrentButton = (state: RootState) => {
+    const path = state.buttonSet.buttonPath
+    return path ? resolveEntity(state, path) as ButtonData | undefined : undefined
+}
+
+export const defaultButton: ButtonData = {
+    id: -1,
+    name: "New Button",
+    nextRollId: 1,
+    tag: -1,
+    isNotComplete: true,
+    nextTriggerId: 1,
+    triggers: {},
+    color: colors[Math.floor(Math.random() * colors.length)],
+    position: -1
+}
+
 
 const initialState: buttonSetState = localStorage.getItem("buttonSetsList")
     ? JSON.parse(localStorage.getItem("buttonSetsList") ?? "") as buttonSetState
@@ -85,6 +107,12 @@ const buttonSetSlice = createSlice({
 
             const stringState = JSON.stringify(state)
             localStorage.setItem("buttonSetsList", stringState);
+        },
+        setButtonPath: (state, action) => {
+            state.buttonPath = action.payload;
+        },
+        setTriggerPath: (state, action) => {
+            state.triggerPath = action.payload;
         },
         addTagToSet: (state, action) => {
             const setId = action.payload.setId;
@@ -193,6 +221,38 @@ const buttonSetSlice = createSlice({
 
             const stringState = JSON.stringify(state)
             localStorage.setItem("buttonSetsList", stringState);
+        },
+        createNewBlankButton: (state, action: {
+            payload: {
+                setId: number,
+                tag?: Tag
+            }
+        }) => {
+            const setId = action.payload.setId;
+            const tag = action.payload.tag;
+            const set = state.sets[setId];
+            if (!set) return;
+
+            Object.values(set.buttonList).forEach(button => {
+                if (button.isNotComplete) {
+                    delete set.buttonList[button.id]
+                }
+            })
+
+            const newButton: ButtonData = {
+                ...defaultButton,
+                color: tag ? tag.color : defaultButton.color,
+                tag: tag ? tag.id : -1,
+                id: state.nextButtonId,
+            }
+            state.nextButtonId++;
+
+            set.buttonList[newButton.id] = newButton
+
+            state.buttonPath = makePath.button(setId, newButton.id)
+
+            const stringState = JSON.stringify(state)
+            localStorage.setItem("buttonSetsList", stringState);
         }
     }
 })
@@ -204,6 +264,7 @@ export const {
     addTagToSet,
     editTagOfSet,
     addNewSet,
+    createNewBlankButton,
     sendNewButtonList,
     setSelectedSet
 } = buttonSetSlice.actions

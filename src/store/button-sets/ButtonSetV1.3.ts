@@ -60,6 +60,7 @@ export type TriggersMapV13 = Record<number, TriggerV13>
 export type ButtonDataV13 = {
     id: number;
     name: string;
+    isNotComplete: boolean;
     color: string;
     tag?: number;
     position: number;
@@ -84,6 +85,8 @@ export type ButtonSetStateV13 = {
     nextSetId: number;
     nextButtonId: number;
     nextTagId: number;
+    buttonPath?: ButtonPath
+    triggerPath?: TriggerPath
     currentVersion: string;
     selectedSetId: number;
     sets: Record<number, ButtonSetV13>;

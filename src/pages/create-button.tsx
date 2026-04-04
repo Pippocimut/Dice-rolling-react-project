@@ -1,16 +1,17 @@
-import {Button} from "@/components/ui/button.tsx";
+import { Button } from "@/components/ui/button.tsx";
 import ButtonForm from "@/pages/main/components/ButtonForm.tsx";
-import {useCallback} from "react";
-import {upsertButtonOfSet} from "@/store/button-sets/buttonSetSlice.ts";
-import {toast} from "react-toastify";
-import {useDispatch, useSelector} from "react-redux";
-import type {RootState} from "@/store";
-import {useNavigate} from "react-router-dom";
+import { useCallback } from "react";
+import { selectCurrentButton, upsertButtonOfSet } from "@/store/button-sets/buttonSetSlice.ts";
+import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import type { RootState } from "@/store";
+import { useNavigate } from "react-router-dom";
 
 export const CreateButtonPage = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const button = useSelector((state: RootState) => state.buttonManage.button)
+    const button = useSelector(selectCurrentButton)!
+
     const selectedSetId = useSelector((state: RootState) => state.buttonSet.selectedSetId)
 
     const areAllFieldsFilled = () => {
@@ -20,7 +21,10 @@ export const CreateButtonPage = () => {
     const correctOnClick = useCallback(() => {
         if (areAllFieldsFilled()) {
             dispatch(upsertButtonOfSet({
-                button,
+                button: {
+                    ...button,
+                    isNotComplete: false
+                },
                 setId: selectedSetId
             }))
             navigate("/")
