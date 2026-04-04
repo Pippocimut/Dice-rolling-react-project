@@ -1,7 +1,7 @@
 export type BaseTriggerV13 = {
     id: number;
     onRoll: boolean
-    type: "roll" | "text";
+    type: "roll" | "text" | "button";
     name: string;
 }
 
@@ -17,7 +17,12 @@ export type TextTriggerV13 = BaseTriggerV13 & {
     text: string;
 }
 
-export type TriggerV13 = TextTriggerV13 | RollTriggerV13
+export type ButtonTriggerV13 = BaseTriggerV13 & {
+    type: "button";
+    targetButtonId: number;
+}
+
+export type TriggerV13 = TextTriggerV13 | RollTriggerV13 | ButtonTriggerV13
 
 export type EquationRecordV13 = Record<number, EquationV13>
 

@@ -3,7 +3,6 @@ import { TriggerCard } from "@/pages/main/components/mainBody/dialogs/forms/Roll
 import type {
     Equation,
     EquationRecord,
-    RollTrigger,
     SideEffect, SideEffectsMap,
     Trigger,
     TriggersMap,
@@ -14,7 +13,7 @@ import { setButtonTriggers } from "@/store/buttonManageSlice.ts";
 import { GeneralTriggersV12 } from "@/store/button-sets/ButtonSetV1.2";
 
 const TriggerList = () => {
-    const rolls = useSelector((state: RootState) => state.buttonManage.button.triggers);
+    const triggers = useSelector((state: RootState) => state.buttonManage.button.triggers);
 
     const dispatch = useDispatch();
 
@@ -22,7 +21,7 @@ const TriggerList = () => {
 
     const handleDeleteTrigger = useCallback(
         (rollId: number) => {
-            const newRolls = { ...rolls };
+            const newRolls = { ...triggers };
 
             const newRollsFiltered = Object.values(newRolls).reduce((acc1: TriggersMap, trigger: Trigger) => {
                 if (trigger.type !== "roll") {
@@ -57,21 +56,23 @@ const TriggerList = () => {
                 updateTriggers(newRollsFiltered);
             }
         },
-        [rolls, updateTriggers]
+        [triggers, updateTriggers]
     );
 
     const handleUpdateTrigger = useCallback(
         (rollId: number) => {
-            return (newRoll: RollTrigger) => {
+            return (newRoll: Trigger) => {
                 updateTriggers({
-                    ...rolls,
+                    ...triggers,
                     [rollId]: newRoll
                 });
             }
-        }, [rolls])
+        }, [triggers])
+
+    console.log("Rendering trigger list with rolls", triggers)
 
     return (<div className={"flex flex-row flex-wrap justify-start items-start w-full gap-2"}>
-        {Object.values(rolls).map((trigger: Trigger) => {
+        {Object.values(triggers).map((trigger: Trigger) => {
             return <TriggerCard
                 key={trigger.id}
                 index={trigger.id}

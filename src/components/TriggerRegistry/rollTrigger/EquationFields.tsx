@@ -1,16 +1,16 @@
 import {
     EquationConditionSelection
-} from "@/pages/main/components/mainBody/dialogs/forms/RollForms/roll/EquationConditionSelection";
+} from "@/components/TriggerRegistry/rollTrigger/EquationConditionSelection";
 import {
     EquationValueSelection
-} from "@/pages/main/components/mainBody/dialogs/forms/RollForms/roll/EquationValueSelection";
+} from "@/components/TriggerRegistry/rollTrigger/EquationValueSelection";
 import type { Equation, RollTrigger, SideEffect, Trigger } from "@/store/button-sets/buttonSetSlice.ts";
 import { Button } from "@/components/ui/button.tsx";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "@/store";
 import { setRoll } from "@/store/buttonManageSlice.ts";
 import { useMemo } from "react";
-import { useSideEffects } from "../hooks/useSideEffects";
+import { useSideEffects } from "../../../pages/main/components/mainBody/dialogs/forms/RollForms/hooks/useSideEffects";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { GeneralTriggersV12 } from "@/store/button-sets/ButtonSetV1.2";
 
@@ -23,13 +23,15 @@ export const EquationFields = ({
     currentEquation, sideEffect
 }: Props) => {
 
-    const roll = useSelector((state: RootState) => state.buttonManage.trigger)
+    const trigger = useSelector((state: RootState) => state.buttonManage.trigger)
+    if (trigger.type !== "roll") return null
     const dispatch = useDispatch()
     const updateRoll = (roll: RollTrigger) => {
         dispatch(setRoll(roll))
     }
+
     const deleteSideEffect = (equationId: number) => (sideEffectId: number) => () => {
-        const newEquation = { ...roll.equations[equationId] }
+        const newEquation = { ...trigger.equations[equationId] }
 
         if (newEquation.sideEffects === undefined) return
 
@@ -39,9 +41,9 @@ export const EquationFields = ({
         newEquation.sideEffects = sideEffects
 
         updateRoll({
-            ...roll,
+            ...trigger,
             equations: {
-                ...roll.equations,
+                ...trigger.equations,
                 [equationId]: newEquation
             }
         })

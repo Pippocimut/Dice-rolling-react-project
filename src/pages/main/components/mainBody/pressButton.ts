@@ -1,15 +1,17 @@
 import { addRoll, type ButtonPressRecord, type TriggerResult } from "@/store/historySidebarSlice.ts";
-import type { ButtonData } from "@/store/button-sets/buttonSetSlice.ts";
+import type { ButtonData, Trigger } from "@/store/button-sets/buttonSetSlice.ts";
 import type { AppThunk } from "@/store";
-import { executeTrigger } from "./triggerRegistry.tsx";
+import type { Enqueue, ResolveTrigger } from "../../../../components/TriggerRegistry/triggerRegistry.tsx";
+import { executeTrigger } from "../../../../components/TriggerRegistry/triggerRegistry.tsx";
 
-/**
- * Thunk that executes a full button press: runs all on-roll triggers, then
- * iteratively processes any chained triggers until the queue is empty.
- *
- * Returns the completed ButtonPressRecord so the calling component can
- * forward it to the socket and toast without knowing about the execution loop.
- */
+// Each queue slot carries the trigger and the resolver scoped to its own button.
+// This means two buttons can both have a trigger with ID 1 and they will never
+// interfere — the resolver attached at enqueue time is always the right one.
+type QueuedItem = {
+    trigger: Trigger;
+    resolveTrigger: ResolveTrigger;
+};
+
 export const pressButton = (
     buttonData: ButtonData,
     username: string
@@ -17,25 +19,30 @@ export const pressButton = (
     (dispatch, _getState) => {
         const results: TriggerResult[] = [];
 
-        // First pass: all triggers marked onRoll fire immediately
-        const triggerQueue: number[] = [];
-        const enqueue = (id: number) => triggerQueue.push(id);
+        const queue: QueuedItem[] = [];
+        const enqueue: Enqueue = (trigger, resolveTrigger) =>
+            queue.push({ trigger, resolveTrigger });
 
+        // Resolver for the pressed button — used for the initial pass and
+        // passed into each handler so side effects resolve against the right map.
+        const resolveForButton: ResolveTrigger = (id) => buttonData.triggers[id];
+
+        // First pass: all on-roll triggers from the pressed button
         for (const trigger of Object.values(buttonData.triggers).filter((t) => t.onRoll)) {
-            results.push(dispatch(executeTrigger(trigger, enqueue)));
+            results.push(dispatch(executeTrigger(trigger, resolveForButton, enqueue)));
         }
 
-        // Subsequent passes: drain the queue until no more chained triggers
-        let currentQueue = triggerQueue.splice(0);
+        // Subsequent passes: each item already carries its own resolver,
+        // so cross-button triggers work without any extra lookup
+        let currentQueue = queue.splice(0);
 
         while (currentQueue.length > 0) {
-            const nextQueue: number[] = [];
-            const enqueueNext = (id: number) => nextQueue.push(id);
+            const nextQueue: QueuedItem[] = [];
+            const enqueueNext: Enqueue = (trigger, resolveTrigger) =>
+                nextQueue.push({ trigger, resolveTrigger });
 
-            for (const id of currentQueue) {
-                const trigger = buttonData.triggers[id];
-                if (!trigger) continue;
-                results.push(dispatch(executeTrigger(trigger, enqueueNext)));
+            for (const { trigger, resolveTrigger } of currentQueue) {
+                results.push(dispatch(executeTrigger(trigger, resolveTrigger, enqueueNext)));
             }
 
             currentQueue = nextQueue;

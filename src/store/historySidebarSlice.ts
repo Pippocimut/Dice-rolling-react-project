@@ -4,12 +4,12 @@ import type { ButtonData } from "./button-sets/buttonSetSlice.ts";
 
 export type BaseTriggerResult = {
     name: string;
-    type: "roll" | "text";
+    type: "roll" | "text" | "button";
 }
 
 export type TextTriggerResult = BaseTriggerResult & {
-    text: string;
     type: "text";
+    text: string;
 }
 
 export type RollTriggerResult = BaseTriggerResult & {
@@ -18,7 +18,12 @@ export type RollTriggerResult = BaseTriggerResult & {
     total: number;
 }
 
-export type TriggerResult = TextTriggerResult | RollTriggerResult;
+export type ButtonTriggerResult = BaseTriggerResult & {
+    type: "button";
+    targetButtonName: string;
+}
+
+export type TriggerResult = TextTriggerResult | RollTriggerResult | ButtonTriggerResult;
 
 export type ButtonPressRecord = Omit<ButtonData, "rolls" | "nextRollId" | "position" | "nextTriggerId" | "triggers"> & {
     username: string;

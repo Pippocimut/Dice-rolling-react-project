@@ -4,10 +4,11 @@ import {
     type ButtonSetV12, colorsV12,
 } from "@/store/button-sets/ButtonSetV1.2.ts";
 import { ImportManager } from "@/store/button-sets/import.ts";
-import type { BaseButtonSetV13, ButtonDataV13, ButtonSetStateV13, ButtonSetV13, EquationRecordV13, EquationV13, RollMapV13, RollTriggerV13, SideEffectsMapV13, SideEffectV13, TagV13, TextTriggerV13, TriggersMapV13, TriggerV13 } from "./ButtonSetV1.3";
+import type { BaseButtonSetV13, ButtonDataV13, ButtonSetStateV13, ButtonSetV13, ButtonTriggerV13, EquationRecordV13, EquationV13, RollMapV13, RollTriggerV13, SideEffectsMapV13, SideEffectV13, TagV13, TextTriggerV13, TriggersMapV13, TriggerV13 } from "./ButtonSetV1.3";
 
 export type RollTrigger = RollTriggerV13
 export type TextTrigger = TextTriggerV13
+export type ButtonTrigger = ButtonTriggerV13
 export type EquationRecord = EquationRecordV13
 export type SideEffect = SideEffectV13
 export type SideEffectsMap = SideEffectsMapV13

@@ -11,6 +11,8 @@ export function RollSelection() {
     const button = useSelector((state: RootState) => state.buttonManage.button);
     const dispatch = useDispatch();
 
+    console.log("Rendering roll selection with button", button)
+
     return <div
         className={"flex flex-col justify-center w-full items-center rounded-md border-neutral-200 border-1 shadow-sm p-4 gap-4"}>
         <div className={"flex flex-row gap-2 justify-between w-full items-center"}>

@@ -2,7 +2,7 @@ import type { Trigger } from "@/store/button-sets/buttonSetSlice.ts";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "@/store";
 import { setRoll } from "@/store/buttonManageSlice.ts";
-import { TRIGGER_REGISTRY } from "@/pages/main/components/mainBody/triggerRegistry.tsx";
+import { TRIGGER_REGISTRY } from "@/components/TriggerRegistry/triggerRegistry";
 
 export const useRolls = () => {
     const roll = useSelector((state: RootState) => state.buttonManage.trigger);
