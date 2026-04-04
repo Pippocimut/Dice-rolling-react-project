@@ -1,17 +1,16 @@
-import type { RollTrigger, TextTrigger, Trigger } from "@/store/button-sets/buttonSetSlice.ts";
+import type { Trigger } from "@/store/button-sets/buttonSetSlice.ts";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "@/store";
 import { setRoll } from "@/store/buttonManageSlice.ts";
+import { TRIGGER_REGISTRY } from "@/pages/main/components/mainBody/triggerRegistry.tsx";
 
 export const useRolls = () => {
-    const roll = useSelector((state: RootState) => state.buttonManage.trigger)
-    const button = useSelector((state: RootState) => state.buttonManage.button)
+    const roll = useSelector((state: RootState) => state.buttonManage.trigger);
+    const button = useSelector((state: RootState) => state.buttonManage.button);
     const triggers = button?.triggers ?? {};
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
 
-    const updateRoll = (updatedRoll: Trigger) => {
-        dispatch(setRoll(updatedRoll))
-    }
+    const updateRoll = (updated: Trigger) => dispatch(setRoll(updated));
 
     const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         updateRoll({ ...roll, name: e.target.value });
@@ -19,33 +18,23 @@ export const useRolls = () => {
 
     const handleOnRollToggle = () => {
         updateRoll({ ...roll, onRoll: !roll.onRoll });
-    }
+    };
 
     const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (roll.type !== "text") return
+        if (roll.type !== "text") return;
         updateRoll({ ...roll, text: e.target.value });
-    }
+    };
 
-    const handleTriggerTypeChange = (type: "roll" | "text") => {
-        if (type === "roll") {
-            updateRoll({
-                id: roll.id,
-                name: roll.name,
-                type: "roll",
-                onRoll: roll.type === "roll" ? roll.onRoll : true,
-                nextEquationId: roll.type === "roll" ? roll.nextEquationId : 2,
-                equations: roll.type === "roll" ? roll.equations : {}
-            } as RollTrigger);
-        } else {
-            updateRoll({
-                id: roll.id,
-                name: roll.name,
-                onRoll: roll.type === "roll" ? roll.onRoll : true,
-                type: "text",
-                text: roll.type === "text" ? roll.text : ""
-            } as TextTrigger);
-        }
-    }
+    /**
+     * Switch trigger type. The registry's defaultData preserves any type-compatible
+     * fields from the current trigger (e.g. switching back to roll keeps equations).
+     * No explicit branching needed here — add a new type to the registry and this
+     * function handles it automatically.
+     */
+    const handleTriggerTypeChange = (type: Trigger["type"]) => {
+        const base = { id: roll.id, name: roll.name, onRoll: roll.onRoll };
+        updateRoll(TRIGGER_REGISTRY[type].defaultData(base, roll));
+    };
 
     return {
         triggers,
@@ -53,6 +42,6 @@ export const useRolls = () => {
         handleTextChange,
         handleNameChange,
         handleOnRollToggle,
-        handleTriggerTypeChange
-    }
-}
+        handleTriggerTypeChange,
+    };
+};
