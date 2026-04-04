@@ -14,7 +14,7 @@ export const CreateButtonPage = () => {
     const selectedSetId = useSelector((state: RootState) => state.buttonSet.selectedSetId)
 
     const areAllFieldsFilled = () => {
-        return !(button.name == "" || Object.values(button.rolls).length === 0);
+        return !(button.name == "" || Object.values(button.triggers).length === 0);
     }
 
     const correctOnClick = useCallback(() => {

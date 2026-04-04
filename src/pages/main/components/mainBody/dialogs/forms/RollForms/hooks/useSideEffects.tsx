@@ -1,13 +1,13 @@
 import {useDispatch, useSelector} from "react-redux";
 import type {RootState} from "@/store";
-import {type Equation, type Roll, type SideEffect} from "@/store/button-sets/buttonSetSlice.ts";
-import {setRoll} from "@/store/button-change-handle/buttonManageSlice.ts";
+import {type Equation, type RollTrigger, type SideEffect} from "@/store/button-sets/buttonSetSlice.ts";
+import {setRoll} from "@/store/buttonManageSlice.ts";
 import {SideEffectConditionsV12} from "@/store/button-sets/ButtonSetV1.2.ts";
 
 export const useSideEffects = () => {
-    const roll = useSelector((state: RootState) => state.buttonManage.roll)
+    const roll = useSelector((state: RootState) => state.buttonManage.trigger)
     const dispatch = useDispatch()
-    const updateRoll = (roll: Roll) => {
+    const updateRoll = (roll: RollTrigger) => {
         dispatch(setRoll(roll))
     }
 

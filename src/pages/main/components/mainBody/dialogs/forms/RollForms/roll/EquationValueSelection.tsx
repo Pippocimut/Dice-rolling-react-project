@@ -1,9 +1,9 @@
-import {type Equation, type Roll, type SideEffect} from "@/store/button-sets/buttonSetSlice.ts";
+import {type Equation, type RollTrigger, type SideEffect} from "@/store/button-sets/buttonSetSlice.ts";
 import {type ChangeEvent} from "react";
 import {Input} from "@/components/ui/input.tsx";
 import {useDispatch, useSelector} from "react-redux";
 import type {RootState} from "@/store";
-import {setRoll} from "@/store/button-change-handle/buttonManageSlice.ts";
+import {setRoll} from "@/store/buttonManageSlice.ts";
 
 export const EquationValueSelection = ({
                                            currentEquation,
@@ -12,9 +12,9 @@ export const EquationValueSelection = ({
     currentEquation: Equation,
     sideEffectId: number,
 }) => {
-    const roll = useSelector((state: RootState) => state.buttonManage.roll)
+    const roll = useSelector((state: RootState) => state.buttonManage.trigger)
     const dispatch = useDispatch()
-    const updateRoll = (roll: Roll) => {
+    const updateRoll = (roll: RollTrigger) => {
         dispatch(setRoll(roll))
     }
     const currentSideEffect = currentEquation?.sideEffects ? currentEquation?.sideEffects[sideEffectId] : undefined

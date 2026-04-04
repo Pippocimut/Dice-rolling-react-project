@@ -1,31 +1,38 @@
-import {useCallback} from "react";
-import {RollCard} from "@/pages/main/components/mainBody/dialogs/forms/RollCard.tsx";
+import { useCallback } from "react";
+import { TriggerCard } from "@/pages/main/components/mainBody/dialogs/forms/RollCard.tsx";
 import type {
     Equation,
     EquationRecord,
-    Roll,
-    RollMap,
+    RollTrigger,
     SideEffect, SideEffectsMap,
+    Trigger,
+    TriggersMap,
 } from "@/store/button-sets/buttonSetSlice.ts";
-import {useDispatch, useSelector} from "react-redux";
-import type {RootState} from "@/store";
-import {setButtonRolls} from "@/store/button-change-handle/buttonManageSlice.ts";
+import { useDispatch, useSelector } from "react-redux";
+import type { RootState } from "@/store";
+import { setButtonTriggers } from "@/store/buttonManageSlice.ts";
 import { GeneralTriggersV12 } from "@/store/button-sets/ButtonSetV1.2";
 
-const RollsList = () => {
-    const rolls = useSelector((state: RootState) => state.buttonManage.button.rolls);
+const TriggerList = () => {
+    const rolls = useSelector((state: RootState) => state.buttonManage.button.triggers);
 
     const dispatch = useDispatch();
-    const updateRolls = (rolls: RollMap) => dispatch(setButtonRolls(rolls))
 
-    const handleDeleteRoll = useCallback(
+    const updateTriggers = (triggers: TriggersMap) => dispatch(setButtonTriggers(triggers))
+
+    const handleDeleteTrigger = useCallback(
         (rollId: number) => {
-            const newRolls = {...rolls};
+            const newRolls = { ...rolls };
 
-            const newRollsFiltered = Object.values(newRolls).reduce((acc1: RollMap, roll: Roll) => {
-                acc1[roll.id] = {
-                    ...roll,
-                    equations: Object.values(roll.equations ?? []).reduce((acc2: EquationRecord, equation: Equation) => {
+            const newRollsFiltered = Object.values(newRolls).reduce((acc1: TriggersMap, trigger: Trigger) => {
+                if (trigger.type !== "roll") {
+                    acc1[trigger.id] = trigger;
+                    return acc1;
+                }
+
+                acc1[trigger.id] = {
+                    ...trigger,
+                    equations: Object.values(trigger.equations ?? []).reduce((acc2: EquationRecord, equation: Equation) => {
                         acc2[equation.id] = {
                             ...equation,
                             sideEffects: Object.values(equation.sideEffects ?? {}).reduce((acc3: SideEffectsMap, sideEffect: SideEffect) => {
@@ -39,8 +46,7 @@ const RollsList = () => {
                             }, {})
                         }
                         return acc2
-                    }, {}),
-                    trigger: roll.trigger === rollId ? GeneralTriggersV12.None : roll.trigger
+                    }, {} as EquationRecord),
                 }
 
                 return acc1;
@@ -48,16 +54,16 @@ const RollsList = () => {
 
             delete newRollsFiltered[rollId];
             return () => {
-                updateRolls(newRollsFiltered);
+                updateTriggers(newRollsFiltered);
             }
         },
-        [rolls, updateRolls]
+        [rolls, updateTriggers]
     );
 
-    const handleUpdateRoll = useCallback(
+    const handleUpdateTrigger = useCallback(
         (rollId: number) => {
-            return (newRoll: Roll) => {
-                updateRolls({
+            return (newRoll: RollTrigger) => {
+                updateTriggers({
                     ...rolls,
                     [rollId]: newRoll
                 });
@@ -65,17 +71,17 @@ const RollsList = () => {
         }, [rolls])
 
     return (<div className={"flex flex-row flex-wrap justify-start items-start w-full gap-2"}>
-        {Object.values(rolls).map((roll: Roll) => {
-            return <RollCard
-                key={roll.id}
-                index={roll.id}
-                roll={roll}
-                handleDeleteRoll={handleDeleteRoll(roll.id)}
-                handleUpdateRoll={handleUpdateRoll(roll.id)}
+        {Object.values(rolls).map((trigger: Trigger) => {
+            return <TriggerCard
+                key={trigger.id}
+                index={trigger.id}
+                trigger={trigger}
+                handleDeleteRoll={handleDeleteTrigger(trigger.id)}
+                handleUpdateRoll={handleUpdateTrigger(trigger.id)}
             />
         })
         }</div>)
 
 };
 
-export default RollsList;
+export default TriggerList;

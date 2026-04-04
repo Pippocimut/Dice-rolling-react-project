@@ -4,8 +4,8 @@ import type {RootState} from "@/store";
 import {
     type ButtonPressRecord,
     setSelectedResult,
-} from "@/store/history-sidebar/historySidebarSlice.ts";
-import {clearHistory} from "@/store/history-sidebar/historySidebarSlice.ts";
+} from "@/store/historySidebarSlice.ts";
+import {clearHistory} from "@/store/historySidebarSlice.ts";
 import {Button} from "@/components/ui/button.tsx";
 
 const HistoryPanel = () => {

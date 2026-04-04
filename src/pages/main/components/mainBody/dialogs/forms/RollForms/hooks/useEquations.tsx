@@ -1,12 +1,12 @@
-import type { Roll} from "@/store/button-sets/buttonSetSlice.ts";
+import type { RollTrigger} from "@/store/button-sets/buttonSetSlice.ts";
 import {useDispatch, useSelector} from "react-redux";
 import type {RootState} from "@/store";
-import {setRoll} from "@/store/button-change-handle/buttonManageSlice.ts";
+import {setRoll} from "@/store/buttonManageSlice.ts";
 
 export const useEquations = () => {
-    const roll = useSelector((state: RootState) => state.buttonManage.roll)
+    const roll = useSelector((state: RootState) => state.buttonManage.trigger)
     const dispatch = useDispatch()
-    const updateRoll = (roll: Roll) => {
+    const updateRoll = (roll: RollTrigger) => {
         dispatch(setRoll(roll))
     }
 

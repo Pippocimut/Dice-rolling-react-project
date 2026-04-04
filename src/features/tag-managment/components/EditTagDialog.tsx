@@ -12,7 +12,7 @@ import {TagForm} from "@/features/tag-managment/components/TagForm.tsx";
 import {editTagOfSet, type Tag} from "@/store/button-sets/buttonSetSlice.ts";
 import {useDispatch, useSelector} from "react-redux";
 import type {RootState} from "@/store";
-import {setButton} from "@/store/button-change-handle/buttonManageSlice.ts";
+import {setButton} from "@/store/buttonManageSlice.ts";
 
 export function EditTagDialog(props: {tag:Tag}){
     const [isEditTagOpen, setIsEditTagOpen] = useState(false);

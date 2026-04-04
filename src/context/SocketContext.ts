@@ -1,5 +1,5 @@
 import {createContext} from 'react';
-import type {ButtonPressRecord} from "../store/history-sidebar/historySidebarSlice.ts";
+import type {ButtonPressRecord} from "../store/historySidebarSlice.ts";
 import type {Socket} from "socket.io-client";
 
 export type SocketContextType = {

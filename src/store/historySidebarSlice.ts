@@ -1,16 +1,29 @@
-import {createSlice} from "@reduxjs/toolkit";
-import type {ButtonData} from "../button-sets/buttonSetSlice.ts";
+import { createSlice } from "@reduxjs/toolkit";
+import type { ButtonData } from "./button-sets/buttonSetSlice.ts";
 
-export type RollResult = {
+
+export type BaseTriggerResult = {
     name: string;
+    type: "roll" | "text";
+}
+
+export type TextTriggerResult = BaseTriggerResult & {
+    text: string;
+    type: "text";
+}
+
+export type RollTriggerResult = BaseTriggerResult & {
+    type: "roll";
     result: string;
     total: number;
-};
+}
 
-export type ButtonPressRecord = Omit<ButtonData, "rolls"| "nextRollId" | "position" | "nextTriggerId" | "triggers"> & {
+export type TriggerResult = TextTriggerResult | RollTriggerResult;
+
+export type ButtonPressRecord = Omit<ButtonData, "rolls" | "nextRollId" | "position" | "nextTriggerId" | "triggers"> & {
     username: string;
     date: string;
-    rollResult: RollResult[];
+    rollResult: TriggerResult[];
 };
 
 export type exportMenuState = {

@@ -1,10 +1,10 @@
 import {useDispatch, useSelector} from "react-redux";
 import type {RootState} from "@/store";
 import {Button} from "@/components/ui/button.tsx";
-import {toggleEditMode} from "@/store/selected/selectedSlice.ts";
+import {toggleEditMode} from "@/store/selectedSlice.ts";
 import {BsPencilFill} from "react-icons/bs";
 import {useNavigate} from "react-router-dom";
-import {resetButton} from "@/store/button-change-handle/buttonManageSlice.ts";
+import {resetButton} from "@/store/buttonManageSlice.ts";
 
 function MainActionButtons({areThereButtons =false}: { areThereButtons?: boolean}) {
     const bigButtonClass = "w-40 h-40 text-8xl"

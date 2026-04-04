@@ -1,5 +1,5 @@
 import {createSlice} from "@reduxjs/toolkit";
-import type {ButtonData, ButtonSet, Tag} from "../button-sets/buttonSetSlice.ts";
+import type {ButtonData, ButtonSet, Tag} from "./button-sets/buttonSetSlice.ts";
 
 export type exportMenuState = {
     sets: number[],

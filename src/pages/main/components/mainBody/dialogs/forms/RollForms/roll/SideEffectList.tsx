@@ -1,4 +1,4 @@
-import {EquationFields} from "@/pages/main/components/mainBody/dialogs/forms/RollForms/EquationFields.tsx";
+import {EquationFields} from "@/pages/main/components/mainBody/dialogs/forms/RollForms/roll/EquationFields";
 import type {Equation} from "@/store/button-sets/buttonSetSlice.ts";
 import {Collapsible, CollapsibleContent, CollapsibleTrigger} from "@/components/ui/collapsible.tsx";
 import {useEffect, useMemo, useState} from "react";

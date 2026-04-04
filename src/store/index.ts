@@ -1,11 +1,11 @@
-import {configureStore} from "@reduxjs/toolkit";
+import { configureStore } from "@reduxjs/toolkit";
 import buttonSetReducer from "./button-sets/buttonSetSlice.ts"
-import exportMenuReducer from "./export-menu/exportMenuSlice.ts"
-import historySidebarReducer from "./history-sidebar/historySidebarSlice.ts";
-import selectedReducer from "./selected/selectedSlice.ts";
-import socketReducer from "./socket/socketSlice.ts";
-import settingsReducer from "./settings/settingsSlice.ts";
-import buttonManageReducer from "./button-change-handle/buttonManageSlice.ts"
+import historySidebarReducer from "./historySidebarSlice.ts";
+import exportMenuReducer from "./exportMenuSlice.ts";
+import selectedReducer from "./selectedSlice.ts";
+import socketReducer from "./socketSlice.ts";
+import settingsReducer from "./settingsSlice.ts";
+import buttonManageReducer from "./buttonManageSlice.ts";
 
 export const store = configureStore({
     reducer: {

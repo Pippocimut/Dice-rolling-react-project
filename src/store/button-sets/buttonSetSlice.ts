@@ -1,49 +1,44 @@
-import {createSlice} from "@reduxjs/toolkit";
-import {defaultTags} from "@/store/button-sets/defaultTags.ts";
+import { createSlice } from "@reduxjs/toolkit";
+import { defaultTags } from "@/store/button-sets/defaultTags.ts";
 import {
-    type BaseButtonSetV12,
-    type ButtonDataV12, type ButtonSetStateV12, type ButtonSetV12, colorsV12,
-    type EquationRecordV12, type EquationV12, type RollMapV12,
-    type RollV12,
-    type SideEffectsMapV12,
-    type SideEffectV12,
-    type TagV12, type TriggersMapV12, type TriggerV12
+    type ButtonSetV12, colorsV12,
 } from "@/store/button-sets/ButtonSetV1.2.ts";
-import {ImportManager} from "@/store/button-sets/import.ts";
+import { ImportManager } from "@/store/button-sets/import.ts";
+import type { BaseButtonSetV13, ButtonDataV13, ButtonSetStateV13, ButtonSetV13, EquationRecordV13, EquationV13, RollMapV13, RollTriggerV13, SideEffectsMapV13, SideEffectV13, TagV13, TextTriggerV13, TriggersMapV13, TriggerV13 } from "./ButtonSetV1.3";
 
-export type Roll = RollV12
-export type EquationRecord = EquationRecordV12
-export type SideEffect = SideEffectV12
-export type SideEffectsMap = SideEffectsMapV12
-export type Equation = EquationV12
-export type Tag = TagV12
-export type Trigger = TriggerV12
-export type TriggersMap = TriggersMapV12
-export type RollMap = RollMapV12
-export type ButtonData = ButtonDataV12
-export type BaseButtonSet = BaseButtonSetV12
-export type ButtonSet = ButtonSetV12
-type buttonSetState = ButtonSetStateV12
+export type RollTrigger = RollTriggerV13
+export type TextTrigger = TextTriggerV13
+export type EquationRecord = EquationRecordV13
+export type SideEffect = SideEffectV13
+export type SideEffectsMap = SideEffectsMapV13
+export type Equation = EquationV13
+export type Tag = TagV13
+export type Trigger = TriggerV13
+export type TriggersMap = TriggersMapV13
+export type ButtonData = ButtonDataV13
+export type BaseButtonSet = BaseButtonSetV13
+export type ButtonSet = ButtonSetV13
+type buttonSetState = ButtonSetStateV13
 export const colors = colorsV12
 
 const initialState: buttonSetState = localStorage.getItem("buttonSetsList")
-        ? JSON.parse(localStorage.getItem("buttonSetsList") ?? "") as buttonSetState
-        : {
-            nextSetId: 2,
-            nextTagId: 4,
-            nextButtonId: 1,
-            currentVersion: "1.2",
-            selectedSetId: 1,
-            sets: {
-                1: {
-                    id: 1,
-                    version: "1.2",
-                    name: "Default",
-                    tags: defaultTags,
-                    buttonList: {}
-                }
+    ? JSON.parse(localStorage.getItem("buttonSetsList") ?? "") as buttonSetState
+    : {
+        nextSetId: 2,
+        nextTagId: 4,
+        nextButtonId: 1,
+        currentVersion: "1.2",
+        selectedSetId: 1,
+        sets: {
+            1: {
+                id: 1,
+                version: "1.3",
+                name: "Default",
+                tags: defaultTags,
+                buttonList: {}
             }
-        } as buttonSetState
+        }
+    } as buttonSetState
 
 
 const buttonSetSlice = createSlice({
@@ -62,7 +57,7 @@ const buttonSetSlice = createSlice({
             }
         }) => {
             const setId = action.payload.setId;
-            const button = {...action.payload.button};
+            const button = { ...action.payload.button };
 
             const set = state.sets[setId];
 

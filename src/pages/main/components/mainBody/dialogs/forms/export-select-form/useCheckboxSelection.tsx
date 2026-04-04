@@ -7,7 +7,7 @@ import {
     onCheckedTagsChange,
     onCheckedButtonsChange,
     selectAllSets,
-} from "@/store/export-menu/exportMenuSlice.ts";
+} from "@/store/exportMenuSlice.ts";
 
 function useCheckboxSelection() {
     const buttonSets = useSelector((state: RootState) => state.buttonSet.sets)

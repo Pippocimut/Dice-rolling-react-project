@@ -5,7 +5,7 @@ import {useMemo} from "react";
 import type {Tag} from "@/store/button-sets/buttonSetSlice.ts";
 import type {RootState} from "@/store";
 import {useNavigate} from "react-router-dom";
-import {resetButton} from "@/store/button-change-handle/buttonManageSlice.ts";
+import {resetButton} from "@/store/buttonManageSlice.ts";
 
 type Props = {
     tagId: number;

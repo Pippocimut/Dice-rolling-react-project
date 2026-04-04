@@ -29,7 +29,7 @@ const EditButtonPage = () => {
         if (button.name == "") {
             return false
         }
-        return Object.values(button.rolls).length !== 0;
+        return Object.values(button.triggers).length !== 0;
     }
 
     const correctOnClick = () => {
