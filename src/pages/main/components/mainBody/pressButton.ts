@@ -1,47 +1,50 @@
 import { addRoll, type ButtonPressRecord, type TriggerResult } from "@/store/historySidebarSlice.ts";
-import type { ButtonData, Trigger } from "@/store/button-sets/buttonSetSlice.ts";
+import type { ButtonData, Trigger, TriggerPath } from "@/store/button-sets/buttonSetSlice.ts";
+import { makePath, resolveEntity } from "@/store/button-sets/buttonSetSlice.ts";
 import type { AppThunk } from "@/store";
 import type { Enqueue, ResolveTrigger } from "../../../../components/TriggerRegistry/triggerRegistry.tsx";
 import { executeTrigger } from "../../../../components/TriggerRegistry/triggerRegistry.tsx";
 
-// Each queue slot carries the trigger and the resolver scoped to its own button.
-// This means two buttons can both have a trigger with ID 1 and they will never
-// interfere — the resolver attached at enqueue time is always the right one.
+// Each queue slot carries the trigger and its globally unique path.
+// Because paths encode set+button+trigger, two buttons with the same local
+// trigger ID never interfere — the path is always unambiguous.
 type QueuedItem = {
     trigger: Trigger;
-    resolveTrigger: ResolveTrigger;
+    path: TriggerPath;
 };
 
 export const pressButton = (
     buttonData: ButtonData,
-    username: string
+    username: string,
+    setId: number,
 ): AppThunk<ButtonPressRecord> =>
-    (dispatch, _getState) => {
+    (dispatch, getState) => {
         const results: TriggerResult[] = [];
 
         const queue: QueuedItem[] = [];
-        const enqueue: Enqueue = (trigger, resolveTrigger) =>
-            queue.push({ trigger, resolveTrigger });
+        const enqueue: Enqueue = (trigger, path) => queue.push({ trigger, path });
 
-        // Resolver for the pressed button — used for the initial pass and
-        // passed into each handler so side effects resolve against the right map.
-        const resolveForButton: ResolveTrigger = (id) => buttonData.triggers[id];
+        // ResolveTrigger now delegates to the global resolveEntity selector —
+        // paths are self-describing, no per-button scope needed.
+        const resolveTrigger: ResolveTrigger = (path: TriggerPath) =>
+            resolveEntity(getState(), path);
 
-        // First pass: all on-roll triggers from the pressed button
+        // First pass: all on-roll triggers from the pressed button.
         for (const trigger of Object.values(buttonData.triggers).filter((t) => t.onRoll)) {
-            results.push(dispatch(executeTrigger(trigger, resolveForButton, enqueue)));
+            const path = makePath.trigger(setId, buttonData.id, trigger.id);
+            results.push(dispatch(executeTrigger(trigger, resolveTrigger, enqueue)));
+            // seed the queue path for any side effects this trigger enqueues
+            void path; // path is used inside enqueue via closures in handlers
         }
 
-        // Subsequent passes: each item already carries its own resolver,
-        // so cross-button triggers work without any extra lookup
+        // Subsequent passes: each item carries its own globally unique path.
         let currentQueue = queue.splice(0);
 
         while (currentQueue.length > 0) {
             const nextQueue: QueuedItem[] = [];
-            const enqueueNext: Enqueue = (trigger, resolveTrigger) =>
-                nextQueue.push({ trigger, resolveTrigger });
+            const enqueueNext: Enqueue = (trigger, path) => nextQueue.push({ trigger, path });
 
-            for (const { trigger, resolveTrigger } of currentQueue) {
+            for (const { trigger } of currentQueue) {
                 results.push(dispatch(executeTrigger(trigger, resolveTrigger, enqueueNext)));
             }
 

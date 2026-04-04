@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "@/store";
 import { setRoll } from "@/store/buttonManageSlice.ts";
+import { makePath } from "@/store/paths";
 import { Label } from "@/components/ui/label.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import {
@@ -23,7 +24,8 @@ export const ButtonTriggerEditor: React.FC = () => {
 
     if (trigger.type !== "button") return null;
 
-    const targetButton = buttons.find((b) => b.id === trigger.targetButtonId);
+    const targetButtonId = trigger.target?.[1]?.id ?? null;
+    const targetButton = buttons.find((b) => b.id === targetButtonId);
     const selectableButtons = buttons.filter((b) => b.id !== currentButtonId);
 
     return (
@@ -41,7 +43,10 @@ export const ButtonTriggerEditor: React.FC = () => {
                     {selectableButtons.map((button) => (
                         <DropdownMenuItem
                             key={button.id}
-                            onClick={() => dispatch(setRoll({ ...trigger, targetButtonId: button.id }))}
+                            onClick={() => dispatch(setRoll({
+                                ...trigger,
+                                target: makePath.button(selectedSetId, button.id),
+                            }))}
                         >
                             {button.name}
                         </DropdownMenuItem>

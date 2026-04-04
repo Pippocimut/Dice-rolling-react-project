@@ -1,6 +1,6 @@
 import React from "react";
 import type { AppThunk } from "@/store";
-import type { Trigger } from "@/store/button-sets/buttonSetSlice.ts";
+import type { Trigger, TriggerPath } from "@/store/button-sets/buttonSetSlice.ts";
 import type { TriggerResult } from "@/store/historySidebarSlice.ts";
 import { rollTriggerHandler } from "./rollTrigger/index.tsx";
 import { textTriggerHandler } from "./textTrigger/index.tsx";
@@ -11,19 +11,16 @@ import { buttonTriggerHandler } from "./buttonTrigger/index.tsx";
 type BaseData = Pick<Trigger, "id" | "name" | "onRoll">;
 
 /**
- * Resolves a trigger ID to a Trigger object within a specific button's scope.
- * Each handler receives the resolver that matches the button it came from,
- * so ID lookups are never ambiguous even if two buttons share the same ID.
+ * Resolves a TriggerPath to a Trigger object.
+ * Paths are globally unique, so no per-button scoping is needed.
  */
-export type ResolveTrigger = (id: number) => Trigger | undefined;
+export type ResolveTrigger = (path: TriggerPath) => Trigger | undefined;
 
 /**
- * Adds a trigger to the execution queue, paired with its resolver.
- * The resolver travels with the trigger so that when it eventually executes
- * its own side effects, it resolves IDs against the correct button — not
- * whatever button happened to start the press.
+ * Adds a trigger to the execution queue alongside its globally unique path.
+ * The path is used if the trigger itself needs to resolve further references.
  */
-export type Enqueue = (trigger: Trigger, resolveTrigger: ResolveTrigger) => void;
+export type Enqueue = (trigger: Trigger, path: TriggerPath) => void;
 
 export type TriggerHandler<T extends Trigger> = {
     label: string;

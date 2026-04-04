@@ -10,7 +10,6 @@ import type {
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "@/store";
 import { setButtonTriggers } from "@/store/buttonManageSlice.ts";
-import { GeneralTriggersV12 } from "@/store/button-sets/ButtonSetV1.2";
 
 const TriggerList = () => {
     const triggers = useSelector((state: RootState) => state.buttonManage.button.triggers);
@@ -35,12 +34,11 @@ const TriggerList = () => {
                         acc2[equation.id] = {
                             ...equation,
                             sideEffects: Object.values(equation.sideEffects ?? {}).reduce((acc3: SideEffectsMap, sideEffect: SideEffect) => {
-                                if (sideEffect.triggerId === rollId) {
-                                    acc3[sideEffect.id] = {
-                                        ...sideEffect,
-                                        triggerId: GeneralTriggersV12.None
-                                    }
-                                } else acc3[sideEffect.id] = sideEffect;
+                                // If this side effect targeted the deleted trigger, clear its target.
+                                const targetsTrigger = sideEffect.target?.[2]?.id === rollId;
+                                acc3[sideEffect.id] = targetsTrigger
+                                    ? { ...sideEffect, target: null }
+                                    : sideEffect;
                                 return acc3;
                             }, {})
                         }

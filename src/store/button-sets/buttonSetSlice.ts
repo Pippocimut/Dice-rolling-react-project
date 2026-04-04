@@ -9,6 +9,9 @@ import type { BaseButtonSetV13, ButtonDataV13, ButtonSetStateV13, ButtonSetV13, 
 export type RollTrigger = RollTriggerV13
 export type TextTrigger = TextTriggerV13
 export type ButtonTrigger = ButtonTriggerV13
+export type { SetPath, ButtonPath, TriggerPath, EntityPath, PathSegment } from "@/store/paths"
+export { makePath, pathToString } from "@/store/paths"
+export { resolveEntity } from "@/store/resolveEntity"
 export type EquationRecord = EquationRecordV13
 export type SideEffect = SideEffectV13
 export type SideEffectsMap = SideEffectsMapV13

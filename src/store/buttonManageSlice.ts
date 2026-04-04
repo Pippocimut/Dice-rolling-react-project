@@ -5,7 +5,7 @@ import {
     type RollTrigger, type Tag,
     type Trigger
 } from "@/store/button-sets/buttonSetSlice.ts";
-import { GeneralTriggersV12, SideEffectConditionsV12 } from "./button-sets/ButtonSetV1.2";
+import { SideEffectConditionsV12 } from "./button-sets/ButtonSetV1.2";
 
 
 type buttonManagementState = {
@@ -43,13 +43,13 @@ const initialState: buttonManagementState =
                         id: 1,
                         condition: SideEffectConditionsV12.EqualTo,
                         values: [20],
-                        triggerId: GeneralTriggersV12.None,
+                        target: null,
                     },
                     [2]: {
                         id: 2,
                         condition: SideEffectConditionsV12.LessThan,
                         values: [20],
-                        triggerId: GeneralTriggersV12.None,
+                        target: null,
                     },
                 }
             }

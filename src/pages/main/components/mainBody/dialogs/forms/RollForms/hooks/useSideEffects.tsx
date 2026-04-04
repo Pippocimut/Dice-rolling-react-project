@@ -1,8 +1,8 @@
-import {useDispatch, useSelector} from "react-redux";
-import type {RootState} from "@/store";
-import {type Equation, type RollTrigger, type SideEffect} from "@/store/button-sets/buttonSetSlice.ts";
-import {setRoll} from "@/store/buttonManageSlice.ts";
-import {SideEffectConditionsV12} from "@/store/button-sets/ButtonSetV1.2.ts";
+import { useDispatch, useSelector } from "react-redux";
+import type { RootState } from "@/store";
+import { type Equation, type RollTrigger, type SideEffect, type TriggerPath } from "@/store/button-sets/buttonSetSlice.ts";
+import { setRoll } from "@/store/buttonManageSlice.ts";
+import { SideEffectConditionsV12 } from "@/store/button-sets/ButtonSetV1.2.ts";
 
 export const useSideEffects = () => {
     const roll = useSelector((state: RootState) => state.buttonManage.trigger)
@@ -25,15 +25,15 @@ export const useSideEffects = () => {
         })
     }
 
-    const handleTriggerChange = (equationId: number) => (sideEffectId: number) => (triggerId: number) => {
-        const equations = {...roll.equations};
+    const handleTriggerChange = (equationId: number) => (sideEffectId: number) => (target: TriggerPath | null) => {
+        const equations = { ...roll.equations };
         equations[equationId] = {
             ...equations[equationId],
             sideEffects: {
                 ...equations[equationId].sideEffects,
                 [sideEffectId]: {
                     ...equations[equationId].sideEffects![sideEffectId],
-                    triggerId: triggerId
+                    target,
                 } as SideEffect
             }
         };
@@ -44,7 +44,7 @@ export const useSideEffects = () => {
         });
     };
 
-    return {addSideEffect: handleAddSideEffect, handleTriggerChange: handleTriggerChange}
+    return { addSideEffect: handleAddSideEffect, handleTriggerChange }
 };
 
 const createNewDefaultSideEffectForEquation = (equation: Equation) => {
@@ -65,5 +65,5 @@ const defaultSideEffect: SideEffect = {
     id: -1,
     condition: SideEffectConditionsV12.EqualTo,
     values: [20],
-    triggerId: -1
+    target: null,
 }

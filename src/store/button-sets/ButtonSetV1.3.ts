@@ -1,3 +1,5 @@
+import type { ButtonPath, TriggerPath } from "@/store/paths";
+
 export type BaseTriggerV13 = {
     id: number;
     onRoll: boolean
@@ -19,7 +21,9 @@ export type TextTriggerV13 = BaseTriggerV13 & {
 
 export type ButtonTriggerV13 = BaseTriggerV13 & {
     type: "button";
-    targetButtonId: number;
+    // Full path to the target button — globally unique, not scoped to a set.
+    // null means no target has been selected yet.
+    target: ButtonPath | null;
 }
 
 export type TriggerV13 = TextTriggerV13 | RollTriggerV13 | ButtonTriggerV13
@@ -30,7 +34,9 @@ export type SideEffectV13 = {
     id: number;
     condition: SideEffectConditionsTypeV13,
     values: number[],
-    triggerId: number,
+    // Full path to the trigger to fire when this condition matches.
+    // null means "no side effect trigger" (replaces the old -1 sentinel).
+    target: TriggerPath | null,
 }
 
 export type SideEffectsMapV13 = Record<number, SideEffectV13>

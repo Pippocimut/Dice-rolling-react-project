@@ -19,9 +19,10 @@ const RollButton = ({ buttonId }: Props) => {
     const dispatch = useDispatch<AppDispatch>();
     const userName = useSelector((state: RootState) => state.socket.userName);
     const editMode = useSelector((state: RootState) => state.selected.editMode);
+    const selectedSetId = useSelector((state: RootState) => state.buttonSet.selectedSetId);
     const buttonData: ButtonData = useSelector(
         (state: RootState) =>
-            state.buttonSet.sets[state.buttonSet.selectedSetId].buttonList[buttonId]
+            state.buttonSet.sets[selectedSetId].buttonList[buttonId]
     );
     const audioOn: boolean = useSelector((state: RootState) => state.settings.audioOn);
 
@@ -47,7 +48,7 @@ const RollButton = ({ buttonId }: Props) => {
                 setRollingAnimationOn(false);
             }.bind(this), 1000);
 
-            const roll = dispatch(pressButton(buttonData, "You"));
+            const roll = dispatch(pressButton(buttonData, "You", selectedSetId));
 
             toast(<CustomRollToast historyData={roll} />, {
                 position: "bottom-left",

@@ -1,5 +1,5 @@
-import type { Equation, SideEffect, Trigger } from "@/store/button-sets/buttonSetSlice";
-import { GeneralTriggersV12, SideEffectConditionsV12, type SideEffectConditionsTypeV12 } from "@/store/button-sets/ButtonSetV1.2";
+import type { Equation, SideEffect } from "@/store/button-sets/buttonSetSlice";
+import { SideEffectConditionsV12, type SideEffectConditionsTypeV12 } from "@/store/button-sets/ButtonSetV1.2";
 import type { Enqueue, ResolveTrigger } from "../triggerRegistry";
 import { evaluate } from "mathjs";
 
@@ -53,19 +53,17 @@ const conditionMatches = (
   }
 };
 
-const matchedSideEffectIds = (sideEffects: SideEffect[], total: number): number[] =>
-  sideEffects
-    .filter((se) => conditionMatches(total, se.values, se.condition))
-    .map((se) => se.triggerId)
-    .filter((id) => id !== GeneralTriggersV12.None && id !== GeneralTriggersV12.OnRoll);
+// Returns only side effects that matched and have a non-null target path.
+const matchedSideEffects = (sideEffects: SideEffect[], total: number) =>
+  sideEffects.filter(
+    (se) => se.target !== null && conditionMatches(total, se.values, se.condition)
+  ) as (SideEffect & { target: NonNullable<SideEffect["target"]> })[];
 
 /**
  * Evaluates all equations and enqueues any matched side effects.
  *
- * `resolveTrigger` and `enqueue` are passed in from the handler so that:
- * - IDs are resolved against the correct button (no global uniqueness assumed)
- * - Chained triggers carry the same resolver, keeping them scoped to the
- *   same button throughout their own execution
+ * `resolveTrigger` resolves a TriggerPath to a Trigger using the full store
+ * state — paths are globally unique so no per-button scoping is needed.
  */
 export const executeEquations = (
   equations: Record<number, Equation>,
@@ -79,11 +77,10 @@ export const executeEquations = (
     const { result: r, normalizedEquation } = solveEquation(getComponents(equation.formula));
     const eqTotal = evaluate(normalizedEquation) as number;
 
-    matchedSideEffectIds(Object.values(equation.sideEffects ?? {}), eqTotal)
-      .forEach((id) => {
-        const trigger = resolveTrigger(id);
-        // Chained trigger gets the same resolver — it belongs to the same button
-        if (trigger) enqueue(trigger, resolveTrigger);
+    matchedSideEffects(Object.values(equation.sideEffects ?? {}), eqTotal)
+      .forEach((se) => {
+        const trigger = resolveTrigger(se.target);
+        if (trigger) enqueue(trigger, se.target);
       });
 
     total += eqTotal;
