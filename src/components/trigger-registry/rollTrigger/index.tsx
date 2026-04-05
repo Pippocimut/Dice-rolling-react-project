@@ -1,8 +1,8 @@
 import type { RollTrigger } from "@/store/button-sets/buttonSetSlice";
 import type { TriggerHandler } from "../triggerRegistry";
-import { RollTriggerEditor } from "./RollTriggerEditor";
-import { RollTriggerCard } from "./RollTriggerCard";
-import { executeEquations } from "./Execute";
+import { RollTriggerEditor } from "./trigger-editor/RollTriggerEditor";
+import { RollTriggerCard } from "./trigger-card/RollTriggerCard";
+import { executeEquations } from "./execute";
 import type { RollTriggerResult } from "@/store/historySidebarSlice";
 
 

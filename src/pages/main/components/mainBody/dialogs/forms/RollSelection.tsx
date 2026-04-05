@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button.tsx";
 import CreateTriggerDialog from "@/pages/main/components/mainBody/dialogs/forms/RollForms/CreateTriggerDialog";
-import TriggerList from "@/pages/main/components/mainBody/dialogs/forms/RollsList.tsx";
+import TriggerList from "@/pages/main/components/mainBody/dialogs/forms/TriggersList";
 import { selectCurrentButton, upsertButtonOfSet, type RollTrigger, type Trigger } from "@/store/button-sets/buttonSetSlice";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "@/store";
@@ -12,18 +12,22 @@ export function RollSelection() {
 
     const selectedSetId = useSelector((state: RootState) => state.buttonSet.selectedSetId)
 
-    const handleCreateTrigger = (roll: Trigger) => {
+    const handleCreateTrigger = (trigger: Trigger) => {
+        console.log("I'm creating a trigger with these values", trigger)
+        console.log("Inside this button", button)
+        const newButton = {
+            ...button,
+            triggers: {
+                ...button.triggers,
+                [trigger.id]: {
+                    ...button.triggers[trigger.id],
+                    isNotComplete: false
+                } as RollTrigger
+            }
+        }
+        console.log("New button", newButton)
         dispatch(upsertButtonOfSet({
-            button: {
-                ...button,
-                triggers: {
-                    ...button.triggers,
-                    [button.nextTriggerId]: {
-                        ...roll,
-                        id: button.nextTriggerId
-                    } as RollTrigger
-                }, nextTriggerId: button.nextTriggerId + 1
-            }, setId: selectedSetId
+            button: newButton, setId: selectedSetId
         }))
     }
 
@@ -41,7 +45,7 @@ export function RollSelection() {
         <div className={"flex flex-row gap-2 justify-between w-full items-center"}>
             <CreateTriggerDialog createRoll={handleCreateTrigger} />
 
-            {(Object.values(button.triggers).length > 0) && (
+            {(Object.values(button.triggers).filter(trigger => !trigger.isNotComplete).length > 0) && (
                 <Button variant={"outline"} onClick={handleClearTriggers}>
                     Clear rolls
                 </Button>

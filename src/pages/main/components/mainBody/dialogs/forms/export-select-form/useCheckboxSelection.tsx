@@ -21,7 +21,7 @@ function useCheckboxSelection() {
         onCheckedTagsChange: (setID: number) => (newTag: Tag) => dispatch(onCheckedTagsChange({
             setID,
             newTag,
-            relatedButtons: Object.values(buttonSets[setID]?.buttonList ?? {}).filter(button => button.tag === newTag.id).map(button => button.id) ?? []
+            relatedButtons: Object.values(buttonSets[setID]?.buttons ?? {}).filter(button => button.tag === newTag.id).map(button => button.id) ?? []
         })),
         onCheckedButtonsChange: (setID: number) => (newButton: ButtonData) => dispatch(
             onCheckedButtonsChange({

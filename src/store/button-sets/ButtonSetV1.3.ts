@@ -1,10 +1,11 @@
-import type { ButtonPath, TriggerPath } from "@/store/paths";
+import type { ButtonPath, TriggerPath } from "@/store/button-sets/paths";
 
 export type BaseTriggerV13 = {
     id: number;
     onRoll: boolean
     type: "roll" | "text" | "button";
     name: string;
+    isNotComplete: boolean
 }
 
 export type RollTriggerV13 = BaseTriggerV13 & {
@@ -78,13 +79,15 @@ export type ButtonSetV13 = BaseButtonSetV13 & {
     version: "1.3";
     name: string;
     tags: Record<number, TagV13>;
-    buttonList: Record<number, ButtonDataV13>;
+    buttons: Record<number, ButtonDataV13>;
 }
 
 export type ButtonSetStateV13 = {
     nextSetId: number;
     nextButtonId: number;
     nextTagId: number;
+    selectedButtonId: number,
+    selectedTriggerId: number,
     buttonPath?: ButtonPath
     triggerPath?: TriggerPath
     currentVersion: string;

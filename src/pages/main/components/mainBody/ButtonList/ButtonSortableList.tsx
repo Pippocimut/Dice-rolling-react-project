@@ -16,7 +16,7 @@ export function ButtonSortableList({items}: Props) {
 
     const updateButtons = useCallback((newButtonList: ButtonData[]) => {
         const filter = (button: ButtonData) => newButtonList.find((newButton) => newButton.id === button.id) === undefined
-        const updatedButtonList = Object.values(buttonSet.buttonList).filter(filter)
+        const updatedButtonList = Object.values(buttonSet.buttons).filter(filter)
 
         const sortedNewButtonList = newButtonList.map((newButton: ButtonData, index:number) => {
             return {

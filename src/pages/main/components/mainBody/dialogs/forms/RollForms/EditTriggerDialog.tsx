@@ -3,10 +3,9 @@ import { Button } from "@/components/ui/button.tsx";
 import { TriggerHandlingDialogContent }
     from "@/pages/main/components/mainBody/dialogs/forms/RollForms/components/TriggerDialogContent";
 import { useEffect, useState } from "react";
-import type { Trigger } from "@/store/button-sets/buttonSetSlice.ts";
-import { useDispatch, useSelector } from "react-redux";
-import { setRoll } from "@/store/buttonManageSlice.ts";
-import type { RootState } from "@/store";
+import { setSelectedTriggerId, type Trigger } from "@/store/button-sets/buttonSetSlice.ts";
+import { useDispatch, } from "react-redux";
+
 
 type Props = {
     trigger: Trigger;
@@ -15,11 +14,10 @@ type Props = {
 
 export function EditTriggerDialog(props: Props) {
     const dispatch = useDispatch();
-    const roll = useSelector((state: RootState) => state.buttonManage.trigger)
     const [openDialog, setOpenDialog] = useState(false);
 
     useEffect(() => {
-        dispatch(setRoll(props.trigger))
+        dispatch(setSelectedTriggerId(props.trigger.id))
     }, [openDialog]);
 
     return (<Dialog open={openDialog} onOpenChange={setOpenDialog}>
@@ -33,7 +31,7 @@ export function EditTriggerDialog(props: Props) {
             </DialogTrigger>
             <TriggerHandlingDialogContent>
                 <DialogClose>
-                    <Button className={"bg-green-500 hover:bg-green-600"} onClick={() => props.updateTrigger(roll)}>
+                    <Button className={"bg-green-500 hover:bg-green-600"} onClick={() => props.updateTrigger(props.trigger)}>
                         Update Roll
                     </Button>
                 </DialogClose>

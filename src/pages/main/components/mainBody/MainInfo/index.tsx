@@ -5,7 +5,7 @@ export function MainInfo() {
     const {roomName} = useSelector((state: RootState) => state.socket)
 
     const currentSet = useSelector((state: RootState) => state.buttonSet.sets[state.buttonSet.selectedSetId])
-    const areThereNoButtons = (Object.values(currentSet.buttonList ?? {}).length ?? 0) === 0
+    const areThereNoButtons = (Object.values(currentSet.buttons ?? {}).length ?? 0) === 0
 
     const isConnected = (!!roomName && roomName.length > 0) ?? false
 

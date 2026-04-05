@@ -1,7 +1,7 @@
-import { EditTriggerDialog } from "@/pages/main/components/mainBody/dialogs/forms/RollForms/EditRollDialog.tsx";
+import { EditTriggerDialog } from "@/pages/main/components/mainBody/dialogs/forms/RollForms/EditTriggerDialog";
 import { Button } from "@/components/ui/button.tsx";
 import type { Trigger } from "@/store/button-sets/buttonSetSlice.ts";
-import { TRIGGER_REGISTRY, type TriggerHandler } from "@/components/TriggerRegistry/triggerRegistry.tsx";
+import { TRIGGER_REGISTRY, type TriggerHandler } from "@/components/trigger-registry/triggerRegistry";
 
 type Props = {
     index: number;
@@ -12,7 +12,7 @@ type Props = {
 
 export function TriggerCard({ index, trigger, handleDeleteRoll, handleUpdateRoll }: Props) {
     const { CardComponent } = TRIGGER_REGISTRY[trigger.type] as TriggerHandler<Trigger>;
-    console.log("Rendering card for trigger", trigger)
+
 
     return (
         <div

@@ -19,7 +19,7 @@ export const ExporPage = () => {
 
     useEffect(clearAll, []);
 
-    const noButtonsToDisplay = Object.values(buttonSets).filter((buttonSet) => Object.values(buttonSet.buttonList).length > 0).length === 0;
+    const noButtonsToDisplay = Object.values(buttonSets).filter((buttonSet) => Object.values(buttonSet.buttons).length > 0).length === 0;
 
     return <div className={"flex flex-col w-1/3 mx-auto h-full"}>
         <h1 className={"text-4xl font-bold mx-auto text-center my-2"}>
@@ -81,8 +81,8 @@ const ExportButton = ({setName}: { setName: string }) => {
 
         const buttonListExport = Object.values(buttonSets).reduce((acc: Record<number, ButtonData>, set) => {
             buttons.forEach((buttonId) => {
-                if (set.buttonList[buttonId]) {
-                    acc[buttonId] = set.buttonList[buttonId]
+                if (set.buttons[buttonId]) {
+                    acc[buttonId] = set.buttons[buttonId]
                 }
             })
             return acc
@@ -150,11 +150,11 @@ const SetSelection = ({buttonSet}: { buttonSet: ButtonSet }) => {
     } = useCheckboxSelection()
     const isChecked = checkedData.sets.includes(buttonSet.id)
     const [isOpen, setIsOpen] = useState(false)
-    const untaggedButtons = Object.values(buttonSet.buttonList).filter(
+    const untaggedButtons = Object.values(buttonSet.buttons).filter(
         (button: ButtonData) => !button.tag || !(buttonSet.tags[button.tag])
     )
 
-    if (Object.values(buttonSet.buttonList).length === 0) return null;
+    if (Object.values(buttonSet.buttons).length === 0) return null;
     return <Collapsible open={isOpen} onOpenChange={setIsOpen}
                         className={"flex flex-col items-start justify-start pl-2 my-4"}
                         key={buttonSet.id}>
@@ -191,7 +191,7 @@ const TagSelection = ({buttonSet, tag}: { buttonSet: ButtonSet, tag: Tag }) => {
     const [isOpen, setIsOpen] = useState(false)
     const onChangedTag = onCheckedTagsChange(buttonSet.id)
 
-    const buttonList = Object.values(buttonSet.buttonList).filter((button: ButtonData) => button.tag === tag.id)
+    const buttonList = Object.values(buttonSet.buttons).filter((button: ButtonData) => button.tag === tag.id)
 
     return <CollapsibleContent>
         <li key={tag.id} className={"flex flex-col justify-start mb-2 w-full"}>

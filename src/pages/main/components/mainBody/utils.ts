@@ -1,7 +1,7 @@
 import { type ButtonSet } from "@/store/button-sets/buttonSetSlice.ts";
 
 export function getSortedTags(buttonSet: ButtonSet) {
-    const tagCounts = Object.values(buttonSet.buttonList).reduce((counts, button) => {
+    const tagCounts = Object.values(buttonSet.buttons).reduce((counts, button) => {
         if (!button) return counts;
         if (button.tag !== undefined && button.tag !== null && button.tag !== -1) {
             counts[button.tag] = (counts[button.tag] || 0) + 1;

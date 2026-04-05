@@ -1,6 +1,6 @@
 import type { ButtonTrigger } from "@/store/button-sets/buttonSetSlice";
-import { makePath } from "@/store/paths";
-import { resolveEntity } from "@/store/resolveEntity";
+import { makePath } from "@/store/button-sets/paths";
+import { resolveEntity } from "@/store/button-sets/resolveEntity";
 import type { TriggerHandler } from "../triggerRegistry";
 import type { ButtonTriggerResult } from "@/store/historySidebarSlice";
 import { ButtonTriggerEditor } from "./ButtonTriggerEditor";

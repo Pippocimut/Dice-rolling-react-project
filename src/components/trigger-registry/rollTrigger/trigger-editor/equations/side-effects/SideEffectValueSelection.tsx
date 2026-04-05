@@ -1,26 +1,30 @@
-import {type Equation, type RollTrigger, type SideEffect} from "@/store/button-sets/buttonSetSlice.ts";
-import {type ChangeEvent} from "react";
-import {Input} from "@/components/ui/input.tsx";
-import {useDispatch, useSelector} from "react-redux";
-import type {RootState} from "@/store";
-import {setRoll} from "@/store/buttonManageSlice.ts";
+import { makePath, selectCurrentButton, selectCurrentTrigger, setTrigger, type ButtonData, type Equation, type RollTrigger, type SideEffect } from "@/store/button-sets/buttonSetSlice.ts";
+import { type ChangeEvent } from "react";
+import { Input } from "@/components/ui/input.tsx";
+import { useDispatch, useSelector } from "react-redux";
+import type { RootState } from "@/store";
 
-export const EquationValueSelection = ({
-                                           currentEquation,
-                                           sideEffectId
-                                       }: {
+export const SideEffectValueSelection = ({
+    currentEquation,
+    sideEffectId
+}: {
     currentEquation: Equation,
     sideEffectId: number,
 }) => {
-    const roll = useSelector((state: RootState) => state.buttonManage.trigger)
+    const trigger = useSelector(selectCurrentTrigger) as RollTrigger
+    const button = useSelector(selectCurrentButton) as ButtonData
+    const setId = useSelector((state: RootState) => state.buttonSet.selectedSetId)
     const dispatch = useDispatch()
-    const updateRoll = (roll: RollTrigger) => {
-        dispatch(setRoll(roll))
+    const updateRoll = (trigger: RollTrigger) => {
+        dispatch(setTrigger({
+            trigger,
+            triggerPath: makePath.trigger(setId, button.id, trigger.id)
+        }))
     }
     const currentSideEffect = currentEquation?.sideEffects ? currentEquation?.sideEffects[sideEffectId] : undefined
     const handleValueChange = (index: number) => (e: ChangeEvent<HTMLInputElement>
     ) => {
-        const equations = {...roll.equations}
+        const equations = { ...trigger.equations }
         const values = [...currentSideEffect?.values ?? []]
         if (values[index] === undefined)
             values.push(parseInt(e.currentTarget.value))
@@ -38,7 +42,7 @@ export const EquationValueSelection = ({
             }
         } as Equation
         updateRoll({
-            ...roll,
+            ...trigger,
             equations
         })
 
@@ -48,15 +52,15 @@ export const EquationValueSelection = ({
     if (currentSideEffect.condition === "Between")
         return <>
             <Input type="number" value={currentSideEffect.values[0]} onChange={handleValueChange(0)}
-                   className={"w-20"}/>
+                className={"w-20"} />
             <Input type="number" value={currentSideEffect.values[1]} onChange={handleValueChange(1)}
-                   className={"w-20"}/>
+                className={"w-20"} />
         </>
     if (currentSideEffect.condition === "Not between") return <>
-        <Input type="number" value={currentSideEffect.values[0]} onChange={handleValueChange(0)} className={"w-20"}/>
-        <Input type="number" value={currentSideEffect.values[1]} onChange={handleValueChange(1)} className={"w-20"}/>
+        <Input type="number" value={currentSideEffect.values[0]} onChange={handleValueChange(0)} className={"w-20"} />
+        <Input type="number" value={currentSideEffect.values[1]} onChange={handleValueChange(1)} className={"w-20"} />
     </>
 
     if (currentSideEffect.condition === "Always") return
-    return <Input type="number" value={currentSideEffect.values[0]} onChange={handleValueChange(0)} className={"w-20"}/>
+    return <Input type="number" value={currentSideEffect.values[0]} onChange={handleValueChange(0)} className={"w-20"} />
 }

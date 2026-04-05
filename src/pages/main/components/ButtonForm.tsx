@@ -19,8 +19,6 @@ const ButtonForm = ({ children }: PropsWithChildren) => {
 
     const handleTagChange = (id: number) => {
         if (currentSet) {
-            console.log(currentSet.tags[id])
-            console.log("Button before tag change: ", button.triggers)
             let highest_trigger_id = Math.max(...Object.values(button.triggers).map(roll => roll.id), 0) + 1
             const triggers = {
                 ...button.triggers,

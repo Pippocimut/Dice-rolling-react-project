@@ -6,17 +6,17 @@ import {
     DialogTitle,
     DialogTrigger
 } from "@/components/ui/dialog.tsx";
-import {Button} from "@/components/ui/button.tsx";
-import {useEffect, useState} from "react";
-import {TagForm} from "@/features/tag-managment/components/TagForm.tsx";
-import {editTagOfSet, type Tag} from "@/store/button-sets/buttonSetSlice.ts";
-import {useDispatch, useSelector} from "react-redux";
-import type {RootState} from "@/store";
-import {setButton} from "@/store/buttonManageSlice.ts";
+import { Button } from "@/components/ui/button.tsx";
+import { useEffect, useState } from "react";
+import { TagForm } from "@/features/tag-managment/components/TagForm.tsx";
+import { createNewBlankButton, editTagOfSet, selectCurrentButton, upsertButtonOfSet, type Tag } from "@/store/button-sets/buttonSetSlice.ts";
+import { useDispatch, useSelector } from "react-redux";
+import type { RootState } from "@/store";
 
-export function EditTagDialog(props: {tag:Tag}){
+export function EditTagDialog(props: { tag: Tag }) {
     const [isEditTagOpen, setIsEditTagOpen] = useState(false);
-    const button = useSelector((state:RootState)=> state.buttonManage.button)
+    const button = useSelector(selectCurrentButton)!
+    const setId = useSelector((state: RootState) => state.buttonSet.selectedSetId)
 
     const [tag, setTag] = useState<Tag>({
         ...props.tag,
@@ -25,8 +25,10 @@ export function EditTagDialog(props: {tag:Tag}){
     const dispatch = useDispatch();
 
     useEffect(() => {
-        console.log(props.tag)
-        dispatch(setButton(props.tag.buttonConfig))
+        dispatch(createNewBlankButton({
+            setId: setId,
+            tag: props.tag
+        }))
     }, [isEditTagOpen]);
 
     const currentSet = useSelector((state: RootState) => state.buttonSet.sets[state.buttonSet.selectedSetId])
@@ -46,9 +48,8 @@ export function EditTagDialog(props: {tag:Tag}){
             newTag: {
                 ...tag,
                 buttonConfig: {
-                    triggers:button.triggers,
-                    nextTriggerId:button.nextTriggerId,
-                    rolls:button.rolls,
+                    triggers: button.triggers,
+                    nextTriggerId: button.nextTriggerId
                 }
             }
         }))
@@ -58,12 +59,12 @@ export function EditTagDialog(props: {tag:Tag}){
     return <Dialog open={isEditTagOpen} onOpenChange={setIsEditTagOpen}>
         <DialogTrigger asChild>
             <Button id={"create-tag-button"} className={"w-fit"} variant={"outline"}
-                    onClick={() => setIsEditTagOpen(true)}>
-                <div className={"w-5 h-5 rounded-full border-1 border-gray-300 shadow-md mr-4 "+tag.color}/>
+                onClick={() => setIsEditTagOpen(true)}>
+                <div className={"w-5 h-5 rounded-full border-1 border-gray-300 shadow-md mr-4 " + tag.color} />
                 <span>{tag.name}</span>
             </Button>
         </DialogTrigger>
-        <DialogContent className={"w-fit"} onOpenAutoFocus={(e)=> e.preventDefault()}>
+        <DialogContent className={"w-fit"} onOpenAutoFocus={(e) => e.preventDefault()}>
             <DialogHeader>
                 <DialogTitle>Edit Tag</DialogTitle>
                 <DialogDescription>

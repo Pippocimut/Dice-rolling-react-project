@@ -8,7 +8,7 @@ const UntaggedButtonListSection = () => {
 
     const items = useMemo(() => {
         if (!buttonSet) return [];
-        return Object.values(buttonSet.buttonList).filter(button => !button.tag || button.tag === -1).filter(button => !button.isNotComplete)
+        return Object.values(buttonSet.buttons).filter(button => !button.tag || button.tag === -1).filter(button => !button.isNotComplete)
     }, [buttonSet]);
 
     if (items.length === 0) return null;

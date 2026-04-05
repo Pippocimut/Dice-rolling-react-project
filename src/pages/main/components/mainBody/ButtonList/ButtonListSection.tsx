@@ -31,7 +31,7 @@ const ButtonListSection = ({ tagId = -1 }: Props) => {
     const buttonSet = useSelector((state: RootState) => state.buttonSet.sets[state.buttonSet.selectedSetId])!
 
     const items = useMemo(() => {
-        return Object.values(buttonSet.buttonList).filter(button => button.tag === tagId).filter(button => !button.isNotComplete)
+        return Object.values(buttonSet.buttons).filter(button => button.tag === tagId).filter(button => !button.isNotComplete)
     }, [buttonSet, tagId]);
 
     if (tagId === -1) return null

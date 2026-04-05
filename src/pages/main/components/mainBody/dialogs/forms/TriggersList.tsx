@@ -76,10 +76,9 @@ const TriggerList = () => {
             }
         }, [triggers])
 
-    console.log("Rendering trigger list with rolls", triggers)
 
     return (<div className={"flex flex-row flex-wrap justify-start items-start w-full gap-2"}>
-        {Object.values(triggers).map((trigger: Trigger) => {
+        {Object.values(triggers).filter(trigger => !trigger.isNotComplete).map((trigger: Trigger) => {
             return <TriggerCard
                 key={trigger.id}
                 index={trigger.id}

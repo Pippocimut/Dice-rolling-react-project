@@ -4,17 +4,16 @@ import {
     type ButtonSetV12, colorsV12,
 } from "@/store/button-sets/ButtonSetV1.2.ts";
 import { ImportManager } from "@/store/button-sets/import.ts";
-import type { BaseButtonSetV13, ButtonDataV13, ButtonSetStateV13, ButtonSetV13, ButtonTriggerV13, EquationRecordV13, EquationV13, RollMapV13, RollTriggerV13, SideEffectsMapV13, SideEffectV13, TagV13, TextTriggerV13, TriggersMapV13, TriggerV13 } from "./ButtonSetV1.3";
-import { makePath } from "@/store/paths";
-import { resolveEntity } from "@/store/resolveEntity";
+import type { BaseButtonSetV13, ButtonDataV13, ButtonSetStateV13, ButtonSetV13, ButtonTriggerV13, EquationRecordV13, EquationV13, RollTriggerV13, SideEffectsMapV13, SideEffectV13, TagV13, TextTriggerV13, TriggersMapV13, TriggerV13 } from "./ButtonSetV1.3";
+import { makePath, type ButtonPath, type TriggerPath } from "@/store/button-sets/paths";
 import type { RootState } from "@/store";
 
 export type RollTrigger = RollTriggerV13
 export type TextTrigger = TextTriggerV13
 export type ButtonTrigger = ButtonTriggerV13
-export type { SetPath, ButtonPath, TriggerPath, EntityPath, PathSegment } from "@/store/paths"
-export { makePath, pathToString } from "@/store/paths"
-export { resolveEntity } from "@/store/resolveEntity"
+export type { SetPath, ButtonPath, TriggerPath, EntityPath, PathSegment } from "@/store/button-sets/paths"
+export { makePath, pathToString } from "@/store/button-sets/paths"
+export { resolveEntity } from "@/store/button-sets/resolveEntity"
 export type EquationRecord = EquationRecordV13
 export type SideEffect = SideEffectV13
 export type SideEffectsMap = SideEffectsMapV13
@@ -25,13 +24,23 @@ export type TriggersMap = TriggersMapV13
 export type ButtonData = ButtonDataV13
 export type BaseButtonSet = BaseButtonSetV13
 export type ButtonSet = ButtonSetV13
-type buttonSetState = ButtonSetStateV13
+type ButtonSetState = ButtonSetStateV13
 export const colors = colorsV12
 
 export const selectCurrentButtonPath = (state: RootState) => state.buttonSet.buttonPath
 export const selectCurrentButton = (state: RootState) => {
-    const path = state.buttonSet.buttonPath
-    return path ? resolveEntity(state, path) as ButtonData | undefined : undefined
+    const set = state.buttonSet.sets[state.buttonSet.selectedSetId]
+    const button = set.buttons[state.buttonSet.selectedButtonId]
+    return button
+}
+
+export const selectCurrentTriggerPath = (state: RootState) => state.buttonSet.triggerPath
+export const selectCurrentTrigger = (state: RootState) => {
+    const set = state.buttonSet.sets[state.buttonSet.selectedSetId]
+    const button = set.buttons[state.buttonSet.selectedButtonId]
+    const trigger = button.triggers[state.buttonSet.selectedTriggerId]
+
+    return trigger
 }
 
 export const defaultButton: ButtonData = {
@@ -46,25 +55,36 @@ export const defaultButton: ButtonData = {
     position: -1
 }
 
+export const defaultTrigger: Trigger = {
+    id: -1,
+    name: "New Trigger",
+    onRoll: true,
+    isNotComplete: true,
+    type: "text",
+    text: "Trigger text"
+}
 
-const initialState: buttonSetState = localStorage.getItem("buttonSetsList")
-    ? JSON.parse(localStorage.getItem("buttonSetsList") ?? "") as buttonSetState
+
+const initialState: ButtonSetState = localStorage.getItem("buttonSetsList")
+    ? JSON.parse(localStorage.getItem("buttonSetsList") ?? "") as ButtonSetState
     : {
         nextSetId: 2,
         nextTagId: 4,
         nextButtonId: 1,
         currentVersion: "1.2",
         selectedSetId: 1,
+        selectedButtonId: -1,
+        selectedTriggerId: -1,
         sets: {
             1: {
                 id: 1,
                 version: "1.3",
                 name: "Default",
                 tags: defaultTags,
-                buttonList: {}
+                buttons: {}
             }
         }
-    } as buttonSetState
+    } as ButtonSetState
 
 
 const buttonSetSlice = createSlice({
@@ -98,8 +118,14 @@ const buttonSetSlice = createSlice({
                 button.position = button.id
             }
 
-            set.buttonList = {
-                ...set.buttonList,
+            button.triggers = Object.fromEntries(
+                Object.entries(button.triggers).filter(([key, trigger]) => !trigger?.isNotComplete)
+            )
+
+            console.log("Button is slice", button)
+
+            set.buttons = {
+                ...set.buttons,
                 [button.id]: button
             }
 
@@ -108,11 +134,11 @@ const buttonSetSlice = createSlice({
             const stringState = JSON.stringify(state)
             localStorage.setItem("buttonSetsList", stringState);
         },
-        setButtonPath: (state, action) => {
-            state.buttonPath = action.payload;
+        setSelectedButtonId: (state, action) => {
+            state.selectedButtonId = action.payload
         },
-        setTriggerPath: (state, action) => {
-            state.triggerPath = action.payload;
+        setSelectedTriggerId: (state, action) => {
+            state.selectedTriggerId = action.payload
         },
         addTagToSet: (state, action) => {
             const setId = action.payload.setId;
@@ -149,8 +175,8 @@ const buttonSetSlice = createSlice({
 
             delete set.tags[tagId]
 
-            const idToDelete = Object.values(set.buttonList).filter(button => button.tag === tagId).map(button => button.id);
-            idToDelete.forEach(id => delete set.buttonList[id]);
+            const idToDelete = Object.values(set.buttons).filter(button => button.tag === tagId).map(button => button.id);
+            idToDelete.forEach(id => delete set.buttons[id]);
 
             const stringState = JSON.stringify(state)
             localStorage.setItem("buttonSetsList", stringState);
@@ -184,7 +210,7 @@ const buttonSetSlice = createSlice({
                 setId,
                 buttons
             } = action.payload;
-            state.sets[setId].buttonList = buttons.reduce((acc, button) => {
+            state.sets[setId].buttons = buttons.reduce((acc, button) => {
                 acc[button.id] = button;
                 return acc;
             }, {} as Record<number, ButtonData>)
@@ -217,7 +243,64 @@ const buttonSetSlice = createSlice({
             const setId = action.payload.setId;
             const id = action.payload.id;
 
-            delete state.sets[setId].buttonList[id]
+            delete state.sets[setId].buttons[id]
+
+            const stringState = JSON.stringify(state)
+            localStorage.setItem("buttonSetsList", stringState);
+        },
+        setTrigger(state, action: {
+            payload: {
+                trigger: Trigger,
+                triggerPath: TriggerPath
+            }
+        }) {
+            const { trigger, triggerPath } = action.payload
+            const setId = triggerPath[0].id
+            const buttonId = triggerPath[1].id;
+            const triggerId = triggerPath[2].id;
+            const set = state.sets[setId]
+            if (!set) return;
+            const button = set.buttons[buttonId]
+            if (!button) return;
+            button.triggers[triggerId] = trigger
+
+            const stringState = JSON.stringify(state)
+            localStorage.setItem("buttonSetsList", stringState);
+        },
+        createNewBlankTrigger: (state, action: {
+            payload: {
+                setId: number,
+                buttonId: number
+            }
+        }) => {
+            const { setId, buttonId } = action.payload
+            const set = state.sets[setId]
+            if (!set) return;
+            const button = { ...set.buttons[buttonId] }
+            if (!button) return;
+
+            const trigger = { ...defaultTrigger }
+
+            trigger.id = button.nextTriggerId
+            button.nextTriggerId++
+
+            Object.values(button.triggers).map(trigger => {
+                if (trigger.isNotComplete)
+                    delete button.triggers[trigger.id]
+            })
+
+            button.triggers = {
+                ...button.triggers,
+                [trigger.id]: trigger
+            }
+
+            set.buttons[button.id] = button
+
+            state.triggerPath = makePath.trigger(setId, buttonId, trigger.id)
+            state.selectedTriggerId = trigger.id
+
+            console.log("Trigger Id", trigger.id)
+            console.log("Button", button)
 
             const stringState = JSON.stringify(state)
             localStorage.setItem("buttonSetsList", stringState);
@@ -233,23 +316,25 @@ const buttonSetSlice = createSlice({
             const set = state.sets[setId];
             if (!set) return;
 
-            Object.values(set.buttonList).forEach(button => {
+            Object.values(set.buttons).forEach(button => {
                 if (button.isNotComplete) {
-                    delete set.buttonList[button.id]
+                    delete set.buttons[button.id]
                 }
             })
 
             const newButton: ButtonData = {
                 ...defaultButton,
+                ...tag?.buttonConfig,
                 color: tag ? tag.color : defaultButton.color,
                 tag: tag ? tag.id : -1,
                 id: state.nextButtonId,
             }
             state.nextButtonId++;
 
-            set.buttonList[newButton.id] = newButton
+            set.buttons[newButton.id] = newButton
 
             state.buttonPath = makePath.button(setId, newButton.id)
+            state.selectedButtonId = newButton.id
 
             const stringState = JSON.stringify(state)
             localStorage.setItem("buttonSetsList", stringState);
@@ -264,9 +349,17 @@ export const {
     addTagToSet,
     editTagOfSet,
     addNewSet,
+
     createNewBlankButton,
+    createNewBlankTrigger,
+
     sendNewButtonList,
-    setSelectedSet
+    setSelectedSet,
+
+    setTrigger,
+    setSelectedTriggerId,
+    setSelectedButtonId
+
 } = buttonSetSlice.actions
 
 export default buttonSetSlice.reducer

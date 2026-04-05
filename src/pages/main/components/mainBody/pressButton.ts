@@ -2,8 +2,8 @@ import { addRoll, type ButtonPressRecord, type TriggerResult } from "@/store/his
 import type { ButtonData, Trigger, TriggerPath } from "@/store/button-sets/buttonSetSlice.ts";
 import { makePath, resolveEntity } from "@/store/button-sets/buttonSetSlice.ts";
 import type { AppThunk } from "@/store";
-import type { Enqueue, ResolveTrigger } from "../../../../components/TriggerRegistry/triggerRegistry.tsx";
-import { executeTrigger } from "../../../../components/TriggerRegistry/triggerRegistry.tsx";
+import type { Enqueue, ResolveTrigger } from "../../../../components/trigger-registry/triggerRegistry.tsx";
+import { executeTrigger } from "../../../../components/trigger-registry/triggerRegistry.tsx";
 
 // Each queue slot carries the trigger and its globally unique path.
 // Because paths encode set+button+trigger, two buttons with the same local

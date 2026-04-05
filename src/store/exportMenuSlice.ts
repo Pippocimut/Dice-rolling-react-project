@@ -24,7 +24,7 @@ const buttonSetSlice = createSlice({
             } else {
                 state.sets.push(newSet.id);
                 state.tags[newSet.id] = [...state.tags[newSet.id] ?? [], ...Object.values(newSet.tags).map(tag => tag.id)];
-                state.buttons[newSet.id] = [...state.buttons[newSet.id] ?? [], ...Object.values(newSet.buttonList).map(button => button.id)];
+                state.buttons[newSet.id] = [...state.buttons[newSet.id] ?? [], ...Object.values(newSet.buttons).map(button => button.id)];
             }
         },
         onCheckedTagsChange: (state, action: {
@@ -74,7 +74,7 @@ const buttonSetSlice = createSlice({
             }
             state.buttons = {
                 ...buttonSets.reduce((acc, set) => {
-                    acc[set.id] = Object.values(set.buttonList).map(button => button.id)
+                    acc[set.id] = Object.values(set.buttons).map(button => button.id)
                     return acc
                 }, {} as Record<number, number[]>)
             }

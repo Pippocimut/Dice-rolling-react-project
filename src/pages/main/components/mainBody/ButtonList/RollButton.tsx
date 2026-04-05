@@ -5,11 +5,10 @@ import { SocketContext } from "@/context/SocketContext.ts";
 import { SortableItemContext } from "@/components/dnd/SortableItem.tsx";
 import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button.tsx";
-import type { ButtonData } from "@/store/button-sets/buttonSetSlice.ts";
+import { makePath, setSelectedButtonId, type ButtonData } from "@/store/button-sets/buttonSetSlice.ts";
 import { CustomRollToast } from "@/pages/main/components/mainBody/ButtonList/CustomRollToast.tsx";
 import { pressButton } from "@/pages/main/components/mainBody/pressButton.ts";
 import { FaDice } from "react-icons/fa";
-import { setButton } from "@/store/buttonManageSlice.ts";
 import { useNavigate } from "react-router-dom";
 import type { AppDispatch } from "@/store";
 
@@ -22,7 +21,7 @@ const RollButton = ({ buttonId }: Props) => {
     const selectedSetId = useSelector((state: RootState) => state.buttonSet.selectedSetId);
     const buttonData: ButtonData = useSelector(
         (state: RootState) =>
-            state.buttonSet.sets[selectedSetId].buttonList[buttonId]
+            state.buttonSet.sets[selectedSetId].buttons[buttonId]
     );
     const audioOn: boolean = useSelector((state: RootState) => state.settings.audioOn);
 
@@ -33,11 +32,11 @@ const RollButton = ({ buttonId }: Props) => {
     const navigate = useNavigate();
 
     const [rollingAnimationOn, setRollingAnimationOn] = useState(false);
-    let rollingTimeout = setTimeout(function () {});
+    let rollingTimeout = setTimeout(function () { });
 
     const onClick = useCallback(() => {
         if (editMode) {
-            dispatch(setButton(buttonData));
+            dispatch(setSelectedButtonId(buttonId))
             navigate("/button/edit");
         } else {
             setRollingAnimationOn(true);
@@ -69,7 +68,7 @@ const RollButton = ({ buttonId }: Props) => {
     const onContextMenu: MouseEventHandler<HTMLButtonElement> = useCallback(
         (e) => {
             e.preventDefault();
-            dispatch(setButton(buttonData));
+            dispatch(setSelectedButtonId(buttonId))
             navigate("/button/edit");
         },
         [editMode, buttonData]
@@ -93,9 +92,8 @@ const RollButton = ({ buttonId }: Props) => {
             {...attributes}
             {...listeners}
             ref={ref}
-            className={`w-30 h-30 rounded-lg ${buttonData.color} font-bold hover:outline-4 ${
-                editMode ? "glowing-border" : ""
-            }`}
+            className={`w-30 h-30 rounded-lg ${buttonData.color} font-bold hover:outline-4 ${editMode ? "glowing-border" : ""
+                }`}
             onClick={onClick}
             onContextMenu={onContextMenu}
         >

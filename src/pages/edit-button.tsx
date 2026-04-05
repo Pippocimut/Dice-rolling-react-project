@@ -1,17 +1,17 @@
 import ButtonForm from "./main/components/ButtonForm.tsx";
-import {useCallback} from "react";
-import {deleteButtonOfSet, upsertButtonOfSet} from "@/store/button-sets/buttonSetSlice.ts";
-import {useDispatch, useSelector} from "react-redux";
-import type {RootState} from "@/store";
-import {Button} from "@/components/ui/button.tsx";
-import {toast} from "react-toastify";
-import {useNavigate} from "react-router-dom";
+import { useCallback } from "react";
+import { deleteButtonOfSet, selectCurrentButton, upsertButtonOfSet } from "@/store/button-sets/buttonSetSlice.ts";
+import { useDispatch, useSelector } from "react-redux";
+import type { RootState } from "@/store";
+import { Button } from "@/components/ui/button.tsx";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const EditButtonPage = () => {
 
     const selectedSetId = useSelector((state: RootState) => state.buttonSet.selectedSetId)
     const buttonSet = useSelector((state: RootState) => state.buttonSet.sets[state.buttonSet.selectedSetId])
-    const selectedButton = useSelector((state: RootState) => state.buttonManage.button)
+    const selectedButton = useSelector(selectCurrentButton)
     const navigate = useNavigate();
 
     if (!selectedButton) throw new Error("Button not found")
@@ -19,11 +19,11 @@ const EditButtonPage = () => {
     const dispatch = useDispatch();
 
     const deleteButton = useCallback(() => {
-        dispatch(deleteButtonOfSet({setId: selectedSetId, id: selectedButton.id}))
+        dispatch(deleteButtonOfSet({ setId: selectedSetId, id: selectedButton.id }))
         navigate("/")
     }, [buttonSet]);
 
-    const button = useSelector((state: RootState) => state.buttonManage.button)
+    const button = useSelector(selectCurrentButton)!
 
     const areAllFieldsFilled = () => {
         if (button.name == "") {
@@ -48,7 +48,7 @@ const EditButtonPage = () => {
         <div className={"flex flex-col gap-4 border-1 rounded-md w-full max-w-130 mx-auto my-12"}>
             <ButtonForm>
                 <Button id={"delete"} className="bg-danger  hover:bg-red-600"
-                        onClick={deleteButton}>
+                    onClick={deleteButton}>
                     Delete Button
                 </Button>
                 <Button

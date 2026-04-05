@@ -53,7 +53,7 @@ function ToggleEditModeButton({ areThereButtons = false }: { areThereButtons?: b
 
 export function ActionButtons() {
     const areThereButtons = useSelector((state: RootState) =>
-        !(Object.values(state.buttonSet.sets[state.buttonSet.selectedSetId].buttonList).filter(button => !button.isNotComplete).length === 0)
+        !(Object.values(state.buttonSet.sets[state.buttonSet.selectedSetId].buttons).filter(button => !button.isNotComplete).length === 0)
     )
 
     return <div

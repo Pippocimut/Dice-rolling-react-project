@@ -7,9 +7,9 @@
 //   4. Add a factory to makePath
 //   5. Add a resolver branch in resolveEntity.ts
 
-export type SetSegment = { kind: "set"; id: number }
-export type ButtonSegment = { kind: "button"; id: number }
-export type TriggerSegment = { kind: "trigger"; id: number }
+export type SetSegment = { kind: "sets"; id: number }
+export type ButtonSegment = { kind: "buttons"; id: number }
+export type TriggerSegment = { kind: "triggers"; id: number }
 
 export type PathSegment = SetSegment | ButtonSegment | TriggerSegment
 
@@ -27,18 +27,18 @@ export type EntityPath = SetPath | ButtonPath | TriggerPath
 
 export const makePath = {
     set: (setId: number): SetPath => [
-        { kind: "set", id: setId },
+        { kind: "sets", id: setId },
     ],
 
     button: (setId: number, buttonId: number): ButtonPath => [
-        { kind: "set", id: setId },
-        { kind: "button", id: buttonId },
+        { kind: "sets", id: setId },
+        { kind: "buttons", id: buttonId },
     ],
 
     trigger: (setId: number, buttonId: number, triggerId: number): TriggerPath => [
-        { kind: "set", id: setId },
-        { kind: "button", id: buttonId },
-        { kind: "trigger", id: triggerId },
+        { kind: "sets", id: setId },
+        { kind: "buttons", id: buttonId },
+        { kind: "triggers", id: triggerId },
     ],
 }
 

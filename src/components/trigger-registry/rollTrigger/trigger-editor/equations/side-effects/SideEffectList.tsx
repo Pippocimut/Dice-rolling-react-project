@@ -1,4 +1,4 @@
-import {EquationFields} from "@/components/TriggerRegistry/rollTrigger/EquationFields";
+import {SideEffectFields} from "@/components/trigger-registry/rollTrigger/trigger-editor/equations/side-effects/SideEffectFields";
 import type {Equation} from "@/store/button-sets/buttonSetSlice.ts";
 import {Collapsible, CollapsibleContent, CollapsibleTrigger} from "@/components/ui/collapsible.tsx";
 import {useEffect, useMemo, useState} from "react";
@@ -22,7 +22,7 @@ export const SideEffectList = ({equation}: { equation: Equation }) => {
                 className="flex flex-col justify-center items-center w-full"
                 key={`equation-${equation.id}-sideEffect-${sideEffectId}`}
             >
-                <EquationFields
+                <SideEffectFields
                     currentEquation={equation}
                     sideEffect={sideEffect}
                 />
