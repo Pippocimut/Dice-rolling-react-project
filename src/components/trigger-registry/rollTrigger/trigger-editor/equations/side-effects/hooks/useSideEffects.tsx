@@ -1,14 +1,13 @@
 import { useDispatch, useSelector } from "react-redux";
-import { selectCurrentTrigger, selectCurrentTriggerPath, setTrigger, type Equation, type RollTrigger, type SideEffect, type TriggerPath } from "@/store/button-sets/buttonSetSlice.ts";
+import { selectCurrentTrigger, setTrigger, type Equation, type RollTrigger, type SideEffect, type TriggerPath } from "@/store/button-sets/buttonSetSlice.ts";
 import { SideEffectConditionsV12 } from "@/store/button-sets/ButtonSetV1.2.ts";
 
 export const useSideEffects = () => {
     const trigger = useSelector(selectCurrentTrigger) as RollTrigger
-    const triggerPath = useSelector(selectCurrentTriggerPath) as TriggerPath
 
     const dispatch = useDispatch()
     const updateRoll = (trigger: RollTrigger) => {
-        dispatch(setTrigger({ trigger, triggerPath }))
+        dispatch(setTrigger({ trigger }))
     }
 
     const handleAddSideEffect = (equationId: number) => () => {

@@ -88,8 +88,6 @@ export type ButtonSetStateV13 = {
     nextTagId: number;
     selectedButtonId: number,
     selectedTriggerId: number,
-    buttonPath?: ButtonPath
-    triggerPath?: TriggerPath
     currentVersion: string;
     selectedSetId: number;
     sets: Record<number, ButtonSetV13>;

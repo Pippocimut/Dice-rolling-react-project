@@ -7,10 +7,11 @@ import {
     type RollV12,
     type TagV12
 } from "@/store/button-sets/ButtonSetV1.2.ts";
+import type { ButtonSetV13 } from "./ButtonSetV1.3";
 
-type UsableDataSets = ButtonSetV11 | ButtonSetV12
+type UsableDataSets = ButtonSetV11 | ButtonSetV12 | ButtonSetV13
 
-const latestVersion: string = "1.2";
+const latestVersion: string = "1.3";
 
 export class ImportManager {
 

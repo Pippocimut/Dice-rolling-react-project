@@ -1,14 +1,11 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import type { RootState } from "@/store";
-import { makePath, selectCurrentButton, selectCurrentTrigger, setTrigger } from "@/store/button-sets/buttonSetSlice";
+import { selectCurrentTrigger, setTrigger } from "@/store/button-sets/buttonSetSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 export const TextTriggerEditor: React.FC = () => {
-  const selectedSetId = useSelector((state: RootState) => state.buttonSet.selectedSetId)
 
   const trigger = useSelector(selectCurrentTrigger)!;
-  const selectedButton = useSelector(selectCurrentButton)!
   const dispatch = useDispatch();
 
   if (trigger?.type !== "text") return null;
@@ -23,7 +20,7 @@ export const TextTriggerEditor: React.FC = () => {
         onChange={(e) => dispatch(setTrigger({
           trigger: {
             ...trigger, text: e.target.value
-          }, triggerPath: makePath.trigger(selectedSetId, selectedButton.id, trigger.id)
+          }
         }))}
       />
     </div>

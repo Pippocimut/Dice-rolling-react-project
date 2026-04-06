@@ -1,19 +1,18 @@
-import { selectCurrentButton, selectCurrentTrigger, selectCurrentTriggerPath, setTrigger, type Trigger } from "@/store/button-sets/buttonSetSlice.ts";
+import { selectCurrentButton, selectCurrentTrigger, setTrigger, type Trigger } from "@/store/button-sets/buttonSetSlice.ts";
 import { useDispatch, useSelector } from "react-redux";
 import { TRIGGER_REGISTRY } from "@/components/trigger-registry/triggerRegistry";
 
 export const useTriggers = () => {
     const trigger = useSelector(selectCurrentTrigger)!;
-    const triggerPath = useSelector(selectCurrentTriggerPath)!
     const button = useSelector(selectCurrentButton);
 
     const triggers = button?.triggers ?? {};
     const dispatch = useDispatch();
 
-    const updateRoll = (trigger: Trigger) => dispatch(setTrigger({ trigger, triggerPath }));
+    const updateRoll = (trigger: Trigger) => dispatch(setTrigger({ trigger }));
 
-    const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        updateRoll({ ...trigger, name: e.target.value });
+    const handleNameChange = (name: string) => {
+        updateRoll({ ...trigger, name });
     };
 
     const handleOnRollToggle = () => {

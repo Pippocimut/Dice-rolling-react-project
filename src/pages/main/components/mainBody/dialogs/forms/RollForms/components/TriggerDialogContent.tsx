@@ -25,21 +25,14 @@ import { selectCurrentTrigger, type Trigger } from "@/store/button-sets/buttonSe
 
 // Renders the type-specific editor for whichever trigger type is active.
 // Adding a new trigger type requires no changes here — the registry handles it.
-function TriggerSpecificEditor() {
-    const trigger = useSelector(selectCurrentTrigger)!;
+function TriggerSpecificEditor({ trigger }: { trigger: Trigger }) {
     const { EditorComponent } = TRIGGER_REGISTRY[trigger.type];
     return <EditorComponent />;
 }
 
-function OnRollTriggerSelection() {
-    const roll = useSelector(selectCurrentTrigger)!
-    const { handleOnRollToggle } = useTriggers()
-
-    if (!roll) return null
-
-    const isOnRoll = Boolean(roll.onRoll)
-    const buttonText = isOnRoll ? "On-Roll: Active" : "On-Roll: Inactive"
-    const buttonColorClass = isOnRoll
+function OnRollTriggerSelection({ triggerOnRoll, onRollToggle }: { onRollToggle: () => void, triggerOnRoll: boolean }) {
+    const buttonText = triggerOnRoll ? "On-Roll: Active" : "On-Roll: Inactive"
+    const buttonColorClass = triggerOnRoll
         ? "bg-emerald-600 text-white hover:bg-emerald-500"
         : "bg-zinc-200 text-zinc-800 hover:bg-zinc-300"
 
@@ -49,9 +42,9 @@ function OnRollTriggerSelection() {
             <Button
                 variant="secondary"
                 className={`w-fit ${buttonColorClass}`}
-                onClick={handleOnRollToggle}
+                onClick={() => onRollToggle()}
                 role="checkbox"
-                aria-checked={isOnRoll}
+                aria-checked={triggerOnRoll}
                 aria-label="Toggle on-roll behavior"
             >
                 {buttonText}
@@ -62,28 +55,23 @@ function OnRollTriggerSelection() {
 }
 
 // Dropdown populated entirely from the registry — no hardcoded type list.
-function TriggerTypeSelection() {
-    const trigger = useSelector(selectCurrentTrigger)!;
-    const { handleTriggerTypeChange } = useTriggers();
-
-    if (!trigger) return null
-
+function TriggerTypeSelection({ onTriggerTypeChange, triggerType }: { triggerType: Trigger["type"], onTriggerTypeChange: (type: Trigger["type"]) => void }) {
     return (
         <div className="flex flex-row justify-center items-center gap-4">
             <Label htmlFor="triggerType">Trigger Type:</Label>
             <DropdownMenu>
                 <DropdownMenuTrigger asChild id="trigger-type-dropdown-menu-trigger">
                     <Button variant="outline" className="w-fit">
-                        {TRIGGER_REGISTRY[trigger.type].label}
+                        {TRIGGER_REGISTRY[triggerType].label}
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56">
                     <DropdownMenuLabel>Trigger Type</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuRadioGroup
-                        value={trigger.type}
+                        value={triggerType}
                         onValueChange={(value) =>
-                            handleTriggerTypeChange(value as Trigger["type"])
+                            onTriggerTypeChange(value as Trigger["type"])
                         }
                     >
                         {(Object.entries(TRIGGER_REGISTRY) as [Trigger["type"], typeof TRIGGER_REGISTRY[Trigger["type"]]][]).map(
@@ -100,25 +88,22 @@ function TriggerTypeSelection() {
     );
 }
 
-function TriggerNameSelection() {
-
-    const { handleNameChange } = useTriggers();
-    const trigger = useSelector(selectCurrentTrigger)!;
-
+function TriggerNameSelection({ triggerName, onNameChange }: { triggerName: string, onNameChange: (_: string) => void }) {
     return <div>
         <Label htmlFor="rollName">Roll name:</Label>
         <Input
             placeholder="Roll Name"
-            value={trigger.name}
+            value={triggerName}
             id="rollName"
-            onChange={handleNameChange}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => onNameChange(e.target.value)}
         />
     </div>
 }
 
 export function TriggerHandlingDialogContent({ children }: PropsWithChildren) {
     const trigger = useSelector(selectCurrentTrigger)
-    console.log(trigger)
+    const { handleNameChange, handleOnRollToggle, handleTriggerTypeChange } = useTriggers()
+
     if (!trigger) return null
     return (
         <DialogContent className="flex flex-col gap-4 justify-start items-start">
@@ -129,10 +114,10 @@ export function TriggerHandlingDialogContent({ children }: PropsWithChildren) {
                 </DialogDescription>
             </DialogHeader>
 
-            <TriggerTypeSelection />
-            <OnRollTriggerSelection />
-            <TriggerNameSelection />
-            <TriggerSpecificEditor />
+            <TriggerTypeSelection triggerType={trigger.type} onTriggerTypeChange={handleTriggerTypeChange} />
+            <OnRollTriggerSelection triggerOnRoll={trigger.onRoll} onRollToggle={handleOnRollToggle} />
+            <TriggerNameSelection triggerName={trigger.name} onNameChange={handleNameChange} />
+            <TriggerSpecificEditor trigger={trigger} />
 
             <DialogFooter className="flex flex-row gap-2 w-full justify-end items-center">
                 {children}

@@ -1,13 +1,12 @@
-import { selectCurrentTrigger, selectCurrentTriggerPath, setTrigger, type RollTrigger, type TriggerPath } from "@/store/button-sets/buttonSetSlice.ts";
+import { selectCurrentTrigger, setTrigger, type RollTrigger } from "@/store/button-sets/buttonSetSlice.ts";
 import { useDispatch, useSelector } from "react-redux";
 
 export const useEquations = () => {
     const trigger = useSelector(selectCurrentTrigger) as RollTrigger
-    const triggerPath = useSelector(selectCurrentTriggerPath) as TriggerPath
 
     const dispatch = useDispatch()
     const updateRoll = (trigger: RollTrigger) => {
-        dispatch(setTrigger({ trigger, triggerPath }))
+        dispatch(setTrigger({ trigger }))
     }
 
     const handleFormulaChange = (id: number) => (e: React.ChangeEvent<HTMLInputElement>) => {
