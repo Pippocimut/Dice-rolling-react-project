@@ -1,6 +1,6 @@
 import {MainInfo} from "@/pages/main/components/mainBody/MainInfo";
 import {ActionButtons} from "@/pages/main/components/mainBody/MainActionButtons.tsx";
-import ButtonLists from "@/pages/main/components/mainBody/ButtonList/ButtonLists.tsx";
+import ButtonLists from "@/pages/main/components/mainBody/buttons/ButtonLists";
 import {AudioToggle} from "@/pages/main/components/NavHeader/AudioToggle.tsx";
 
 export function RollCupPage() {

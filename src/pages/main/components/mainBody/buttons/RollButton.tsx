@@ -6,7 +6,7 @@ import { SortableItemContext } from "@/components/dnd/SortableItem.tsx";
 import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button.tsx";
 import { makePath, setSelectedButtonId, type ButtonData } from "@/store/button-sets/buttonSetSlice.ts";
-import { CustomRollToast } from "@/pages/main/components/mainBody/ButtonList/CustomRollToast.tsx";
+import { CustomRollToast } from "@/pages/main/components/mainBody/buttons/CustomRollToast";
 import { pressButton } from "@/pages/main/components/mainBody/pressButton.ts";
 import { FaDice } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";

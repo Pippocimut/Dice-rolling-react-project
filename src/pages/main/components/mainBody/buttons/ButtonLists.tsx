@@ -2,7 +2,7 @@ import {useSelector} from "react-redux";
 import {useMemo} from "react";
 import ButtonListSection from "./ButtonListSection.tsx";
 import { getSortedTags} from "@/pages/main/components/mainBody/utils.ts";
-import UntaggedButtonListSection from "@/pages/main/components/mainBody/ButtonList/UntaggedButtonListSection.tsx";
+import UntaggedButtonListSection from "@/pages/main/components/mainBody/buttons/UntaggedButtonListSection.tsx";
 import type {RootState} from "@/store";
 
 export default function ButtonLists() {
