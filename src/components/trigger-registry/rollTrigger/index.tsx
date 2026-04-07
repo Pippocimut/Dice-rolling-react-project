@@ -25,7 +25,7 @@ export const rollTriggerHandler: TriggerHandler<RollTrigger> = {
 
   // resolveTrigger and enqueue are provided by pressButton, already scoped to
   // the correct button. No getState needed here — no ID uniqueness assumed.
-  execute: (trigger, resolveTrigger, enqueue) => (_dispatch, _getState): RollTriggerResult => {
+  execute: (trigger, resolveTrigger, enqueue) => (_, __): RollTriggerResult => {
     const { total, result } = executeEquations(trigger.equations, resolveTrigger, enqueue);
     return { type: "roll", name: trigger.name, total, result };
   },

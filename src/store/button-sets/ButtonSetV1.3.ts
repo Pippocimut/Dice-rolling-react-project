@@ -37,7 +37,7 @@ export type SideEffectV13 = {
     values: number[],
     // Full path to the trigger to fire when this condition matches.
     // null means "no side effect trigger" (replaces the old -1 sentinel).
-    target: TriggerPath | null,
+    target: number | null,
 }
 
 export type SideEffectsMapV13 = Record<number, SideEffectV13>

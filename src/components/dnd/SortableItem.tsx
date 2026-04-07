@@ -1,6 +1,7 @@
 import {createContext, type CSSProperties, useMemo} from "react";
 import type { PropsWithChildren} from "react";
 import type {
+    DraggableAttributes,
     DraggableSyntheticListeners,
     UniqueIdentifier
 } from "@dnd-kit/core";
@@ -13,7 +14,7 @@ interface Props {
 }
 
 interface Context {
-    attributes: Record<string, any>;
+    attributes: Record<string, DraggableAttributes>;
     listeners: DraggableSyntheticListeners;
 
     ref(node: HTMLElement | null): void;

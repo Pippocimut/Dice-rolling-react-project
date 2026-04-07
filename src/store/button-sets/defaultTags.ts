@@ -10,6 +10,7 @@ const attackTriggers: TriggersMap = {
         onRoll: true,
         type: "roll",
         id: 1,
+        isNotComplete: true,
         "nextEquationId": 3,
         "equations": {
             [1]: {
@@ -21,19 +22,19 @@ const attackTriggers: TriggersMap = {
                         "id": 1,
                         "condition": SideEffectConditionsV12.EqualTo,
                         "values": [20],
-                        "triggerId": 2
+                        "target": 2
                     },
                     [2]: {
                         "id": 2,
                         "condition": SideEffectConditionsV12.Between,
                         "values": [2, 19],
-                        "triggerId": 3
+                        "target": 3
                     },
                     [3]: {
                         "id": 3,
                         "condition": SideEffectConditionsV12.EqualTo,
                         "values": [1],
-                        "triggerId": 4
+                        "target": 4
                     }
                 }
             },
@@ -47,6 +48,7 @@ const attackTriggers: TriggersMap = {
     [2]: {
         "name": "Critical hit",
         onRoll: false,
+        isNotComplete: true,
         type: "roll",
         id: 2,
         "nextEquationId": 2,
@@ -61,6 +63,7 @@ const attackTriggers: TriggersMap = {
     [3]: {
         "name": "Hit",
         onRoll: false,
+        isNotComplete: true,
         type: "roll",
         id: 3,
         "nextEquationId": 2,
@@ -74,6 +77,7 @@ const attackTriggers: TriggersMap = {
     },
     [4]: {
         "name": "Miss",
+        isNotComplete: true,
         onRoll: false,
         type: "text",
         id: 4,
@@ -87,6 +91,7 @@ const saveTriggers: TriggersMap = {
         "name": "Save",
         onRoll: true,
         type: "roll",
+        isNotComplete: true,
         id: 1,
         "nextEquationId": 2,
         "equations": {
@@ -105,6 +110,7 @@ const checkTriggers: TriggersMap = {
     [1]: {
         "name": "Check",
         id: 1,
+        isNotComplete: true,
         onRoll: true,
         type: "roll",
         "nextEquationId": 2,

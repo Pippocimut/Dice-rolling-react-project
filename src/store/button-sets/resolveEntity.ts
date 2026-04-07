@@ -5,7 +5,7 @@
 
 import type { RootState } from "@/store";
 import type { ButtonSet, ButtonData, Trigger } from "@/store/button-sets/buttonSetSlice";
-import type { SetPath, ButtonPath, TriggerPath, EntityPath, PathSegment } from "./paths";
+import type { SetPath, ButtonPath, TriggerPath, EntityPath } from "./paths";
 
 // ── Overloads ─────────────────────────────────────────────────────────────────
 // Each concrete path type maps to its specific return type.
@@ -18,13 +18,13 @@ export function resolveEntity(
     state: RootState,
     path: EntityPath,
 ): Trigger | ButtonData | ButtonSet | undefined {
-    const segments = path as PathSegment[]
-    let item: any = state.buttonSet
+    const [setSegment, buttonSegment, triggerSegment] = path
 
-    for (const segment of segments) {
-        item = item?.[segment.kind]?.[segment.id]
-        if (!item) return undefined
-    }
+    const set = state.buttonSet.sets[setSegment.id]
+    if (!buttonSegment || !set) return set
 
-    return item
+    const button = set.buttons[buttonSegment.id]
+    if (!triggerSegment || !button) return button
+
+    return button.triggers[triggerSegment.id]
 }
