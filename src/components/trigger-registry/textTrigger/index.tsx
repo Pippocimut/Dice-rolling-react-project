@@ -10,6 +10,7 @@ export const textTriggerHandler: TriggerHandler<TextTrigger> = {
   defaultData: (base, previous) => ({
     ...base,
     type: "text",
+    isNotComplete: true,
     text: previous?.type === "text" ? previous.text : "Triggered!",
   } satisfies TextTrigger),
 

@@ -13,6 +13,7 @@ export const rollTriggerHandler: TriggerHandler<RollTrigger> = {
     ...base,
     type: "roll",
     nextEquationId: previous?.type === "roll" ? previous.nextEquationId : 2,
+    isNotComplete: true,
     equations:
       previous?.type === "roll"
         ? previous.equations

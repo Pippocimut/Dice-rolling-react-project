@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { selectCurrentTrigger, setTrigger, type Equation, type RollTrigger, type SideEffect, type TriggerPath } from "@/store/button-sets/buttonSetSlice.ts";
 import { SideEffectConditionsV12 } from "@/store/button-sets/ButtonSetV1.2.ts";
+import type { SideEffectConditionsTypeV13 } from "@/store/button-sets/ButtonSetV1.3";
 
 export const useSideEffects = () => {
     const trigger = useSelector(selectCurrentTrigger) as RollTrigger
@@ -61,7 +62,7 @@ export const useSideEffects = () => {
         });
     };
 
-    const handleConditionChange = (equationId: number) => (sideEffectId: number) => (condition: SideEffectConditionsV12 | "None") => {
+    const handleConditionChange = (equationId: number) => (sideEffectId: number) => (condition: SideEffectConditionsTypeV13 | "None") => {
         const equations = { ...trigger.equations };
         equations[equationId] = {
             ...equations[equationId],

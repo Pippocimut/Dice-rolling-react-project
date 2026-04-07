@@ -12,6 +12,7 @@ export const buttonTriggerHandler: TriggerHandler<ButtonTrigger> = {
     defaultData: (base) => ({
         ...base,
         type: "button",
+        isNotComplete: true,
         target: null,
     } satisfies ButtonTrigger),
 

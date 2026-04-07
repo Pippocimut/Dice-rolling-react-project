@@ -49,8 +49,7 @@ export const ButtonTriggerEditor: React.FC = () => {
                                     trigger: {
                                         ...trigger,
                                         target: makePath.button(selectedSetId, button.id)
-                                    },
-                                    triggerPath: makePath.trigger(selectedSetId, button.id, trigger.id)
+                                    }
                                 })
                             )}
                         >
