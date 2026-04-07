@@ -1,4 +1,4 @@
-import type { ButtonPath, TriggerPath } from "@/store/button-sets/paths";
+import type { ButtonPath } from "@/store/button-sets/paths";
 
 export type BaseTriggerV13 = {
     id: number;
