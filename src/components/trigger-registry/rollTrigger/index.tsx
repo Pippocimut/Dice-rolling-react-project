@@ -1,4 +1,4 @@
-import type { RollTrigger } from "@/store/button-sets/buttonSetSlice";
+import type { RollTrigger, TriggerPath } from "@/store/button-sets/buttonSetSlice";
 import type { TriggerHandler } from "../triggerRegistry";
 import { RollTriggerEditor } from "./trigger-editor/RollTriggerEditor";
 import { RollTriggerCard } from "./trigger-card/RollTriggerCard";
@@ -25,8 +25,11 @@ export const rollTriggerHandler: TriggerHandler<RollTrigger> = {
 
   // resolveTrigger and enqueue are provided by pressButton, already scoped to
   // the correct button. No getState needed here — no ID uniqueness assumed.
-  execute: (trigger, resolveTrigger, enqueue) => (_, __): RollTriggerResult => {
-    const { total, result } = executeEquations(trigger.equations, resolveTrigger, enqueue);
-    return { type: "roll", name: trigger.name, total, result };
+  execute: (trigger, resolveTrigger, enqueue, parentPath) => (_, __): RollTriggerResult => {
+    if (parentPath) {
+      const { total, result } = executeEquations(trigger.equations, resolveTrigger, enqueue, parentPath);
+      return { type: "roll", name: trigger.name, total, result };
+    }
+    return { type: "roll", name: trigger.name, total: 0, result: "" };
   },
 }

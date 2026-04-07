@@ -31,8 +31,8 @@ export const pressButton = (
 
         // First pass: all on-roll triggers from the pressed button.
         for (const trigger of Object.values(buttonData.triggers).filter((t) => t.onRoll)) {
-            const path = makePath.trigger(setId, buttonData.id, trigger.id);
-            results.push(dispatch(executeTrigger(trigger, resolveTrigger, enqueue)));
+            const path = makePath.button(setId, buttonData.id);
+            results.push(dispatch(executeTrigger(trigger, resolveTrigger, enqueue, path)));
             // seed the queue path for any side effects this trigger enqueues
             void path; // path is used inside enqueue via closures in handlers
         }
@@ -45,7 +45,8 @@ export const pressButton = (
             const enqueueNext: Enqueue = (trigger, path) => nextQueue.push({ trigger, path });
 
             for (const { trigger } of currentQueue) {
-                results.push(dispatch(executeTrigger(trigger, resolveTrigger, enqueueNext)));
+                const path = makePath.button(setId, buttonData.id);
+                results.push(dispatch(executeTrigger(trigger, resolveTrigger, enqueueNext, path)));
             }
 
             currentQueue = nextQueue;

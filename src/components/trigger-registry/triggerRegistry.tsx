@@ -1,6 +1,6 @@
 import React from "react";
 import type { AppThunk } from "@/store";
-import type { Trigger, TriggerPath } from "@/store/button-sets/buttonSetSlice.ts";
+import type { ButtonPath, Trigger, TriggerPath } from "@/store/button-sets/buttonSetSlice.ts";
 import type { TriggerResult } from "@/store/historySidebarSlice.ts";
 import { rollTriggerHandler } from "./rollTrigger/index.tsx";
 import { textTriggerHandler } from "./textTrigger/index.tsx";
@@ -27,7 +27,7 @@ export type TriggerHandler<T extends Trigger> = {
     defaultData: (base: BaseData, previous?: Trigger) => T;
     EditorComponent: React.FC;
     CardComponent: React.FC<{ trigger: T }>;
-    execute: (trigger: T, resolveTrigger: ResolveTrigger, enqueue: Enqueue) => AppThunk<TriggerResult>;
+    execute: (trigger: T, resolveTrigger: ResolveTrigger, enqueue: Enqueue, parentPath?: ButtonPath) => AppThunk<TriggerResult>;
 };
 
 export type TriggerRegistry = {
@@ -47,11 +47,13 @@ export const TRIGGER_REGISTRY: TriggerRegistry = {
 export function executeTrigger(
     trigger: Trigger,
     resolveTrigger: ResolveTrigger,
-    enqueue: Enqueue
+    enqueue: Enqueue,
+    parentPath?: ButtonPath
 ): AppThunk<TriggerResult> {
     return (TRIGGER_REGISTRY[trigger.type] as TriggerHandler<Trigger>).execute(
         trigger,
         resolveTrigger,
-        enqueue
+        enqueue,
+        parentPath
     );
 }

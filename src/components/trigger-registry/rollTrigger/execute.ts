@@ -1,4 +1,4 @@
-import type { Equation, SideEffect } from "@/store/button-sets/buttonSetSlice";
+import type { ButtonPath, Equation, SideEffect, TriggerPath } from "@/store/button-sets/buttonSetSlice";
 import { SideEffectConditionsV12, type SideEffectConditionsTypeV12 } from "@/store/button-sets/ButtonSetV1.2";
 import type { Enqueue, ResolveTrigger } from "../triggerRegistry";
 import { evaluate } from "mathjs";
@@ -40,16 +40,16 @@ const conditionMatches = (
   condition: SideEffectConditionsTypeV12
 ): boolean => {
   switch (condition) {
-    case SideEffectConditionsV12.EqualTo:        return total === values[0];
-    case SideEffectConditionsV12.NotEqualTo:     return total !== values[0];
-    case SideEffectConditionsV12.GreaterThan:    return total > values[0];
-    case SideEffectConditionsV12.LessThan:       return total < values[0];
+    case SideEffectConditionsV12.EqualTo: return total === values[0];
+    case SideEffectConditionsV12.NotEqualTo: return total !== values[0];
+    case SideEffectConditionsV12.GreaterThan: return total > values[0];
+    case SideEffectConditionsV12.LessThan: return total < values[0];
     case SideEffectConditionsV12.GreaterEqualTo: return total >= values[0];
-    case SideEffectConditionsV12.LessEqualTo:    return total <= values[0];
-    case SideEffectConditionsV12.Between:        return total >= values[0] && total <= values[1];
-    case SideEffectConditionsV12.NotBetween:     return total < values[0] || total > values[1];
-    case SideEffectConditionsV12.Always:         return true;
-    default:                                     return false;
+    case SideEffectConditionsV12.LessEqualTo: return total <= values[0];
+    case SideEffectConditionsV12.Between: return total >= values[0] && total <= values[1];
+    case SideEffectConditionsV12.NotBetween: return total < values[0] || total > values[1];
+    case SideEffectConditionsV12.Always: return true;
+    default: return false;
   }
 };
 
@@ -68,7 +68,8 @@ const matchedSideEffects = (sideEffects: SideEffect[], total: number) =>
 export const executeEquations = (
   equations: Record<number, Equation>,
   resolveTrigger: ResolveTrigger,
-  enqueue: Enqueue
+  enqueue: Enqueue,
+  parentPath: ButtonPath,
 ): { total: number; result: string } => {
   let total = 0;
   let result = "";
@@ -79,8 +80,9 @@ export const executeEquations = (
 
     matchedSideEffects(Object.values(equation.sideEffects ?? {}), eqTotal)
       .forEach((se) => {
-        const trigger = resolveTrigger(se.target);
-        if (trigger) enqueue(trigger, se.target);
+        const target = [...parentPath, { kind: "triggers", id: se.target }] as TriggerPath
+        const trigger = resolveTrigger(target);
+        if (trigger) enqueue(trigger, target);
       });
 
     total += eqTotal;

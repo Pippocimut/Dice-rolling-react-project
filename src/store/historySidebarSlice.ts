@@ -25,7 +25,7 @@ export type ButtonTriggerResult = BaseTriggerResult & {
 
 export type TriggerResult = TextTriggerResult | RollTriggerResult | ButtonTriggerResult;
 
-export type ButtonPressRecord = Omit<ButtonData, "rolls" | "nextRollId" | "position" | "nextTriggerId" | "triggers"> & {
+export type ButtonPressRecord = Omit<ButtonData, "rolls" | "nextRollId" | "position" | "nextTriggerId" | "triggers" | "isNotComplete"> & {
     username: string;
     date: string;
     rollResult: TriggerResult[];
