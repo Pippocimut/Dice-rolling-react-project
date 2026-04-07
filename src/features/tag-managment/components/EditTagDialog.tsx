@@ -9,7 +9,7 @@ import {
 import { Button } from "@/components/ui/button.tsx";
 import { useEffect, useState } from "react";
 import { TagForm } from "@/features/tag-managment/components/TagForm.tsx";
-import { createNewBlankButton, editTagOfSet, selectCurrentButton, upsertButtonOfSet, type Tag } from "@/store/button-sets/buttonSetSlice.ts";
+import { createNewBlankButton, editTagOfSet, selectCurrentButton, type Tag } from "@/store/button-sets/buttonSetSlice.ts";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "@/store";
 
