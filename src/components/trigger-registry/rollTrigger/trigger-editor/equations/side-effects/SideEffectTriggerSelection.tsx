@@ -22,7 +22,8 @@ export const SideEffectTriggerSelection = ({ equation, sideEffectId }: SideEffec
   const currentTrigger = useSelector((state: RootState) => {
     if (!currentSideEffect || !currentSideEffect.target) return undefined;
 
-    return resolveEntity(state, currentSideEffect.target) as Trigger | undefined
+    const path = makePath.trigger(selectedSetId, button.id, currentSideEffect.target)
+    return resolveEntity(state, path) as Trigger | undefined
   })
 
   const { handleTriggerChange } = useSideEffects()
@@ -51,7 +52,7 @@ export const SideEffectTriggerSelection = ({ equation, sideEffectId }: SideEffec
         <DropdownMenuLabel>Trigger</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuRadioGroup
-          value={currentSideEffect.target ? String(currentSideEffect.target[2].id) : "none"}
+          value={currentSideEffect.target ? String(currentSideEffect.target) : "none"}
           onValueChange={handleSelect}
         >
           <DropdownMenuRadioItem value="none">None</DropdownMenuRadioItem>

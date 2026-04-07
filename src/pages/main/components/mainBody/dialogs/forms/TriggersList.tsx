@@ -44,7 +44,7 @@ const TriggerList = () => {
                             ...equation,
                             sideEffects: Object.values(equation.sideEffects ?? {}).reduce((acc3: SideEffectsMap, sideEffect: SideEffect) => {
                                 // If this side effect targeted the deleted trigger, clear its target.
-                                const targetsTrigger = sideEffect.target?.[2]?.id === rollId;
+                                const targetsTrigger = sideEffect.target === rollId;
                                 acc3[sideEffect.id] = targetsTrigger
                                     ? { ...sideEffect, target: null }
                                     : sideEffect;

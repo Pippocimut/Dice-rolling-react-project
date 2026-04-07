@@ -8,6 +8,7 @@ import {
 import { Button } from "@/components/ui/button.tsx";
 import { SideEffectConditionsV12 } from "@/store/button-sets/ButtonSetV1.2.ts";
 import { useSideEffects } from "@/components/trigger-registry/rollTrigger/trigger-editor/equations/side-effects/hooks/useSideEffects";
+import type { SideEffectConditionsTypeV13 } from "@/store/button-sets/ButtonSetV1.3";
 
 export const SideEffectConditionSelection = ({
     currentEquation,
@@ -33,7 +34,7 @@ export const SideEffectConditionSelection = ({
                 <DropdownMenuSeparator />
                 <DropdownMenuRadioGroup value={currentSideEffect.condition || "None"}
                     onValueChange={(e) => {
-                        handleConditionChange(currentEquation.id)(sideEffectId)(e)
+                        handleConditionChange(currentEquation.id)(sideEffectId)(e as SideEffectConditionsTypeV13)
                     }}>
                     {Object.values(conditionList).map((condition, index) => {
                         return <DropdownMenuRadioItem key={index} value={condition}>{condition}</DropdownMenuRadioItem>

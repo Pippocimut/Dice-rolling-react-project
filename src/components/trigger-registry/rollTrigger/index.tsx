@@ -1,4 +1,4 @@
-import type { RollTrigger, TriggerPath } from "@/store/button-sets/buttonSetSlice";
+import type { RollTrigger} from "@/store/button-sets/buttonSetSlice";
 import type { TriggerHandler } from "../triggerRegistry";
 import { RollTriggerEditor } from "./trigger-editor/RollTriggerEditor";
 import { RollTriggerCard } from "./trigger-card/RollTriggerCard";
