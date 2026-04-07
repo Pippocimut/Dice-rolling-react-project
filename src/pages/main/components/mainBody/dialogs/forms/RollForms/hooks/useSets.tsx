@@ -42,9 +42,9 @@ export const useSets = (openTriggerDialog: boolean, setOpenTriggerDialog: (x: bo
                     {
                         name: name,
                         id:-1,
-                        version: "1.2",
+                        version: "1.3",
                         tags: defaultTags,
-                        buttonList: {}
+                        buttons: {}
                     }
                 )
             );

@@ -7,11 +7,11 @@ import {
     type RollV12,
     type TagV12
 } from "@/store/button-sets/ButtonSetV1.2.ts";
-import {defaultTriggers} from "@/store/button-sets/defaultTags.ts";
+import type { ButtonSetV13 } from "./ButtonSetV1.3";
 
-type UsableDataSets = ButtonSetV11 | ButtonSetV12
+type UsableDataSets = ButtonSetV11 | ButtonSetV12 | ButtonSetV13
 
-const latestVersion: string = "1.2";
+const latestVersion: string = "1.3";
 
 export class ImportManager {
 
@@ -63,8 +63,7 @@ const convertV11ToLatest = (data: ButtonSetV11) => {
             buttonConfig: {
                 nextTriggerId: value.rollsConfig?.length ?? 0,
                 nextRollId: value.rollsConfig?.length ?? 0,
-                rolls: rolls,
-                triggers: {...defaultTriggers, ...rolls},
+                triggers: {...rolls},
             }
         }
         return acc
@@ -86,7 +85,6 @@ const convertV11ToLatest = (data: ButtonSetV11) => {
                     nextTriggerId: curr.rolls.length,
                     nextRollId: curr.rolls.length,
                     triggers: {
-                        ...defaultTriggers,
                         ...rolls
                     }
                 }

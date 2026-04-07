@@ -22,8 +22,6 @@ type Props = {
 export const CreateSetDialog: React.FC<Props> = ({openSetDialog, setOpenSetDialog, closeMenu}) => {
     const {name, handleChange, handleConfirm, errorMessage} = useSets(openSetDialog, setOpenSetDialog);
 
-
-
     return (
         <Dialog open={openSetDialog} onOpenChange={setOpenSetDialog}>
             <DialogContent>

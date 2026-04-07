@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -E \"\\\\.\\(ts|tsx\\)$\")",
+      "Bash(xargs grep:*)",
+      "Bash(grep -r \"switch.*type\\\\|if.*type\\\\|switch.*condition\" /c/Users/teoka/WebstormProjects/roll-a-die/src --include=*.tsx --include=*.ts -l)",
+      "Bash(grep -n \"type.*RollMap\\\\|type.*Roll[^T]\" /c/Users/teoka/WebstormProjects/roll-a-die/src/store/button-sets/*.ts)",
+      "Bash(powershell -Command \":*)",
+      "Bash(npx tsc:*)"
+    ]
+  }
+}

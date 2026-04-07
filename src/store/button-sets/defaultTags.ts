@@ -1,38 +1,16 @@
 import {
-    type RollMap,
     type Tag,
-    type Trigger
+    type TriggersMap,
 } from "@/store/button-sets/buttonSetSlice.ts";
-import {GeneralTriggersV12, SideEffectConditionsV12, TagIdsV12} from "./ButtonSetV1.2";
+import { SideEffectConditionsV12, TagIdsV12 } from "./ButtonSetV1.2";
 
-export const defaultTriggers: Record<number, Trigger> = {
-    [GeneralTriggersV12.OnRoll]: {
-        id: GeneralTriggersV12.OnRoll,
-        name: "On roll"
-    },
-    [GeneralTriggersV12.None]: {
-        id: -1,
-        name: "None"
-    }
-}
-
-const checkTriggers = {
-    ...defaultTriggers,
-}
-
-const attackTriggers = {
-    ...defaultTriggers,
-}
-
-const saveTriggers = {
-    ...defaultTriggers,
-}
-
-const attackRolls: RollMap = {
+const attackTriggers: TriggersMap = {
     [1]: {
         "name": "Attack",
-        "trigger": 0,
+        onRoll: true,
+        type: "roll",
         id: 1,
+        isNotComplete: true,
         "nextEquationId": 3,
         "equations": {
             [1]: {
@@ -44,19 +22,19 @@ const attackRolls: RollMap = {
                         "id": 1,
                         "condition": SideEffectConditionsV12.EqualTo,
                         "values": [20],
-                        "triggerId": 2
+                        "target": 2
                     },
                     [2]: {
                         "id": 2,
                         "condition": SideEffectConditionsV12.Between,
                         "values": [2, 19],
-                        "triggerId": 3
+                        "target": 3
                     },
                     [3]: {
                         "id": 3,
                         "condition": SideEffectConditionsV12.EqualTo,
                         "values": [1],
-                        "triggerId": 4
+                        "target": 4
                     }
                 }
             },
@@ -69,7 +47,9 @@ const attackRolls: RollMap = {
     },
     [2]: {
         "name": "Critical hit",
-        "trigger": 1,
+        onRoll: false,
+        isNotComplete: true,
+        type: "roll",
         id: 2,
         "nextEquationId": 2,
         "equations": {
@@ -82,7 +62,9 @@ const attackRolls: RollMap = {
     },
     [3]: {
         "name": "Hit",
-        "trigger": 2,
+        onRoll: false,
+        isNotComplete: true,
+        type: "roll",
         id: 3,
         "nextEquationId": 2,
         "equations": {
@@ -95,18 +77,21 @@ const attackRolls: RollMap = {
     },
     [4]: {
         "name": "Miss",
-        "trigger": 3,
+        isNotComplete: true,
+        onRoll: false,
+        type: "text",
         id: 4,
-        "nextEquationId": 1,
-        "equations": {}
+        text: "Missed!"
     }
 }
 
 
-const saveRolls: RollMap = {
+const saveTriggers: TriggersMap = {
     [1]: {
         "name": "Save",
-        "trigger": 0,
+        onRoll: true,
+        type: "roll",
+        isNotComplete: true,
         id: 1,
         "nextEquationId": 2,
         "equations": {
@@ -121,11 +106,13 @@ const saveRolls: RollMap = {
 }
 
 
-const checkRolls: RollMap = {
+const checkTriggers: TriggersMap = {
     [1]: {
         "name": "Check",
-        "trigger": 0,
         id: 1,
+        isNotComplete: true,
+        onRoll: true,
+        type: "roll",
         "nextEquationId": 2,
         "equations": {
             [1]: {
@@ -137,16 +124,14 @@ const checkRolls: RollMap = {
         }
     }
 }
-
 
 export const checkTag: Tag = {
     id: TagIdsV12.Check,
     name: "check",
     color: "green-roll-button",
     buttonConfig: {
-        triggers: {...checkTriggers, ...checkRolls},
+        triggers: { ...checkTriggers },
         nextTriggerId: 1,
-        rolls: checkRolls
     }
 }
 
@@ -155,9 +140,8 @@ export const attackTag: Tag = {
     name: "attack",
     color: "red-roll-button",
     buttonConfig: {
-        triggers: {...attackTriggers,...attackRolls},
+        triggers: { ...attackTriggers },
         nextTriggerId: 4,
-        rolls: attackRolls
     }
 }
 
@@ -166,9 +150,8 @@ export const saveTag: Tag = {
     name: "saving throw",
     color: "blue-roll-button",
     buttonConfig: {
-        triggers: {...saveTriggers, ...saveRolls},
+        triggers: { ...saveTriggers },
         nextTriggerId: 1,
-        rolls: saveRolls
     }
 }
 

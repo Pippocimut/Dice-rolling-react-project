@@ -1,6 +1,6 @@
 import {Button} from "@/components/ui/button";
 import {useDispatch, useSelector} from "react-redux";
-import {toggleAudio} from "@/store/settings/settingsSlice.ts";
+import {toggleAudio} from "@/store/settingsSlice.ts";
 import type {RootState} from "@/store";
 
 

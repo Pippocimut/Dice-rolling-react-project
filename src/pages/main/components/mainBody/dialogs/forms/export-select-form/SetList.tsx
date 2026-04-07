@@ -17,10 +17,10 @@ export function SetList() {
 
     return <ul className={"text-lg h-[50vh] overflow-y-auto border-2 border-gray-400 rounded-lg p-2 m-2"}>
         {Object.values(buttonSets).map((buttonSet) => {
-            if (Object.values(buttonSet.buttonList).length === 0) return null;
+            if (Object.values(buttonSet.buttons).length === 0) return null;
 
             const isChecked = checkedData.sets.includes(buttonSet.id)
-            const untaggedButtons = Object.values(buttonSet.buttonList).filter(
+            const untaggedButtons = Object.values(buttonSet.buttons).filter(
                 (button: ButtonData) => !button.tag || !(buttonSet.tags[button.tag])
             )
 

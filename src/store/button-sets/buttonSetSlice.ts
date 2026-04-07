@@ -1,49 +1,100 @@
-import {createSlice} from "@reduxjs/toolkit";
-import {defaultTags} from "@/store/button-sets/defaultTags.ts";
-import {
-    type BaseButtonSetV12,
-    type ButtonDataV12, type ButtonSetStateV12, type ButtonSetV12, colorsV12,
-    type EquationRecordV12, type EquationV12, type RollMapV12,
-    type RollV12,
-    type SideEffectsMapV12,
-    type SideEffectV12,
-    type TagV12, type TriggersMapV12, type TriggerV12
-} from "@/store/button-sets/ButtonSetV1.2.ts";
-import {ImportManager} from "@/store/button-sets/import.ts";
+import { createSlice } from "@reduxjs/toolkit";
+import { defaultTags } from "@/store/button-sets/defaultTags.ts";
+import { colorsV12 } from "@/store/button-sets/ButtonSetV1.2.ts";
+import { ImportManager } from "@/store/button-sets/import.ts";
+import type {
+    BaseButtonSetV13,
+    ButtonDataV13,
+    ButtonSetStateV13,
+    ButtonSetV13,
+    ButtonTriggerV13,
+    EquationRecordV13,
+    EquationV13,
+    RollTriggerV13,
+    SideEffectsMapV13,
+    SideEffectV13,
+    TagV13,
+    TextTriggerV13,
+    TriggersMapV13,
+    TriggerV13
+} from "./ButtonSetV1.3";
+import type { RootState } from "@/store";
 
-export type Roll = RollV12
-export type EquationRecord = EquationRecordV12
-export type SideEffect = SideEffectV12
-export type SideEffectsMap = SideEffectsMapV12
-export type Equation = EquationV12
-export type Tag = TagV12
-export type Trigger = TriggerV12
-export type TriggersMap = TriggersMapV12
-export type RollMap = RollMapV12
-export type ButtonData = ButtonDataV12
-export type BaseButtonSet = BaseButtonSetV12
-export type ButtonSet = ButtonSetV12
-type buttonSetState = ButtonSetStateV12
+export type RollTrigger = RollTriggerV13
+export type TextTrigger = TextTriggerV13
+export type ButtonTrigger = ButtonTriggerV13
+export type { SetPath, ButtonPath, TriggerPath, EntityPath, PathSegment } from "@/store/button-sets/paths"
+export { makePath, pathToString } from "@/store/button-sets/paths"
+export { resolveEntity } from "@/store/button-sets/resolveEntity"
+export type EquationRecord = EquationRecordV13
+export type SideEffect = SideEffectV13
+export type SideEffectsMap = SideEffectsMapV13
+export type Equation = EquationV13
+export type Tag = TagV13
+export type Trigger = TriggerV13
+export type TriggersMap = TriggersMapV13
+export type ButtonData = ButtonDataV13
+export type BaseButtonSet = BaseButtonSetV13
+export type ButtonSet = ButtonSetV13
+type ButtonSetState = ButtonSetStateV13
 export const colors = colorsV12
 
-const initialState: buttonSetState = localStorage.getItem("buttonSetsList")
-        ? JSON.parse(localStorage.getItem("buttonSetsList") ?? "") as buttonSetState
-        : {
-            nextSetId: 2,
-            nextTagId: 4,
-            nextButtonId: 1,
-            currentVersion: "1.2",
-            selectedSetId: 1,
-            sets: {
-                1: {
-                    id: 1,
-                    version: "1.2",
-                    name: "Default",
-                    tags: defaultTags,
-                    buttonList: {}
-                }
+export const selectCurrentButton = (state: RootState) => {
+    const set = state.buttonSet.sets[state.buttonSet.selectedSetId]
+    const button = set.buttons[state.buttonSet.selectedButtonId]
+    return button
+}
+
+export const selectCurrentTrigger = (state: RootState) => {
+    const set = state.buttonSet.sets[state.buttonSet.selectedSetId]
+    const button = set.buttons[state.buttonSet.selectedButtonId]
+    const trigger = button.triggers[state.buttonSet.selectedTriggerId]
+
+    return trigger
+}
+
+export const defaultButton: ButtonData = {
+    id: -1,
+    name: "New Button",
+    nextRollId: 1,
+    tag: -1,
+    isNotComplete: true,
+    nextTriggerId: 1,
+    triggers: {},
+    color: colors[Math.floor(Math.random() * colors.length)],
+    position: -1
+}
+
+export const defaultTrigger: Trigger = {
+    id: -1,
+    name: "New Trigger",
+    onRoll: true,
+    isNotComplete: true,
+    type: "text",
+    text: "Trigger text"
+}
+
+
+const initialState: ButtonSetState = localStorage.getItem("buttonSetsList")
+    ? JSON.parse(localStorage.getItem("buttonSetsList") ?? "") as ButtonSetState
+    : {
+        nextSetId: 2,
+        nextTagId: 4,
+        nextButtonId: 1,
+        currentVersion: "1.2",
+        selectedSetId: 1,
+        selectedButtonId: -1,
+        selectedTriggerId: -1,
+        sets: {
+            1: {
+                id: 1,
+                version: "1.3",
+                name: "Default",
+                tags: defaultTags,
+                buttons: {}
             }
-        } as buttonSetState
+        }
+    } as ButtonSetState
 
 
 const buttonSetSlice = createSlice({
@@ -62,7 +113,7 @@ const buttonSetSlice = createSlice({
             }
         }) => {
             const setId = action.payload.setId;
-            const button = {...action.payload.button};
+            const button = { ...action.payload.button };
 
             const set = state.sets[setId];
 
@@ -77,8 +128,14 @@ const buttonSetSlice = createSlice({
                 button.position = button.id
             }
 
-            set.buttonList = {
-                ...set.buttonList,
+            button.triggers = Object.fromEntries(
+                Object.entries(button.triggers).filter(([_, trigger]) => !trigger?.isNotComplete)
+            )
+
+            console.log("Button is slice", button)
+
+            set.buttons = {
+                ...set.buttons,
                 [button.id]: button
             }
 
@@ -86,6 +143,12 @@ const buttonSetSlice = createSlice({
 
             const stringState = JSON.stringify(state)
             localStorage.setItem("buttonSetsList", stringState);
+        },
+        setSelectedButtonId: (state, action) => {
+            state.selectedButtonId = action.payload
+        },
+        setSelectedTriggerId: (state, action) => {
+            state.selectedTriggerId = action.payload
         },
         addTagToSet: (state, action) => {
             const setId = action.payload.setId;
@@ -122,8 +185,8 @@ const buttonSetSlice = createSlice({
 
             delete set.tags[tagId]
 
-            const idToDelete = Object.values(set.buttonList).filter(button => button.tag === tagId).map(button => button.id);
-            idToDelete.forEach(id => delete set.buttonList[id]);
+            const idToDelete = Object.values(set.buttons).filter(button => button.tag === tagId).map(button => button.id);
+            idToDelete.forEach(id => delete set.buttons[id]);
 
             const stringState = JSON.stringify(state)
             localStorage.setItem("buttonSetsList", stringState);
@@ -157,7 +220,7 @@ const buttonSetSlice = createSlice({
                 setId,
                 buttons
             } = action.payload;
-            state.sets[setId].buttonList = buttons.reduce((acc, button) => {
+            state.sets[setId].buttons = buttons.reduce((acc, button) => {
                 acc[button.id] = button;
                 return acc;
             }, {} as Record<number, ButtonData>)
@@ -167,12 +230,14 @@ const buttonSetSlice = createSlice({
         },
         addNewSet: (state, action: { payload: ButtonSet }) => {
             const set = action.payload;
+            const nextSetId = state.nextSetId
             const importingUtil = new ImportManager()
 
-            importingUtil.from(set)
-            const convertedSet = importingUtil.convert() as ButtonSetV12
+            importingUtil.from({ ...set })
+            const convertedSet = importingUtil.convert() as ButtonSetV13
             convertedSet.id = state.nextSetId;
-            state.sets[state.nextSetId] = convertedSet
+
+            state.sets[nextSetId] = convertedSet
             state.nextSetId++;
             state.selectedSetId = convertedSet.id;
             const highest_tag_id = Math.max(...Object.keys(convertedSet.tags).map(key => parseInt(key)))
@@ -190,7 +255,92 @@ const buttonSetSlice = createSlice({
             const setId = action.payload.setId;
             const id = action.payload.id;
 
-            delete state.sets[setId].buttonList[id]
+            delete state.sets[setId].buttons[id]
+
+            const stringState = JSON.stringify(state)
+            localStorage.setItem("buttonSetsList", stringState);
+        },
+        setTrigger(state, action: {
+            payload: {
+                trigger: Trigger,
+            }
+        }) {
+            const { trigger } = action.payload
+            const setId = state.selectedSetId
+            const buttonId = state.selectedButtonId
+            const triggerId = trigger.id
+
+            const set = state.sets[setId]
+            if (!set) return;
+            const button = set.buttons[buttonId]
+            if (!button) return;
+            button.triggers[triggerId] = trigger
+
+            const stringState = JSON.stringify(state)
+            localStorage.setItem("buttonSetsList", stringState);
+        },
+        createNewBlankTrigger: (state) => {
+            const setId = state.selectedSetId
+            const buttonId = state.nextButtonId
+            const set = state.sets[setId]
+            if (!set) return;
+            const button = { ...set.buttons[buttonId] }
+            if (!button) return;
+
+            const trigger = { ...defaultTrigger }
+
+            trigger.id = button.nextTriggerId
+            button.nextTriggerId++
+
+            Object.values(button.triggers).map(trigger => {
+                if (trigger.isNotComplete)
+                    delete button.triggers[trigger.id]
+            })
+
+            button.triggers = {
+                ...button.triggers,
+                [trigger.id]: trigger
+            }
+
+            set.buttons[button.id] = button
+
+            state.selectedTriggerId = trigger.id
+
+            console.log("Trigger Id", trigger.id)
+            console.log("Button", button)
+
+            const stringState = JSON.stringify(state)
+            localStorage.setItem("buttonSetsList", stringState);
+        },
+        createNewBlankButton: (state, action: {
+            payload: {
+                setId: number,
+                tag?: Tag
+            }
+        }) => {
+            const setId = action.payload.setId;
+            const tag = action.payload.tag;
+            const set = state.sets[setId];
+            if (!set) return;
+
+            Object.values(set.buttons).forEach(button => {
+                if (button.isNotComplete) {
+                    delete set.buttons[button.id]
+                }
+            })
+
+            const newButton: ButtonData = {
+                ...defaultButton,
+                ...tag?.buttonConfig,
+                color: tag ? tag.color : defaultButton.color,
+                tag: tag ? tag.id : -1,
+                id: state.nextButtonId,
+            }
+            state.nextButtonId++;
+
+            set.buttons[newButton.id] = newButton
+
+            state.selectedButtonId = newButton.id
 
             const stringState = JSON.stringify(state)
             localStorage.setItem("buttonSetsList", stringState);
@@ -205,8 +355,17 @@ export const {
     addTagToSet,
     editTagOfSet,
     addNewSet,
+
+    createNewBlankButton,
+    createNewBlankTrigger,
+
     sendNewButtonList,
-    setSelectedSet
+    setSelectedSet,
+
+    setTrigger,
+    setSelectedTriggerId,
+    setSelectedButtonId
+
 } = buttonSetSlice.actions
 
 export default buttonSetSlice.reducer

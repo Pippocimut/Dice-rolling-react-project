@@ -1,9 +1,9 @@
 import {type ReactNode, useState} from 'react';
 import {io, Socket} from 'socket.io-client';
 import {SocketContext} from './SocketContext';
-import {addRollFromSocket, type ButtonPressRecord} from "../store/history-sidebar/historySidebarSlice.ts";
+import {addRollFromSocket, type ButtonPressRecord} from "../store/historySidebarSlice.ts";
 import {useDispatch} from "react-redux";
-import {emitRoomName, emitUserName} from "../store/socket/socketSlice.ts";
+import {emitRoomName, emitUserName} from "../store/socketSlice.ts";
 
 const SOCKET_SERVER_URL = 'https://socket-dice-server-819188550192.europe-west1.run.app';
 

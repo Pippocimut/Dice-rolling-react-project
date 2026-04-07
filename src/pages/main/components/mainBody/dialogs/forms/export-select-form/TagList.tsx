@@ -25,7 +25,7 @@ export function TagList({buttonSetId}: Props) {
         const isChecked = currentSetTags.includes(tag.id)
         const onChangedTag = onCheckedTagsChange(buttonSetId)
 
-        const buttonList = Object.values(buttonSet.buttonList).filter((button: ButtonData) => button.tag === tag.id)
+        const buttonList = Object.values(buttonSet.buttons).filter((button: ButtonData) => button.tag === tag.id)
 
         return <div key={tag.id} className={"pl-2 my-2"}>
             <input type="checkbox" className={"mr-2"} checked={isChecked}

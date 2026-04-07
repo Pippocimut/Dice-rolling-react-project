@@ -6,23 +6,21 @@ import {
     DialogTitle,
     DialogTrigger
 } from "@/components/ui/dialog.tsx";
-import {Button} from "@/components/ui/button.tsx";
-import {useEffect, useState} from "react";
-import {TagForm} from "@/features/tag-managment/components/TagForm.tsx";
-import {addTagToSet, colors, type Tag} from "@/store/button-sets/buttonSetSlice.ts";
-import {useDispatch, useSelector} from "react-redux";
-import type {RootState} from "@/store";
-import {setButton} from "@/store/button-change-handle/buttonManageSlice.ts";
-import {GeneralTriggersV12} from "@/store/button-sets/ButtonSetV1.2.ts";
+import { Button } from "@/components/ui/button.tsx";
+import { useEffect, useState } from "react";
+import { TagForm } from "@/features/tag-managment/components/TagForm.tsx";
+import { addTagToSet, createNewBlankButton, selectCurrentButton, type Tag } from "@/store/button-sets/buttonSetSlice.ts";
+import { useDispatch, useSelector } from "react-redux";
+import type { RootState } from "@/store";
 
-export function CreateTagDialog(){
+export function CreateTagDialog() {
     const [isCreateTagOpen, setIsCreateTagOpen] = useState(false);
-    const button = useSelector((state:RootState)=> state.buttonManage.button)
+    const button = useSelector(selectCurrentButton)!
     const [tag, setTag] = useState<Tag>({
         name: "",
         color: "red-roll-button",
         id: -1,
-        buttonConfig:{}
+        buttonConfig: {}
     });
 
     const currentSet = useSelector((state: RootState) => state.buttonSet.sets[state.buttonSet.selectedSetId])
@@ -32,25 +30,7 @@ export function CreateTagDialog(){
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(setButton({
-            id: -1,
-            name: "New State",
-            rolls: [],
-            tag: -1,
-            nextTriggerId: 1,
-            triggers: {
-                [GeneralTriggersV12.OnRoll]: {
-                    id: GeneralTriggersV12.OnRoll,
-                    name: "On roll"
-                },
-                [GeneralTriggersV12.None]: {
-                    id:GeneralTriggersV12.None,
-                    name: "None"
-                }
-            },
-            color: colors[Math.floor(Math.random() * colors.length)],
-            position: -1
-        }))
+        dispatch(createNewBlankButton({ setId: currentSet.id }))
     }, [isCreateTagOpen]);
 
     const createTag = () => {
@@ -65,10 +45,8 @@ export function CreateTagDialog(){
             tag: {
                 ...tag,
                 buttonConfig: {
-                    triggers:button.triggers,
-                    nextTriggerId:button.nextTriggerId,
-                    nextRollId:button.nextRollId,
-                    rolls:button.rolls,
+                    triggers: button.triggers,
+                    nextTriggerId: button.nextTriggerId
                 }
             }
         }))
@@ -79,11 +57,11 @@ export function CreateTagDialog(){
     return <Dialog open={isCreateTagOpen} onOpenChange={setIsCreateTagOpen}>
         <DialogTrigger asChild>
             <Button id={"create-tag-button"} className={"w-full"} variant={"outline"}
-                    onClick={() => setIsCreateTagOpen(true)}>
+                onClick={() => setIsCreateTagOpen(true)}>
                 <span className={"mb-1 text-2xl"}>+</span>
             </Button>
         </DialogTrigger>
-        <DialogContent className={"w-fit"} onOpenAutoFocus={(e)=> e.preventDefault()}>
+        <DialogContent className={"w-fit"} onOpenAutoFocus={(e) => e.preventDefault()}>
             <DialogHeader>
                 <DialogTitle>Create Tag</DialogTitle>
                 <DialogDescription>

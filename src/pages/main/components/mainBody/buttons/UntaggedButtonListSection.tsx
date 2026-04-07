@@ -1,0 +1,23 @@
+import { useSelector } from "react-redux";
+import { ButtonSortableList } from "./ButtonSortableList.tsx";
+import { useMemo } from "react";
+import type { RootState } from "@/store";
+
+const UntaggedButtonListSection = () => {
+    const buttonSet = useSelector((state: RootState) => state.buttonSet.sets[state.buttonSet.selectedSetId])!
+
+    const items = useMemo(() => {
+        if (!buttonSet) return [];
+        return Object.values(buttonSet.buttons).filter(button => !button.tag || button.tag === -1).filter(button => !button.isNotComplete)
+    }, [buttonSet]);
+
+    if (items.length === 0) return null;
+
+    return (
+        <div className={"w-fit flex flex-col gap-4 my-4"}>
+            <ButtonSortableList items={items.sort((a, b) => a.position - b.position)} />
+        </div>
+    );
+};
+
+export default UntaggedButtonListSection;
